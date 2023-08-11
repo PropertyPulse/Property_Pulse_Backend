@@ -69,6 +69,14 @@ public enum Role {
                     TOPMANAGER_DELETE,
                     TOPMANAGER_CREATE
             )
+    ),
+    MPC(
+            Set.of(
+                    MPC_READ,
+                    MPC_UPDATE,
+                    MPC_DELETE,
+                    MPC_CREATE
+            )
     )
 
     ;

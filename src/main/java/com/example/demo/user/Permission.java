@@ -39,7 +39,15 @@ public enum Permission {
     TOPMANAGER_READ("topmanager:read"),
     TOPMANAGER_UPDATE("topmanager:update"),
     TOPMANAGER_CREATE("topmanager:create"),
-    TOPMANAGER_DELETE("topmanager:delete")
+    TOPMANAGER_DELETE("topmanager:delete"),
+
+    MPC_READ("mpc:read"),
+    MPC_UPDATE("mpc:update"),
+    MPC_CREATE("mpc:create"),
+    MPC_DELETE("mpc:delete"),
+
+
+
 
 
 

@@ -11,9 +11,11 @@ import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +34,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private Integer refreshExpiration;
     private final UserRepository repository;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
@@ -123,8 +127,15 @@ public class AuthenticationService {
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
+
+
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).build();
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .firstname(savedUser.getFirstname())
+                .lastname(savedUser.getLastname())
+                .build();
 
 
     }
@@ -160,7 +171,7 @@ public class AuthenticationService {
 //    }
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws UserException {
+    public AuthenticationResponse authenticate(HttpServletResponse response, AuthenticationRequest request) throws UserException {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -173,11 +184,14 @@ public class AuthenticationService {
             var user = repository.findByEmail(request.getEmail()).orElseThrow();
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
-            revokeAllUserTokens(user);
-            saveUserToken(user, jwtToken);
+//            revokeAllUserTokens(user);
+            updateUserToken(user, jwtToken);
+            creatCookie(response, refreshToken, refreshExpiration / 1000);
             return AuthenticationResponse.builder()
+                    .firstname(user.getFirstname())
+                    .lastname(user.getLastname())
                     .accessToken(jwtToken)
-                    .refreshToken(refreshToken).build();
+                    .build();
         } catch (AuthenticationException e) {
             // Authentication failed, handle the exception
             throw new UserException("Authentication failed: " + e.getMessage());
@@ -210,6 +224,16 @@ public class AuthenticationService {
                 .expired(false)
                 .build();
         tokenRepository.save(token);
+    }
+
+    private void updateUserToken(User user, String jwtToken) {
+        var storedToken = tokenRepository.findByUser_Id(user.getId()).orElse(null);
+        if (storedToken != null) {
+            storedToken.setToken(jwtToken);
+            storedToken.setExpired(false);
+            storedToken.setRevoked(false);
+            tokenRepository.save(storedToken);
+        }
     }
 
 //    public void refreshToken(
@@ -252,42 +276,89 @@ public class AuthenticationService {
 //        }
 
 
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    public AuthenticationResponse refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        // here we firstly, doing extracting the request (header,jwt,useremail)
+        String refreshToken = null;
+        final String email;
 
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new IOException("Refresh token is missing");
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refreshToken")) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
         }
-        refreshToken = authHeader.substring(7);
 
-
-        //userEmail is in the jwt token , so we need to extract it from the jwt token, in order to do that we need a class called jwtService to manipulate the jwt token
-        userEmail = jwtService.extractUsername(refreshToken);
-
+        if (refreshToken == null) {
+            return;
+        }
+        email = jwtService.extractUsername(refreshToken);
 //        now we have extracted the useremail from the jwt token, we need to check if the user is authenticated or not
 
 
-        if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail).orElseThrow();
+        if (email != null) {
+            var user = this.repository.findByEmail(email).orElseThrow();
 
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                return AuthenticationResponse.builder()
+//                revokeAllUserTokens(user);
+//                saveUserToken(user, accessToken);
+                updateUserToken(user, accessToken);
+                AuthenticationResponse authResponse = AuthenticationResponse.builder()
+                        .firstname(user.getFirstname())
+                        .lastname(user.getLastname())
                         .accessToken(accessToken)
-                        .refreshToken(refreshToken)
                         .build();
-
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
-        return null;
+
+    }
+//    public AuthenticationResponse refreshToken(
+//            HttpServletRequest request,
+//            HttpServletResponse response
+//    ) throws IOException {
+//        // here we firstly, doing extracting the request (header,jwt,useremail)
+//
+//        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        final String refreshToken;
+//        final String userEmail;
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            throw new IOException("Refresh token is missing");
+//        }
+//        refreshToken = authHeader.substring(7);
+//
+//
+//        //userEmail is in the jwt token , so we need to extract it from the jwt token, in order to do that we need a class called jwtService to manipulate the jwt token
+//        userEmail = jwtService.extractUsername(refreshToken);
+//
+////        now we have extracted the useremail from the jwt token, we need to check if the user is authenticated or not
+//
+//
+//        if (userEmail != null) {
+//            var user = this.repository.findByEmail(userEmail).orElseThrow();
+//
+//            if (jwtService.isTokenValid(refreshToken, user)) {
+//                var accessToken = jwtService.generateToken(user);
+//                revokeAllUserTokens(user);
+//                saveUserToken(user, accessToken);
+//                return AuthenticationResponse.builder()
+//                        .accessToken(accessToken)
+//                        .refreshToken(refreshToken)
+//                        .build();
+//
+//            }
+//        }
+//        return null;
+//    }
+
+    private void creatCookie(HttpServletResponse response, String refreshToken, Integer MaxAge) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);  // Make the cookie accessible only through HTTP
+        refreshTokenCookie.setMaxAge(MaxAge);  // Set the cookie's expiration time in seconds
+        refreshTokenCookie.setPath("/");  // Set the cookie's path to the root
+        response.addCookie(refreshTokenCookie);
     }
 }

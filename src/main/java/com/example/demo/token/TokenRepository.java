@@ -29,5 +29,7 @@ where u.id = :userId and (t.expired = false or t.revoked = false)
 
 //
 
+    Optional<Token> findByUser_Id(Integer id);
+
 
 }

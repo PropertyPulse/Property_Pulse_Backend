@@ -17,6 +17,12 @@ public class AuthenticationResponse {
     @JsonProperty("refresh_token")
     private String refreshToken;
 
+    private String firstname;
+    private String lastname;
+
+
+
+
     private String message;
 
     public AuthenticationResponse(String message) {

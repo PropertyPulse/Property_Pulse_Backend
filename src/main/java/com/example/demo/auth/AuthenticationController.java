@@ -46,9 +46,9 @@ public class AuthenticationController {
 //    }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(HttpServletResponse httpresponse, @RequestBody AuthenticationRequest request) {
         try {
-            AuthenticationResponse response = service.authenticate(request);
+            AuthenticationResponse response = service.authenticate(httpresponse, request);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException | UserException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(e.getMessage()));
@@ -63,13 +63,13 @@ public class AuthenticationController {
 //    ) throws IOException {
 //       service.refreshToken(request,response);
 //    }
-    @PostMapping("/refresh-token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(
+    @GetMapping("/refresh-token")
+    public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        AuthenticationResponse refresresponse = service.refreshToken(request,response);
-        return ResponseEntity.ok(refresresponse);
+        System.out.println("refresh token");
+        service.refreshToken(request,response);
     }
 
 }

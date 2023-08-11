@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.token.TokenRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,15 @@ public class LogoutService implements LogoutHandler {
 
         }
 
+        creatCookie(response, "", 0);
 
+    }
+
+    private void creatCookie(HttpServletResponse response, String refreshToken, Integer MaxAge) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);  // Make the cookie accessible only through HTTP
+        refreshTokenCookie.setMaxAge(MaxAge);  // Set the cookie's expiration time in seconds
+        refreshTokenCookie.setPath("/");  // Set the cookie's path to the root
+        response.addCookie(refreshTokenCookie);
     }
 }

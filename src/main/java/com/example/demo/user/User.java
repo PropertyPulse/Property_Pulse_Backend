@@ -59,8 +59,11 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private TopManager topManager;
 
+    @OneToOne(mappedBy = "user")
+    private ManPowerCompany manPowerCompany;
 
-//    returns the authorities of the user
+
+    //    returns the authorities of the user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
