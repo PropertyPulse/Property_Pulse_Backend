@@ -19,7 +19,4 @@ public class RequestUpdateEmployeeDetailsDto {
     private String email;
     private List<String> skills;
 
-
-
-
 }

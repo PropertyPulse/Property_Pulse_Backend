@@ -134,6 +134,8 @@ public class ManPowerCompanyServiceImpl implements ManPowerCompanyService {
         existingEmployee.setAddress(req.getAddress());
         existingEmployee.setSkills(req.getSkills());
 
+        System.out.println(req.getSkills());
+
         // ... Update other properties
 
         // Save the updated employee

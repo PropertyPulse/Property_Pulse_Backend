@@ -21,6 +21,8 @@ public class AuthenticationResponse {
     private String lastname;
 
 
+//    private Integer userid;
+
 
 
     private String message;

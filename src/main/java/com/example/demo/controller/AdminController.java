@@ -26,6 +26,8 @@ public class AdminController {
         return "POST :: ADMIN";
     }
 
+
+
     @PutMapping
     @PreAuthorize("hasAuthority('admin:update')")
     public String put(){
@@ -37,5 +39,10 @@ public class AdminController {
     public String delete(){
         return "DELETE :: ADMIN";
     }
+
+
+
+
+
 
 }

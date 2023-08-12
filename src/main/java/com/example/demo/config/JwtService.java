@@ -84,6 +84,8 @@ public class JwtService {
                 .orElseThrow();
 
         extraClaims.put("role",user.role.toString());
+
+
         return buildToken(
                 extraClaims,
                 userDetails,
