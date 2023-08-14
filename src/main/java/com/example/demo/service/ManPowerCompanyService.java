@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional
 public interface ManPowerCompanyService {
 
-    public ResponseEmployeeDetailsDto addEmployee(RequestEmployeeDetailsDto req) throws UserException;
+    ResponseEmployeeDetailsDto addEmployee(RequestEmployeeDetailsDto req) throws UserException;
 
     ResponseEntity<List<ResponseEmployeeDetailsDto>> getallEmployees(RequestUserdetails req) throws UserException;
 
