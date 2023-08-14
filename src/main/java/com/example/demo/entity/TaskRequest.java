@@ -13,14 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "new_task_request")
+@Table(name = "task_request")
 public class TaskRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String propertyId;
     private String location;
     private String task;
     private Double price;
@@ -36,6 +35,11 @@ public class TaskRequest {
             scheduleDate = LocalDate.now();  // Set the default value to current date
         }
     }
+
+
+    @ManyToOne
+    @JoinColumn(name = "property_id")
+    private Property property;
 
 
 }
