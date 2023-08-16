@@ -25,12 +25,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthenticationService {
 
@@ -117,13 +119,25 @@ public class AuthenticationService {
                     .email(request.getEmail())
                     .password(encoder.encode(request.getPassword()))
                     .role(request.getRole())
+//                    .propertyOwner(propertyOwner)
                     .build();
 
-            //take the saved user into the savedUser variable
-           var savedUser = repository.save(user);
+//
+//        User user = new User();
+//        user.setFirstname(request.getFirstname());
+//        user.setLastname(request.getLastname());
+//        user.setEmail(request.getEmail());
+//        user.setPassword(encoder.encode(request.getPassword()));
+//        user.setRole(request.getRole());
 
-           propertyOwner.setUser(savedUser);
-        propertyOwnerRepository.save(propertyOwner);
+
+        propertyOwner.setUser(user);
+        user.setPropertyOwner(propertyOwner);
+            //take the saved user into the savedUser variable
+           User savedUser = repository.save(user);
+
+//           propertyOwner.setUser(savedUser);
+//        propertyOwnerRepository.save(propertyOwner);
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);

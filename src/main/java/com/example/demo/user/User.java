@@ -42,6 +42,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
+//    @OneToOne(mappedBy = "user" ,cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
     @OneToOne(mappedBy = "user")
     private PropertyOwner propertyOwner;
 

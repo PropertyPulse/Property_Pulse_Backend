@@ -37,6 +37,8 @@ public class PropertyOwner  {
     private String district;
     private String gender;
 
+
+//    @MapsId
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
