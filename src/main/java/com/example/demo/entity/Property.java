@@ -28,20 +28,24 @@ public class Property {
     private List<TaskRequest> taskRequests = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private List<PayablePayemnts> payablePayemnts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+
+
+
+
     private LocalDate accepted_date;
     private LocalDate returned_date;
 
     private String address;
-
+    @Enumerated(EnumType.STRING)
     private PropertyType type;
 
     private String location;
 //    documents should be implemented
-
-
-
-
-
 
 
 

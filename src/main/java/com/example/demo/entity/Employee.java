@@ -29,6 +29,8 @@ public class Employee {
     private String district;
 
 
+
+
     @ElementCollection
     @CollectionTable(name = "employee_skills", joinColumns = @JoinColumn(name = "employee_id"))
     @Column(name = "skill")
@@ -38,6 +40,11 @@ public class Employee {
     @JoinColumn(name = "manpower_company_id")
     private ManPowerCompany manPowerCompany;
 
+    private boolean isAssigned ;
+    @PrePersist
+    public void prePersist() {
+        isAssigned = false; // Set isAssigned to false by default
+    }
 
 
 

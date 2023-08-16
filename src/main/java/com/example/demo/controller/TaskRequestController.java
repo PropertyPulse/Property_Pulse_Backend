@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.responseDto.ResponseNewTaskRequestDto;
 import com.example.demo.entity.TaskRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.TaskRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,11 @@ import java.util.List;
 @RequestMapping("/api/v1/task-requests")
 public class TaskRequestController {
 
+    private final TaskRequestService taskRequestService;
+
+    public TaskRequestController(TaskRequestService taskRequestService) {
+        this.taskRequestService = taskRequestService;
+    }
 
     @GetMapping("/get")
     public ResponseEntity<String> getTaskRequests() {
@@ -28,4 +34,10 @@ public class TaskRequestController {
     }
 
     // Add more endpoints for updating, deleting, etc.
+
+    @GetMapping("/getAllnewtaskrequests")
+    public ResponseEntity<List<ResponseNewTaskRequestDto>> getAllnewTaskRequests() {
+        List<ResponseNewTaskRequestDto> responseDtos = taskRequestService.getAllNewTaskRequests();
+        return ResponseEntity.ok(responseDtos);
+    }
 }
