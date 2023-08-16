@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestAssignDto;
 import com.example.demo.dto.requestDto.RequestEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUpdateEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUserdetails;
@@ -7,9 +8,12 @@ import com.example.demo.dto.responseDto.ResponseEmployeeDetailsDto;
 import com.example.demo.dto.responseDto.ResponseUpdateEmployeeDetailsDto;
 import com.example.demo.entity.Employee;
 import com.example.demo.entity.ManPowerCompany;
+import com.example.demo.entity.TaskRequest;
+import com.example.demo.entity.TaskStatus;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.ManPowerCompanyRepository;
+import com.example.demo.repository.TaskRequestRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -25,12 +29,13 @@ public class ManPowerCompanyServiceImpl implements ManPowerCompanyService {
 
     private final EmployeeRepository employeeRepository;
     private final ManPowerCompanyRepository manPowerCompanyRepository;
-
+    private final TaskRequestRepository taskRequestRepository;
     private final UserRepository userRepository;
 
-    public ManPowerCompanyServiceImpl(EmployeeRepository employeeRepository, ManPowerCompanyRepository manPowerCompanyRepository, UserRepository userRepository) {
+    public ManPowerCompanyServiceImpl(EmployeeRepository employeeRepository, ManPowerCompanyRepository manPowerCompanyRepository, TaskRequestRepository taskRequestRepository, UserRepository userRepository) {
         this.employeeRepository = employeeRepository;
         this.manPowerCompanyRepository = manPowerCompanyRepository;
+        this.taskRequestRepository = taskRequestRepository;
         this.userRepository = userRepository;
     }
 
@@ -107,6 +112,19 @@ public class ManPowerCompanyServiceImpl implements ManPowerCompanyService {
         return ResponseEntity.ok(employeeDetailsDtos);
     }
 
+    @Override
+    public ResponseEntity<List<ResponseEmployeeDetailsDto>> getallavailableEmployees() throws UserException {
+
+        List<Employee> employees = employeeRepository.findByIsAssignedFalse();
+
+        List<ResponseEmployeeDetailsDto> employeeDetailsDtos = employees.stream()
+                .map(this::convertToEmployeeDetailsDto)
+                .collect(Collectors.toList());
+
+
+        return ResponseEntity.ok(employeeDetailsDtos);
+    }
+
     private ResponseEmployeeDetailsDto convertToEmployeeDetailsDto(Employee employee) {
         ResponseEmployeeDetailsDto employeeDetailsDto = new ResponseEmployeeDetailsDto();
         employeeDetailsDto.setId(employee.getId());
@@ -133,8 +151,8 @@ public class ManPowerCompanyServiceImpl implements ManPowerCompanyService {
         existingEmployee.setNic(req.getNic());
         existingEmployee.setAddress(req.getAddress());
         existingEmployee.setSkills(req.getSkills());
-
-        System.out.println(req.getSkills());
+//
+//        System.out.println(req.getSkills());
 
         // ... Update other properties
 
@@ -169,6 +187,25 @@ public class ManPowerCompanyServiceImpl implements ManPowerCompanyService {
         employeeRepository.delete(existingEmployee);
 
         return "Employee deleted successfully";
+    }
+
+    @Override
+    public ResponseEntity<String> assignEmployee(RequestAssignDto req) throws UserException {
+
+        var taskrequest = taskRequestRepository.findById(req.getRequestid());
+
+        TaskRequest taskreq = taskrequest.get();
+
+        taskreq.setStatus(TaskStatus.ACCEPTED);
+        taskreq.setAssignedEmployeeId(req.getEmpid());
+        taskreq.setManpowerCompany_feedback(req.getFeedback());
+        taskreq.setManpowerCompanytask_requiredDate(req.getRequiredDate());
+        taskreq.setManpowerCompanytask_startDate(req.getStartDate());
+
+
+        taskRequestRepository.save(taskreq);
+
+        return ResponseEntity.ok("Employee Assigned Successfully");
     }
 
 

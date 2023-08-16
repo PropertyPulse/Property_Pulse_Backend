@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.auth.RegisterRequest;
+import com.example.demo.dto.requestDto.RequestAssignDto;
 import com.example.demo.dto.requestDto.RequestEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUpdateEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUserdetails;
@@ -22,8 +23,11 @@ public interface ManPowerCompanyService {
     ResponseEmployeeDetailsDto addEmployee(RequestEmployeeDetailsDto req) throws UserException;
 
     ResponseEntity<List<ResponseEmployeeDetailsDto>> getallEmployees(RequestUserdetails req) throws UserException;
+    ResponseEntity<List<ResponseEmployeeDetailsDto>> getallavailableEmployees() throws UserException;
 
     ResponseUpdateEmployeeDetailsDto updateEmployee(Integer employeeId, RequestUpdateEmployeeDetailsDto req) throws UserException;
 
     String deleteEmployee(Integer employeeId) throws UserException;
+
+    ResponseEntity<String> assignEmployee(RequestAssignDto req) throws UserException;
 }

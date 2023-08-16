@@ -15,6 +15,7 @@ public class ResponseEmployeeDetailsDto {
     private String nic;
     private String contactno;
     private String district;
+    private boolean isAssigned;
     private List<String> skills;
 
 

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.requestDto.RequestAssignDto;
 import com.example.demo.dto.requestDto.RequestEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUpdateEmployeeDetailsDto;
 import com.example.demo.dto.requestDto.RequestUserdetails;
@@ -81,6 +82,19 @@ public class ManPowerCompanyController {
 
         return ResponseEntity.ok(responseMessage);
     }
+
+
+    @GetMapping("/getallavailableemployees")
+    public ResponseEntity<List<ResponseEmployeeDetailsDto>> getallAvailableEmployees() throws UserException {
+        return manPowerCompanyService.getallavailableEmployees();
+    }
+
+
+    @PostMapping("/assignemployee")
+    public ResponseEntity<String> assignEmployee(@RequestBody RequestAssignDto req) throws UserException {
+        return manPowerCompanyService.assignEmployee(req);
+    }
+
 
 
 
