@@ -131,13 +131,13 @@ public class AuthenticationService {
 //        user.setRole(request.getRole());
 
 
-        propertyOwner.setUser(user);
-        user.setPropertyOwner(propertyOwner);
+//        propertyOwner.setUser(user);
+//        user.setPropertyOwner(propertyOwner);
             //take the saved user into the savedUser variable
-           User savedUser = repository.save(user);
+           var savedUser = repository.save(user);
 
-//           propertyOwner.setUser(savedUser);
-//        propertyOwnerRepository.save(propertyOwner);
+           propertyOwner.setUser(savedUser);
+        propertyOwnerRepository.save(propertyOwner);
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);

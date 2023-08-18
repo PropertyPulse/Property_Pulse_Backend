@@ -16,6 +16,7 @@ import static com.example.demo.user.Permission.*;
 public enum Role {
 //no permisions for the user
     USER(Collections.emptySet()),
+    VE(Collections.emptySet()),
     ADMIN(
             Set.of(
                     ADMIN_READ,
