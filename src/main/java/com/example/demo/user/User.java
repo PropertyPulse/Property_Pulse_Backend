@@ -65,7 +65,7 @@ public class User implements UserDetails {
     @PrimaryKeyJoinColumn
     private TopManager topManager;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ManPowerCompany manPowerCompany;
 
 
