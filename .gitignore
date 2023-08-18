@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### transactionalyml ###
+/src/main/resources/application.yml
+

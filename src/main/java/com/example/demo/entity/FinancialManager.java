@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -19,17 +20,21 @@ import javax.validation.constraints.NotNull;
 public class FinancialManager {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
-
-    @NotNull(message = "Firstname is required")
-    private String firstname;
-    @NotNull(message = "Lastname is required")
-    private String lastname;
 
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @MapsId
+    @JoinColumn(name = "id")
     private User user;
+
+
+
+    private String address;
+    private String district;
+    private Integer phone;
+    private String nic;
+    private LocalDate dob;
 
 }

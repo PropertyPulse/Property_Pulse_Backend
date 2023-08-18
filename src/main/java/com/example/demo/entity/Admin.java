@@ -19,18 +19,13 @@ import javax.validation.constraints.NotNull;
 public class Admin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
-
-    @NotNull(message = "Firstname is required")
-    private String firstname;
-    @NotNull(message = "Lastname is required")
-    private String lastname;
 
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @MapsId
+    @JoinColumn(name = "id")
     private User user;
-
 
 }

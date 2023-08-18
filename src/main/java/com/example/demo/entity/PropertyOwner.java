@@ -20,13 +20,15 @@ import java.util.Date;
 public class PropertyOwner  {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
-    @NotNull(message = "Firstname is required")
-    private String firstname;
-    @NotNull(message = "Lastname is required")
-    private String lastname;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private User user;
+
     @NotNull(message = "Address is required")
     private String address;
     @NotNull(message = "nic is required")
@@ -37,8 +39,8 @@ public class PropertyOwner  {
     private String district;
     private String gender;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+
+
+
 
 }

@@ -42,7 +42,7 @@ public class TaskRequestServiceImpl implements TaskRequestService {
         responseDto.setTask(taskRequest.getTask());
         responseDto.setEstimatedPrice(taskRequest.getEstimatedprice());
         responseDto.setScheduleDate(taskRequest.getScheduleDate());
-        responseDto.setMoreInfo(taskRequest.getTaskSupervisor().getContactno());
+        responseDto.setMoreInfo(taskRequest.getTaskSupervisor().getPhone());
         responseDto.setTaskStatus(taskRequest.getStatus());
 
 

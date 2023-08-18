@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.auth.RegisterRequest;
 import com.example.demo.dto.requestDto.RequestUserdetails;
 import com.example.demo.dto.responseDto.ResponseTsdetails;
 import com.example.demo.entity.TaskSupervisor;
@@ -35,9 +34,9 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             User user = userOptional.get();
 
             TaskSupervisor taskSupervisor = taskSupervisorRepository.findTaskSupervisorByUser(user);
-
-            responseTsdetails.setFirstname(taskSupervisor.getFirstname());
-            responseTsdetails.setLastname(taskSupervisor.getLastname());
+//
+//            responseTsdetails.setFirstname(taskSupervisor.getFirstname());
+//            responseTsdetails.setLastname(taskSupervisor.getLastname());
         }
 
 
