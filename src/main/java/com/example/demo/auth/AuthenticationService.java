@@ -45,7 +45,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final PropertyOwnerRepository propertyOwnerRepository;
 
-    
+
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) throws UserException {
 
 //check existing users
@@ -111,33 +112,33 @@ public class AuthenticationService {
 
 
 
-
-//        create the new user registration and save it to the database and return the token out of it
-            var user = User.builder()
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .email(request.getEmail())
-                    .password(encoder.encode(request.getPassword()))
-                    .role(request.getRole())
-//                    .propertyOwner(propertyOwner)
-                    .build();
-
 //
-//        User user = new User();
-//        user.setFirstname(request.getFirstname());
-//        user.setLastname(request.getLastname());
-//        user.setEmail(request.getEmail());
-//        user.setPassword(encoder.encode(request.getPassword()));
-//        user.setRole(request.getRole());
+////        create the new user registration and save it to the database and return the token out of it
+//            var user = User.builder()
+//                    .firstname(request.getFirstname())
+//                    .lastname(request.getLastname())
+//                    .email(request.getEmail())
+//                    .password(encoder.encode(request.getPassword()))
+//                    .role(request.getRole())
+////                    .propertyOwner(propertyOwner)
+//                    .build();
 
 
-//        propertyOwner.setUser(user);
-//        user.setPropertyOwner(propertyOwner);
+        User user = new User();
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
+
+        propertyOwner.setUser(user);
+        user.setPropertyOwner(propertyOwner);
             //take the saved user into the savedUser variable
            var savedUser = repository.save(user);
 
-           propertyOwner.setUser(savedUser);
-        propertyOwnerRepository.save(propertyOwner);
+
+//           propertyOwner.setUser(savedUser);
+//        propertyOwnerRepository.save(propertyOwner);
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
