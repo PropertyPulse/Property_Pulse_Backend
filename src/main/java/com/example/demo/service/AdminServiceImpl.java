@@ -1,5 +1,7 @@
 package com.example.demo.service;
-
+import com.example.demo.auth.AuthenticationService;
+import com.example.demo.config.*;
+import com.example.demo.auth.AuthenticationResponse;
 import com.example.demo.dto.requestDto.RequestAddnewInternalUserDto;
 import com.example.demo.entity.FinancialManager;
 import com.example.demo.entity.TaskSupervisor;
@@ -17,10 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminServiceImpl implements AdminService {
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final AuthenticationService  authenticationService;
 
-    public AdminServiceImpl(PasswordEncoder encoder, UserRepository userRepository) {
+    public AdminServiceImpl(PasswordEncoder encoder, UserRepository userRepository, JwtService jwtService, AuthenticationService authenticationService) {
         this.encoder = encoder;
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -49,6 +55,11 @@ public class AdminServiceImpl implements AdminService {
         user.setTopManager(topManager);
 
         var saveduser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+
+        authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
 
@@ -81,6 +92,17 @@ public class AdminServiceImpl implements AdminService {
         user.setFinancialManager(financialmanager);
 
         var saveduser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+
+        authenticationService.saveUserToken(saveduser, jwtToken);
+//        return AuthenticationResponse.builder()
+//                .accessToken(jwtToken)
+//                .refreshToken(refreshToken)
+//                .firstname(saveduser.getFirstname())
+//                .lastname(saveduser.getLastname())
+//                .build();
 
         return "User added successfully";
 
@@ -116,6 +138,11 @@ public class AdminServiceImpl implements AdminService {
         user.setTaskSupervisor(tasksupervisor);
 
         var saveduser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+
+        authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
 
@@ -148,6 +175,11 @@ public class AdminServiceImpl implements AdminService {
         user.setTaskSupervisor(tasksupervisor);
 
         var saveduser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+
+        authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
     }
