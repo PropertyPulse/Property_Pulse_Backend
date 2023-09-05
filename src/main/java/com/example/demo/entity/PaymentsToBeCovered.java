@@ -7,33 +7,28 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "recievable_payemnts")
-public class ReceivablePayment {
+@Table(name = "PaymentstobeCovered")
+public class PaymentsToBeCovered {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "property_id")
-    private Property property;
-
-    @ManyToOne
-    @JoinColumn(name = "task_supervisor_id")
-    private TaskSupervisor taskSupervisor;
-
-
-
     private Double amount;
     private String description;
 
 
+    private boolean isPaid;
+
     @Enumerated(EnumType.STRING)
-    private RecievablePaymentType type;
-    
+    private PayablePaymentType type;
+
+
 }

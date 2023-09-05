@@ -42,8 +42,8 @@ public class TaskSupervisor {
     @OneToMany(mappedBy = "taskSupervisor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskRequest> taskRequests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "taskSupervisor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+//    @OneToMany(mappedBy = "taskSupervisor", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 
 
 }

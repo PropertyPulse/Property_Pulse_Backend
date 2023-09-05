@@ -31,8 +31,8 @@ public class ManPowerCompany {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "manPowerCompany", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Employee> employees;
+//    @OneToMany(mappedBy = "manPowerCompany", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Employee> employees;
 
 
 
