@@ -67,12 +67,16 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ManPowerCompany manPowerCompany;
 
+    @OneToMany(mappedBy = "complainant")
+    private List<Complaint> complaints;
 
-    //    returns the authorities of the user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
     }
+
+
+    //    returns the authorities of the user
 
     @Override
     public String getUsername() {

@@ -44,6 +44,9 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private PropertyType type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_owner_id")
+    private PropertyOwner propertyOwner;
     private String location;
 //    documents should be implemented
 
