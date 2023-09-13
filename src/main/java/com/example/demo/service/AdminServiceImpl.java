@@ -1,8 +1,7 @@
 package com.example.demo.service;
 import com.example.demo.auth.AuthenticationService;
 import com.example.demo.config.*;
-import com.example.demo.auth.AuthenticationResponse;
-import com.example.demo.dto.requestDto.RequestAddnewInternalUserDto;
+import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
 import com.example.demo.entity.FinancialManager;
 import com.example.demo.entity.TaskSupervisor;
 import com.example.demo.entity.TopManager;
@@ -31,15 +30,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public String addTopmanager(RequestAddnewInternalUserDto req) throws UserException {
+    public String addTopManager(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
 
             throw new UserException("User with this email already exists");
         }
 
         User user = new User();
-        user.setFirstname(req.getUsername());
-        user.setLastname(" ");
+        user.setFirstname(req.getFirstName());
+        user.setLastname(req.getLastName());
         user.setRole(Role.TOPMANAGER);
         user.setEmail(req.getEmail());
         user.setPassword(encoder.encode(req.getPassword()));
@@ -48,9 +47,10 @@ public class AdminServiceImpl implements AdminService {
         topManager.setUser(user);
         topManager.setDob(req.getDob());
         topManager.setNic(req.getNic());
-        topManager.setPhone(req.getPhone());
+        topManager.setContactNo(req.getContactNo());
         topManager.setDistrict(req.getDistrict());
         topManager.setAddress(req.getAddress());
+        topManager.setGender(req.getGender());
 
         user.setTopManager(topManager);
 
@@ -58,25 +58,23 @@ public class AdminServiceImpl implements AdminService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-
         authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
-
 
     }
 
     @Override
     @Transactional
-    public String addFinancemanager(RequestAddnewInternalUserDto req) throws UserException {
+    public String addFinanceManager(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
 
             throw new UserException("User with this email already exists");
         }
 
         User user = new User();
-        user.setFirstname(req.getUsername());
-        user.setLastname(" ");
+        user.setFirstname(req.getFirstName());
+        user.setLastname(req.getLastName());
         user.setRole(Role.FINANCIALMANAGER);
         user.setEmail(req.getEmail());
         user.setPassword(encoder.encode(req.getPassword()));
@@ -85,7 +83,7 @@ public class AdminServiceImpl implements AdminService {
         financialmanager.setUser(user);
         financialmanager.setDob(req.getDob());
         financialmanager.setNic(req.getNic());
-        financialmanager.setPhone(req.getPhone());
+        financialmanager.setPhone(req.getContactNo());
         financialmanager.setDistrict(req.getDistrict());
         financialmanager.setAddress(req.getAddress());
 
@@ -106,22 +104,20 @@ public class AdminServiceImpl implements AdminService {
 
         return "User added successfully";
 
-
     }
 
     @Override
     @Transactional
-    public String addTaskSupervisor(RequestAddnewInternalUserDto req) throws UserException {
+    public String addTaskSupervisor(RequestAddNewInternalUserDto req) throws UserException {
 
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
 
             throw new UserException("User with this email already exists");
         }
 
-
         User user = new User();
-        user.setFirstname(req.getUsername());
-        user.setLastname(" ");
+        user.setFirstname(req.getFirstName());
+        user.setLastname(req.getLastName());
         user.setRole(Role.TASKSUPERVISOR);
         user.setEmail(req.getEmail());
 
@@ -131,7 +127,7 @@ public class AdminServiceImpl implements AdminService {
         tasksupervisor.setUser(user);
         tasksupervisor.setDob(req.getDob());
         tasksupervisor.setNic(req.getNic());
-        tasksupervisor.setPhone(req.getPhone());
+        tasksupervisor.setPhone(req.getContactNo());
         tasksupervisor.setDistrict(req.getDistrict());
         tasksupervisor.setAddress(req.getAddress());
 
@@ -141,25 +137,23 @@ public class AdminServiceImpl implements AdminService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-
         authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
-
 
     }
 
     @Override
     @Transactional
-    public String addValuationExpert(RequestAddnewInternalUserDto req) throws UserException {
+    public String addValuationExpert(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
 
             throw new UserException("User with this email already exists");
         }
 
         User user = new User();
-        user.setFirstname(req.getUsername());
-        user.setLastname(" ");
+        user.setFirstname(req.getFirstName());
+        user.setLastname(req.getLastName());
         user.setRole(Role.VE);
         user.setEmail(req.getEmail());
         user.setPassword(encoder.encode(req.getPassword()));
@@ -168,7 +162,7 @@ public class AdminServiceImpl implements AdminService {
         tasksupervisor.setUser(user);
         tasksupervisor.setDob(req.getDob());
         tasksupervisor.setNic(req.getNic());
-        tasksupervisor.setPhone(req.getPhone());
+        tasksupervisor.setPhone(req.getContactNo());
         tasksupervisor.setDistrict(req.getDistrict());
         tasksupervisor.setAddress(req.getAddress());
 
@@ -177,7 +171,6 @@ public class AdminServiceImpl implements AdminService {
         var saveduser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-
 
         authenticationService.saveUserToken(saveduser, jwtToken);
 

@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -27,13 +26,14 @@ public class TopManager {
     @JoinColumn(name = "id")
     private User user;
 
-
+    private String firstName;
+    private String lastName;
     private String address;
     private String district;
-    private Integer phone;
+    private Integer contactNo;
     private String nic;
     private LocalDate dob;
-
+    private Gender gender;
 
 }
 
