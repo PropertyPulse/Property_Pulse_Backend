@@ -68,7 +68,6 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public String addFinanceManager(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
-
             throw new UserException("User with this email already exists");
         }
 
@@ -83,16 +82,16 @@ public class AdminServiceImpl implements AdminService {
         financialmanager.setUser(user);
         financialmanager.setDob(req.getDob());
         financialmanager.setNic(req.getNic());
-//        financialmanager.setPhone(req.getContactNo());
+        financialmanager.setContactNo(req.getContactNo());
         financialmanager.setDistrict(req.getDistrict());
         financialmanager.setAddress(req.getAddress());
+        financialmanager.setGender(req.getGender());
 
         user.setFinancialManager(financialmanager);
 
         var saveduser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-
 
         authenticationService.saveUserToken(saveduser, jwtToken);
 //        return AuthenticationResponse.builder()
@@ -111,7 +110,6 @@ public class AdminServiceImpl implements AdminService {
     public String addTaskSupervisor(RequestAddNewInternalUserDto req) throws UserException {
 
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
-
             throw new UserException("User with this email already exists");
         }
 
