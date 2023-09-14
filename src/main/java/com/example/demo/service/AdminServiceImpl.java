@@ -120,16 +120,17 @@ public class AdminServiceImpl implements AdminService {
         user.setLastname(req.getLastName());
         user.setRole(Role.TASKSUPERVISOR);
         user.setEmail(req.getEmail());
-
         user.setPassword(encoder.encode(req.getPassword()));
 
         TaskSupervisor tasksupervisor = new TaskSupervisor();
         tasksupervisor.setUser(user);
         tasksupervisor.setDob(req.getDob());
         tasksupervisor.setNic(req.getNic());
-//        tasksupervisor.setPhone(req.getContactNo());
+        tasksupervisor.setContactNo(req.getContactNo());
         tasksupervisor.setDistrict(req.getDistrict());
+        tasksupervisor.setNearestTown(req.getNearestTown());
         tasksupervisor.setAddress(req.getAddress());
+        tasksupervisor.setGender(req.getGender());
 
         user.setTaskSupervisor(tasksupervisor);
 

@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tasksupervisor")
+@Table(name = "task_supervisor")
 public class TaskSupervisor {
 
     @Id
@@ -32,10 +31,12 @@ public class TaskSupervisor {
 
 
     private String address;
+    private String nearestTown;
     private String district;
-    private Integer phone;
+    private String contactNo;
     private String nic;
     private LocalDate dob;
+    private Gender gender;
 
 
 
