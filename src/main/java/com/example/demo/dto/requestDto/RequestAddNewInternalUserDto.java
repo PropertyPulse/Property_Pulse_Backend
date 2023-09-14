@@ -14,7 +14,7 @@ public class RequestAddNewInternalUserDto {
     private String address;
     private String nearestTown;
     private String district;
-    private Integer contactNo;
+    private String contactNo;
     private String email;
     private String nic;
     private LocalDate dob;

@@ -26,11 +26,9 @@ public class TopManager {
     @JoinColumn(name = "id")
     private User user;
 
-    private String firstName;
-    private String lastName;
     private String address;
     private String district;
-    private Integer contactNo;
+    private String contactNo;
     private String nic;
     private LocalDate dob;
     private Gender gender;

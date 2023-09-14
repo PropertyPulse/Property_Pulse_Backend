@@ -5,6 +5,7 @@ import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
 import com.example.demo.entity.FinancialManager;
 import com.example.demo.entity.TaskSupervisor;
 import com.example.demo.entity.TopManager;
+import com.example.demo.entity.ValuationExpert;
 import com.example.demo.exception.UserException;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -32,7 +33,6 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public String addTopManager(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
-
             throw new UserException("User with this email already exists");
         }
 
@@ -83,7 +83,7 @@ public class AdminServiceImpl implements AdminService {
         financialmanager.setUser(user);
         financialmanager.setDob(req.getDob());
         financialmanager.setNic(req.getNic());
-        financialmanager.setPhone(req.getContactNo());
+//        financialmanager.setPhone(req.getContactNo());
         financialmanager.setDistrict(req.getDistrict());
         financialmanager.setAddress(req.getAddress());
 
@@ -127,7 +127,7 @@ public class AdminServiceImpl implements AdminService {
         tasksupervisor.setUser(user);
         tasksupervisor.setDob(req.getDob());
         tasksupervisor.setNic(req.getNic());
-        tasksupervisor.setPhone(req.getContactNo());
+//        tasksupervisor.setPhone(req.getContactNo());
         tasksupervisor.setDistrict(req.getDistrict());
         tasksupervisor.setAddress(req.getAddress());
 
@@ -147,7 +147,6 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public String addValuationExpert(RequestAddNewInternalUserDto req) throws UserException {
         if(userRepository.findByEmail(req.getEmail()).isPresent()){
-
             throw new UserException("User with this email already exists");
         }
 
@@ -158,15 +157,17 @@ public class AdminServiceImpl implements AdminService {
         user.setEmail(req.getEmail());
         user.setPassword(encoder.encode(req.getPassword()));
 
-        TaskSupervisor tasksupervisor = new TaskSupervisor();
-        tasksupervisor.setUser(user);
-        tasksupervisor.setDob(req.getDob());
-        tasksupervisor.setNic(req.getNic());
-        tasksupervisor.setPhone(req.getContactNo());
-        tasksupervisor.setDistrict(req.getDistrict());
-        tasksupervisor.setAddress(req.getAddress());
+        ValuationExpert valuationExpert = new ValuationExpert();
+        valuationExpert.setUser(user);
+        valuationExpert.setDob(req.getDob());
+        valuationExpert.setNic(req.getNic());
+        valuationExpert.setContactNo(req.getContactNo());
+        valuationExpert.setDistrict(req.getDistrict());
+        valuationExpert.setNearestTown(req.getNearestTown());
+        valuationExpert.setAddress(req.getAddress());
+        valuationExpert.setGender(req.getGender());
 
-        user.setTaskSupervisor(tasksupervisor);
+        user.setValuationExpert(valuationExpert);
 
         var saveduser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

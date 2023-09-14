@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-
 import com.example.demo.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "financial_manager")
+@Table(name = "valuation_expert")
 public class ValuationExpert {
 
     @Id
@@ -28,12 +27,12 @@ public class ValuationExpert {
     @JoinColumn(name = "id")
     private User user;
 
-
-
     private String address;
+    private String nearestTown;
     private String district;
-    private Integer phone;
+    private String contactNo;
     private String nic;
     private LocalDate dob;
+    private Gender gender;
 
 }
