@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.requestDto.RequestAddnewInternalUserDto;
+import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.AdminService;
 import org.springframework.http.MediaType;
@@ -23,8 +23,6 @@ public class AdminController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<String> get(){
-        // Replace the following string with an actual object you want to return as JSON
-        // You can create a class representing the response data and return an instance of that class.
         String responseData = "GET :: ADMIN";
         return ResponseEntity.ok(responseData);
     }
@@ -50,26 +48,26 @@ public class AdminController {
     }
 
 
-    @PostMapping("/addTopmanager")
+    @PostMapping("/addTopManager")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> addTopmanager(@RequestBody RequestAddnewInternalUserDto req ) throws UserException {
-        return ResponseEntity.ok(adminService.addTopmanager(req));
+    public ResponseEntity<String> addTopManager(@RequestBody RequestAddNewInternalUserDto req ) throws UserException {
+        return ResponseEntity.ok(adminService.addTopManager(req));
     }
 
 
-    @PostMapping("/addFinancemanager")
+    @PostMapping("/addFinanceManager")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> addFinancemanager(@RequestBody RequestAddnewInternalUserDto req ) throws UserException {
-        return ResponseEntity.ok(adminService.addFinancemanager(req));
+    public ResponseEntity<String> addFinanceManager(@RequestBody RequestAddNewInternalUserDto req ) throws UserException {
+        return ResponseEntity.ok(adminService.addFinanceManager(req));
     }
     @PostMapping("/addTaskSupervisor")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> addTaskSupervisor(@RequestBody RequestAddnewInternalUserDto req ) throws UserException {
+    public ResponseEntity<String> addTaskSupervisor(@RequestBody RequestAddNewInternalUserDto req ) throws UserException {
         return ResponseEntity.ok(adminService.addTaskSupervisor(req));
     }
     @PostMapping("/addValuationExpert")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> addValuationExpert(@RequestBody RequestAddnewInternalUserDto req ) throws UserException {
+    public ResponseEntity<String> addValuationExpert(@RequestBody RequestAddNewInternalUserDto req ) throws UserException {
         return ResponseEntity.ok(adminService.addValuationExpert(req));
     }
 

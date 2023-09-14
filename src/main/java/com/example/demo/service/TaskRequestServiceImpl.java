@@ -4,7 +4,6 @@ import com.example.demo.dto.responseDto.ResponseNewTaskRequestDto;
 import com.example.demo.entity.TaskRequest;
 import com.example.demo.entity.TaskStatus;
 import com.example.demo.repository.TaskRequestRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +41,7 @@ public class TaskRequestServiceImpl implements TaskRequestService {
         responseDto.setTask(taskRequest.getTask());
         responseDto.setEstimatedPrice(taskRequest.getEstimatedprice());
         responseDto.setScheduleDate(taskRequest.getScheduleDate());
-        responseDto.setMoreInfo(taskRequest.getTaskSupervisor().getPhone());
+//        responseDto.setMoreInfo(taskRequest.getTaskSupervisor().getContactNo());
         responseDto.setTaskStatus(taskRequest.getStatus());
 
 

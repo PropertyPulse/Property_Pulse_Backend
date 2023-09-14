@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.requestDto.RequestAddnewInternalUserDto;
+import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
 import com.example.demo.exception.UserException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -9,16 +9,10 @@ import org.springframework.stereotype.Service;
 @Transactional
 public interface AdminService {
 
-    String addTopmanager(RequestAddnewInternalUserDto req) throws UserException;
-    String addFinancemanager(RequestAddnewInternalUserDto req) throws UserException;
-
-
-    String addTaskSupervisor(RequestAddnewInternalUserDto req) throws UserException;
-    String addValuationExpert(RequestAddnewInternalUserDto req) throws UserException;
-
-
-//    String addInsurancemanager(RequestAddnewInternalUserDto req) throws UserException;
-//    String addInsurancemanager(RequestAddnewInternalUserDto req) throws UserException;
+    String addTopManager(RequestAddNewInternalUserDto req) throws UserException;
+    String addFinanceManager(RequestAddNewInternalUserDto req) throws UserException;
+    String addTaskSupervisor(RequestAddNewInternalUserDto req) throws UserException;
+    String addValuationExpert(RequestAddNewInternalUserDto req) throws UserException;
 
 
 }
