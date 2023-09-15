@@ -32,13 +32,14 @@ public class Property {
 
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-    private List<PayablePayemnts> payablePayemnts = new ArrayList<>();
+    private List<RecivedPayment> payablePayemnts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+//    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+//    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_owner_id")
+    private PropertyOwner propertyOwner;
 
     private LocalDate accepted_date;
     private LocalDate returned_date;
@@ -92,10 +93,8 @@ public class Property {
 
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
-
-    @ManyToOne
-    @JoinColumn(name = "property_owner")
-    private PropertyOwner propertyOwner;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
 
 }

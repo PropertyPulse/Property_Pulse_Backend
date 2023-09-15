@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,24 +14,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "payable_payemnts")
-public class PayablePayemnts {
+@Table(name = "Manpower_Company_Payments")
+public class ManpowerCompanyPayments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "property_id")
-    private Property property;
-
-
     private Double amount;
-    private String description;
-    private LocalDate duedate;
 
-    @Enumerated(EnumType.STRING)
-    private PayablePaymentType type;
+    private LocalDate date;
+
+    private boolean isPaid;
+
 
 }
