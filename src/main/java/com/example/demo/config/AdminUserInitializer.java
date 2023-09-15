@@ -6,6 +6,7 @@ import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +14,11 @@ public class AdminUserInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
 
-    public AdminUserInitializer(UserRepository userRepository) {
+    private final PasswordEncoder encoder;
+
+    public AdminUserInitializer(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
     @Override
@@ -22,7 +26,7 @@ public class AdminUserInitializer implements CommandLineRunner {
 
         User user = new User();
         user.setEmail("admin@gmail.com");
-        user.setPassword("admin1234");
+        user.setPassword(encoder.encode("admin1234"));
         user.setRole(Role.ADMIN);
 
         Admin userAdmin = new Admin();
