@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 @Data
 @Builder
@@ -35,7 +34,7 @@ public class PropertyOwner  {
     private String nic;
 
     @Pattern(regexp = "^\\d{10}$", message = "invalid mobile number entered")
-    private String telephone;
+    private String ContactNo;
     private String district;
     private String gender;
 
