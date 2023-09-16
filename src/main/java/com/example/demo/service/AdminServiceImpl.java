@@ -2,10 +2,8 @@ package com.example.demo.service;
 import com.example.demo.auth.AuthenticationService;
 import com.example.demo.config.*;
 import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
-import com.example.demo.entity.FinancialManager;
-import com.example.demo.entity.TaskSupervisor;
-import com.example.demo.entity.TopManager;
-import com.example.demo.entity.ValuationExpert;
+import com.example.demo.dto.responseDto.ResponseViewUsersDto;
+import com.example.demo.entity.*;
 import com.example.demo.exception.UserException;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -13,6 +11,9 @@ import com.example.demo.user.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -175,6 +176,60 @@ public class AdminServiceImpl implements AdminService {
         authenticationService.saveUserToken(saveduser, jwtToken);
 
         return "User added successfully";
+    }
+
+    @Override
+    @Transactional
+    public List<ResponseViewUsersDto> viewUsers() throws UserException {
+        List<User> users = userRepository.findAll();
+        List<ResponseViewUsersDto> responseViewUsersDtos = users.stream()
+                .map(this::mapUserToDto)
+                .collect(Collectors.toList());
+        return responseViewUsersDtos;
+    }
+
+    private ResponseViewUsersDto mapUserToDto (User user) {
+        ResponseViewUsersDto dto = new ResponseViewUsersDto();
+
+        dto.setUserId(user.getId());
+        dto.setUserName(user.getFirstname());
+        dto.setEmail(user.getEmail());
+        dto.setUserRole(user.getRole());
+
+        switch (user.getRole()) {
+            case TASKSUPERVISOR:
+                TaskSupervisor taskSupervisor = user.getTaskSupervisor();
+                if (taskSupervisor != null) {
+                    dto.setContactNo(taskSupervisor.getContactNo());
+                }
+                break;
+            case FINANCIALMANAGER:
+                FinancialManager financialManager = user.getFinancialManager();
+                if (financialManager != null) {
+                    dto.setContactNo(financialManager.getContactNo());
+                }
+            case TOPMANAGER:
+                TopManager topManager = user.getTopManager();
+                if (topManager != null) {
+                    dto.setContactNo(topManager.getContactNo());
+                }
+            case PROPERTYOWNER:
+                PropertyOwner propertyOwner = user.getPropertyOwner();
+                if (propertyOwner != null) {
+                    dto.setContactNo(propertyOwner.getContactNo());
+                }
+            case VE:
+                ValuationExpert valuationExpert = user.getValuationExpert();
+                if (valuationExpert != null) {
+                    dto.setContactNo(valuationExpert.getContactNo());
+                }
+                break;
+            default:
+                dto.setContactNo("N/A");
+                break;
+        }
+
+        return dto;
     }
 
 //    @Override

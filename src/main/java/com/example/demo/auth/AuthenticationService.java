@@ -7,7 +7,6 @@ import com.example.demo.repository.PropertyOwnerRepository;
 import com.example.demo.token.Token;
 import com.example.demo.token.TokenRepository;
 import com.example.demo.token.TokenType;
-import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,7 +93,7 @@ public class AuthenticationService {
             throw new UserException("District is required");
         }
 
-        if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
+        if (propertyOwner.getContactNo()==null || propertyOwner.getContactNo().equals("")) {
             throw new UserException("Phone number is required");
         }
 
@@ -106,7 +101,7 @@ public class AuthenticationService {
             throw new UserException("District is not valid");
         }
 
-        if (propertyOwner.getTelephone().length() != 10) {
+        if (propertyOwner.getContactNo().length() != 10) {
             throw new UserException("Phone number is not valid");
         }
 

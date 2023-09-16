@@ -37,7 +37,7 @@ public class PropertyOwner  {
     private String nic;
 
     @Pattern(regexp = "^\\d{10}$", message = "invalid mobile number entered")
-    private String telephone;
+    private String ContactNo;
     private String district;
     private String gender;
 

@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
+import com.example.demo.dto.responseDto.ResponseViewUsersDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.AdminService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -69,6 +72,11 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> addValuationExpert(@RequestBody RequestAddNewInternalUserDto req ) throws UserException {
         return ResponseEntity.ok(adminService.addValuationExpert(req));
+    }
+    @GetMapping("/viewUsers")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public ResponseEntity<List<ResponseViewUsersDto>> viewUsers() throws UserException{
+        return ResponseEntity.ok(adminService.viewUsers());
     }
 
 
