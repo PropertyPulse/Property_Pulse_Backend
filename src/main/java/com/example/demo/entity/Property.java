@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -50,5 +52,9 @@ public class Property {
 @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
+
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<File> files = new HashSet<>();
 
 }
