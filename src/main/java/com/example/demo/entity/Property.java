@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +43,58 @@ public class Property {
 
     private LocalDate accepted_date;
     private LocalDate returned_date;
+    private LocalDate registered_date;
 
+    @NotBlank(message = "Address is required")
     private String address;
     @Enumerated(EnumType.STRING)
     private PropertyType type;
 
+    @NotBlank(message = "Location is required")
     private String location;
 //    documents should be implemented
-@OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
+
+    @Column(nullable = false)
+    private String district;
+    private String duration;
+    private Integer stories;
+    private Integer bedrooms;
+
+    @Column(name = "living_rooms")
+    private Integer livingRooms;
+
+    private Integer bathrooms;
+
+    @Column(name = "dining_rooms")
+    private Integer diningRooms;
+
+    @Column(name = "have_special_rooms")
+    private String haveSpecialRooms;
+
+    @Column(name = "special_rooms")
+    private String specialRooms;
+
+    @Column(name = "land_size")
+    private Float landSize;
+
+    @Column(name = "have_crops")
+    private String haveCrops;
+
+    private String crops;
+
+    @Column(name = "special_facts")
+    private String specialFacts;
+
+    @Column(name = "registered_status")
+    private String registeredStatus;
+
+    @Column(name = "want_insurance")
+    private Boolean wantInsurance;
+
+    // @Column(name = "property_owner")
+    // private Integer propertyOwnerId;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
 
 }

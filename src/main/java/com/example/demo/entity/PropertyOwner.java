@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -38,8 +41,7 @@ public class PropertyOwner  {
     private String district;
     private String gender;
 
-
-
-
+        @OneToMany(mappedBy = "propertyOwner")
+    private  List<Property> properties = new ArrayList<>();
 
 }
