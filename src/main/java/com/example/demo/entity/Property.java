@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +33,10 @@ public class Property {
 
 //    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_supervisor_id")
+    private TaskSupervisor taskSupervisor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_owner_id")
