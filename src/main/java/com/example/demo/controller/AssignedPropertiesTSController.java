@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.requestDto.RequestUserdetails;
+import com.example.demo.dto.requestDto.RequestUserDetailsDto;
 import com.example.demo.dto.responseDto.ResponseAssignedPropertiesTSDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.AssignedPropertiesTSService;
@@ -23,7 +23,7 @@ public class AssignedPropertiesTSController {
     }
 
     @GetMapping("/assignedPropertiesTS")
-    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestBody RequestUserdetails email) throws UserException {
+    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestBody RequestUserDetailsDto email) throws UserException {
         List<ResponseAssignedPropertiesTSDto> assignedProperties = assignedPropertiesTSService.assignedPropertiesTS(email.getEmail());
         return ResponseEntity.ok(assignedProperties);
     }

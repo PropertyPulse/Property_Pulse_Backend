@@ -99,10 +99,6 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_supervisor_id")
-    private TaskSupervisor taskSupervisor;
-
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<File> files = new HashSet<>();
 }

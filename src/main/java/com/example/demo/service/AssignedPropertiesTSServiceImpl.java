@@ -19,7 +19,7 @@ public class AssignedPropertiesTSServiceImpl implements AssignedPropertiesTSServ
     private final AssignedPropertyRepositoryTS assignedPropertyRepositoryTS;
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
-    public AssignedPropertiesTSServiceImpl(AssignedPropertyRepositoryTS assignedPropertyRepositoryTS, UserRepository userRepository, UserRepository userRepository1, PropertyRepository propertyRepository) {
+    public AssignedPropertiesTSServiceImpl(AssignedPropertyRepositoryTS assignedPropertyRepositoryTS, UserRepository userRepository, PropertyRepository propertyRepository) {
         this.assignedPropertyRepositoryTS = assignedPropertyRepositoryTS;
         this.userRepository = userRepository;
         this.propertyRepository = propertyRepository;
@@ -48,12 +48,12 @@ public class AssignedPropertiesTSServiceImpl implements AssignedPropertiesTSServ
         return e;
     }
 
-    private ResponseAssignedPropertiesTSDto mapUserToDto (Property property) {
-        ResponseAssignedPropertiesTSDto dto = new ResponseAssignedPropertiesTSDto();
-
-        dto.setPropertyId(property.getId());
-        dto.setPropertyOwner(property.getPropertyOwner().toString());
-        dto.setPropertyType(property.getType().toString());
-        return dto;
-    }
+//    private ResponseAssignedPropertiesTSDto mapUserToDto (Property property) {
+//        ResponseAssignedPropertiesTSDto dto = new ResponseAssignedPropertiesTSDto();
+//
+//        dto.setPropertyId(property.getId());
+//        dto.setPropertyOwner(property.getPropertyOwner().getUser().getFirstname());
+//        dto.setPropertyType(property.getType().toString());
+//        return dto;
+//    }
 }
