@@ -10,5 +10,4 @@ import java.util.List;
 @Transactional
 public interface AssignedPropertiesTSService {
     List<ResponseAssignedPropertiesTSDto> assignedPropertiesTS(String email);
-
 }
