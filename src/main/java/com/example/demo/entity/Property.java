@@ -6,13 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -36,6 +35,10 @@ public class Property {
 
 //    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_supervisor_id")
+    private TaskSupervisor taskSupervisor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_owner_id")
@@ -91,10 +94,14 @@ public class Property {
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
 
+    @Column (name = "assign_stage")
+    private String assignStage;
+
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<File> files = new HashSet<>();
 }
