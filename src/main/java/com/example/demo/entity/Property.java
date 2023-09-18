@@ -94,6 +94,9 @@ public class Property {
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
 
+    @Column (name = "assign_stage")
+    private String assignStage;
+
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
