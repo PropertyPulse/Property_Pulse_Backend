@@ -17,4 +17,6 @@ public interface RecivedPaymentService {
     Boolean addTaskPayment(Integer propertyId, Double amount, String description);
     List<ReceivedPaymentDto> getAllTaskPayments();
 
+
+
 }

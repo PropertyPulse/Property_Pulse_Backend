@@ -20,7 +20,9 @@ public class TransactionHistory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+
     private TransactionType type;
+
 
     private String description;
     private Double amount;

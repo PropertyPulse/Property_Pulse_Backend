@@ -5,6 +5,7 @@ import com.example.demo.entity.RecivedPayment;
 import com.example.demo.entity.RecivedPaymentType;
 import com.example.demo.repository.PropertyRepository;
 import com.example.demo.repository.RecivedPaymentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +17,13 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
 
     private final RecivedPaymentRepository recivedPaymentRepository;
     private final PropertyRepository propertyRepository;
+    private final TransactionHistoryService transactionHistoryService;
 
-    public RecivedPaymentServiceImpl(RecivedPaymentRepository recivedPaymentRepository, PropertyRepository propertyRepository) {
+    @Autowired
+    public RecivedPaymentServiceImpl(RecivedPaymentRepository recivedPaymentRepository, PropertyRepository propertyRepository, TransactionHistoryService transactionHistoryService) {
         this.recivedPaymentRepository = recivedPaymentRepository;
         this.propertyRepository = propertyRepository;
+        this.transactionHistoryService = transactionHistoryService;
     }
 
     public List<ReceivedPaymentDto> getAllMonthlyPayments() {
@@ -37,8 +41,8 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
 //        set reciveddate as current date
         recivedPayment.setReceiveddate(java.time.LocalDate.now());
 
-
-        recivedPaymentRepository.save(recivedPayment);
+        RecivedPayment recivedPayment_saved =  recivedPaymentRepository.save(recivedPayment);
+        transactionHistoryService.insertIncome(recivedPayment_saved.getAmount(),recivedPayment_saved.getDescription());
         return true;
 
     }
@@ -51,8 +55,8 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
         recivedPayment.setDescription(description);
         recivedPayment.setType(RecivedPaymentType.SPECIALTASKPAYMENTS);
         recivedPayment.setReceiveddate(java.time.LocalDate.now());
-        recivedPaymentRepository.save(recivedPayment);
-
+        RecivedPayment recivedPayment_saved =  recivedPaymentRepository.save(recivedPayment);
+        transactionHistoryService.insertIncome(recivedPayment_saved.getAmount(),recivedPayment_saved.getDescription());
 
         return true;
     }
