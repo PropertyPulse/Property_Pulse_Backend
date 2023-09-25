@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "files")
-public class File {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,10 @@ public class File {
 
     @Column(name = "file_description")
     private String fileDescription;
+
+    public void setFileType(String contentType) {
+    }
+
 
     // Constructors, getters, and setters
 

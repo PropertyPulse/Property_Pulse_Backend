@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.requestDto.RequestAddNewHomeDTO;
+import com.example.demo.dto.requestDto.RequestAddNewLandDTO;
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.entity.Property;
@@ -26,7 +28,13 @@ public class PropertyController {
     @PostMapping("/addNewProperty")
     @PreAuthorize("hasAuthority('propertyowner:create')")
     public ResponseEntity<String> addNewProperty(@RequestBody RequestAddNewPropertyDto req) throws UserException {
-        return ResponseEntity.ok(propertyService.addNewProperty(req));
+
+        try {
+            propertyService.addNewProperty(req);
+            return ResponseEntity.ok("Property registered successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error registering property: " + e.getMessage());
+        }
     }
 
     /* @PreAuthorize("hasAuthority('propertyowner:create')")
