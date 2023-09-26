@@ -3,9 +3,9 @@ package com.example.demo.config;
 
 import com.example.demo.auth.AuthenticationService;
 import com.example.demo.entity.Admin;
-import com.example.demo.user.Role;
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
+import com.example.demo.entity.Role;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

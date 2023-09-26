@@ -1,21 +1,15 @@
 package com.example.demo.auth;
 
 import com.example.demo.entity.PropertyOwner;
-import com.example.demo.token.Token;
-import com.example.demo.user.Role;
+import com.example.demo.entity.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.List;
 
 @Data
 @Builder

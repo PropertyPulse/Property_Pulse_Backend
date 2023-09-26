@@ -1,10 +1,7 @@
-package com.example.demo.user;
+package com.example.demo.entity;
 
 
-//import com.example.demo.token.Token;
-import com.example.demo.entity.*;
-import com.example.demo.token.PasswordResetToken;
-import com.example.demo.token.Token;
+//import com.example.demo.entity.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

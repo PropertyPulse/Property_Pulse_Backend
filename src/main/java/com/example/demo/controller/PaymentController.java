@@ -12,12 +12,14 @@ import com.example.demo.service.TaskEquipmentPaymentService;
 import com.example.demo.service.TransactionHistoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payments")
+@PreAuthorize("hasRole('FINANCIALMANAGER')")
 public class PaymentController {
 
     private final RecivedPaymentService recivedPaymentService;
@@ -128,6 +130,7 @@ public class PaymentController {
             return ResponseEntity.badRequest().body("Failed to add task payment");
         }
     }
+
     @GetMapping("/getAllTransactionHistory")
     public List<TransactionHistoryDto> getAllTransactionHistory() {
         return transactionHistoryService.getAllTransactionHistory();
@@ -137,6 +140,7 @@ public class PaymentController {
     public ResponseEntity<List<MonthlySummaryDto>> getAllCurrentYearIncomesbymonthly() {
         return ResponseEntity.ok(transactionHistoryService.getMonthlyIncomeSummary());
     }
+
 
     @GetMapping("/getAllCurrentYearExpensesbymonthly")
     public ResponseEntity<List<MonthlySummaryDto>> getAllCurrentYearExpensesbymonthly() {
