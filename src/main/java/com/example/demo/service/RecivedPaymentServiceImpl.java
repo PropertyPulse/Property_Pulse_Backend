@@ -5,9 +5,11 @@ import com.example.demo.entity.RecivedPayment;
 import com.example.demo.entity.RecivedPaymentType;
 import com.example.demo.repository.PropertyRepository;
 import com.example.demo.repository.RecivedPaymentRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
@@ -17,7 +19,7 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
     private final RecivedPaymentRepository recivedPaymentRepository;
     private final PropertyRepository propertyRepository;
 
-    public RecivedPaymentServiceImpl(RecivedPaymentRepository recivedPaymentRepository, PropertyRepository propertyRepository) {
+    public RecivedPaymentServiceImpl(RecivedPaymentRepository recivedPaymentRepository, @Qualifier("homeRepository") PropertyRepository propertyRepository) {
         this.recivedPaymentRepository = recivedPaymentRepository;
         this.propertyRepository = propertyRepository;
     }
@@ -35,7 +37,7 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
         recivedPayment.setDescription(description);
         recivedPayment.setType(RecivedPaymentType.MONTHLYPAYMENTS);
 //        set reciveddate as current date
-        recivedPayment.setReceiveddate(java.time.LocalDate.now());
+        recivedPayment.setReceiveddate(LocalDate.now());
 
 
         recivedPaymentRepository.save(recivedPayment);
@@ -50,7 +52,7 @@ public class RecivedPaymentServiceImpl implements RecivedPaymentService {
         recivedPayment.setAmount(amount);
         recivedPayment.setDescription(description);
         recivedPayment.setType(RecivedPaymentType.SPECIALTASKPAYMENTS);
-        recivedPayment.setReceiveddate(java.time.LocalDate.now());
+        recivedPayment.setReceiveddate(LocalDate.now());
         recivedPaymentRepository.save(recivedPayment);
 
 
