@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
 import com.example.demo.dto.responseDto.ResponseTsDetailsDto;
 import com.example.demo.dto.responseDto.ResponseUpcomingTasksDto;
 import com.example.demo.entity.Property;
@@ -89,6 +90,45 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setPropertyId(task.getProperty().getId());
         dto.setTask(task.getTask());
         dto.setRequestStatus(task.getManpowerCompanyRequestStatus());
+        dto.setLocation(task.getProperty().getLocation());
+
+        return dto;
+    }
+
+    @Override
+    @Transactional
+    public List<ResponseOngoingTasksDto> getOngoingTasks(String email) throws UserException {
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        List<Property> properties = propertyRepository.findByTaskSupervisorId(user.get().getTaskSupervisor().getId());
+
+        List<Task> tasks = new ArrayList<>();
+        for (Property property : properties) {
+            List<Task> tasksOfTheProperty = taskRepository.findByPropertyId(property.getId());
+            for (Task task: tasksOfTheProperty) tasks.add(task);
+        }
+
+        LocalDate currentDate = LocalDate.now();
+
+        List<ResponseOngoingTasksDto> ongoingTasks = tasks.stream()
+                .filter(task -> (task.getStartDate().isBefore(currentDate) && task.getEndDate().isAfter(currentDate))
+                        || task.getStartDate().equals(currentDate)
+                        || task.getEndDate().equals(currentDate))
+                .map(this::mapOngoingTaskToDto)
+                .collect(Collectors.toList());
+
+        return ongoingTasks;
+
+    }
+
+    private ResponseOngoingTasksDto mapOngoingTaskToDto(Task task) {
+
+        ResponseOngoingTasksDto dto = new ResponseOngoingTasksDto();
+
+        dto.setTaskId(task.getId());
+        dto.setPropertyId(task.getProperty().getId());
+        dto.setManpowerCompany(task.getManpowerCompany());
         dto.setLocation(task.getProperty().getLocation());
 
         return dto;

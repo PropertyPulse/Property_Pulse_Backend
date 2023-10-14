@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
 import com.example.demo.dto.responseDto.ResponseTsDetailsDto;
 import com.example.demo.dto.responseDto.ResponseUpcomingTasksDto;
 import com.example.demo.exception.UserException;
@@ -56,9 +57,11 @@ public class TaskSupervisorController {
         return ResponseEntity.ok(upcomingTasks);
     }
 
-
-
-
-
+    @GetMapping("/ongoing-tasks")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<List<ResponseOngoingTasksDto>> getOngoingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
+        List<ResponseOngoingTasksDto> ongoingTasks = taskSupervisorService.getOngoingTasks(email.getEmail());
+        return ResponseEntity.ok(ongoingTasks);
+    }
 
 }
