@@ -27,4 +27,5 @@ public class Task {
     private LocalDate endDate;
     private Float cost;
     private String ManpowerCompanyRequestStatus;
+    private String ManpowerCompany;
 }
