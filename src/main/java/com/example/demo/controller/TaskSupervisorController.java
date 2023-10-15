@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.ResponseCompletedTasksDto;
 import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
 import com.example.demo.dto.responseDto.ResponseTsDetailsDto;
 import com.example.demo.dto.responseDto.ResponseUpcomingTasksDto;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/ts")
@@ -62,6 +65,13 @@ public class TaskSupervisorController {
     public ResponseEntity<List<ResponseOngoingTasksDto>> getOngoingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
         List<ResponseOngoingTasksDto> ongoingTasks = taskSupervisorService.getOngoingTasks(email.getEmail());
         return ResponseEntity.ok(ongoingTasks);
+    }
+
+    @GetMapping("/completed-tasks")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
+        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email.getEmail());
+        return ResponseEntity.ok(completedTasks);
     }
 
 }
