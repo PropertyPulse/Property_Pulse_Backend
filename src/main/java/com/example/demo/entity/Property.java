@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public abstract class Property {
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_supervisor_id")
+    private TaskSupervisor taskSupervisor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_owner_id")
     private PropertyOwner propertyOwner;
 
@@ -65,15 +70,19 @@ public abstract class Property {
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
 
+    @Column (name = "assign_stage")
+    private String assignStage;
+
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
-
-
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<Document> files;
 
+
+    private Set<File> files = new HashSet<>();
 
 }
