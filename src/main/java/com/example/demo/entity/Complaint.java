@@ -8,7 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "Complaint")
 public class Complaint  {
 
     @Id
@@ -27,6 +35,9 @@ public class Complaint  {
     @Column(name = "description", length = 1000)
     private String description;
 
+
+    @Column(name = "reason", length = 500)
+    private String reason;
 
     private String title;
 
