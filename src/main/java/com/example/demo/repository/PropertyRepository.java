@@ -11,4 +11,6 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Property> findBytaskSupervisor_id(Integer taskSupervisorId);
 
     List<Property> findByTaskSupervisorIdAndAssignStage(Integer taskSupervisorId, String assign_stage);
+
+    List<Property> findByPropertyOwnerId(Integer propertyOwner);
 }
