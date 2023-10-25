@@ -14,7 +14,7 @@ public class ResponseNewTaskRequestDto {
     private String task;
     private Double estimatedPrice;
     private LocalDate scheduleDate;
-    private String moreInfo;
+    private Integer moreInfo;
     private TaskStatus taskStatus;
 
 

@@ -1,12 +1,19 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.requestDto.RequestUserdetails;
-import com.example.demo.dto.responseDto.ResponseTsdetails;
+import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.ResponseCompletedTasksDto;
+import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
+import com.example.demo.dto.responseDto.ResponseTsDetailsDto;
+import com.example.demo.dto.responseDto.ResponseUpcomingTasksDto;
+import com.example.demo.exception.UserException;
 import com.example.demo.service.TaskSupervisorService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/ts")
@@ -38,20 +45,33 @@ public class TaskSupervisorController {
 
     @PostMapping("/tsdetails")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<ResponseTsdetails> getTsdetails(@RequestBody final RequestUserdetails requestUserdetails){
-        ResponseTsdetails responseTsdetails ;
+    public ResponseEntity<ResponseTsDetailsDto> getTsdetails(@RequestBody final RequestUserDetailsDto requestUserdetails){
 
+        ResponseTsDetailsDto responseTsdetailsDto;
+        responseTsdetailsDto = taskSupervisorService.getTasksupervisorDetails(requestUserdetails);
 
-        responseTsdetails = taskSupervisorService.getTasksupervisorDetails(requestUserdetails);
-
-
-
-        return ResponseEntity.ok(responseTsdetails);
+        return ResponseEntity.ok(responseTsdetailsDto);
     }
 
+    @GetMapping("/upcoming-tasks")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<List<ResponseUpcomingTasksDto>> getUpcomingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
+        List<ResponseUpcomingTasksDto> upcomingTasks = taskSupervisorService.getUpcomingTasks(email.getEmail());
+        return ResponseEntity.ok(upcomingTasks);
+    }
 
+    @GetMapping("/ongoing-tasks")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<List<ResponseOngoingTasksDto>> getOngoingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
+        List<ResponseOngoingTasksDto> ongoingTasks = taskSupervisorService.getOngoingTasks(email.getEmail());
+        return ResponseEntity.ok(ongoingTasks);
+    }
 
-
-
+    @GetMapping("/completed-tasks")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
+        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email.getEmail());
+        return ResponseEntity.ok(completedTasks);
+    }
 
 }

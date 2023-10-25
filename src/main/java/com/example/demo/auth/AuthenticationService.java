@@ -7,7 +7,6 @@ import com.example.demo.repository.PropertyOwnerRepository;
 import com.example.demo.token.Token;
 import com.example.demo.token.TokenRepository;
 import com.example.demo.token.TokenType;
-import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +40,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final PropertyOwnerRepository propertyOwnerRepository;
 
-    
+
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) throws UserException {
 
 //check existing users
@@ -97,7 +93,7 @@ public class AuthenticationService {
             throw new UserException("District is required");
         }
 
-        if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
+        if (propertyOwner.getContactNo()==null || propertyOwner.getContactNo().equals("")) {
             throw new UserException("Phone number is required");
         }
 
@@ -105,39 +101,39 @@ public class AuthenticationService {
             throw new UserException("District is not valid");
         }
 
-        if (propertyOwner.getTelephone().length() != 10) {
+        if (propertyOwner.getContactNo().length() != 10) {
             throw new UserException("Phone number is not valid");
         }
 
 
 
-
-//        create the new user registration and save it to the database and return the token out of it
-            var user = User.builder()
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .email(request.getEmail())
-                    .password(encoder.encode(request.getPassword()))
-                    .role(request.getRole())
-//                    .propertyOwner(propertyOwner)
-                    .build();
-
 //
-//        User user = new User();
-//        user.setFirstname(request.getFirstname());
-//        user.setLastname(request.getLastname());
-//        user.setEmail(request.getEmail());
-//        user.setPassword(encoder.encode(request.getPassword()));
-//        user.setRole(request.getRole());
+////        create the new user registration and save it to the database and return the token out of it
+//            var user = User.builder()
+//                    .firstname(request.getFirstname())
+//                    .lastname(request.getLastname())
+//                    .email(request.getEmail())
+//                    .password(encoder.encode(request.getPassword()))
+//                    .role(request.getRole())
+////                    .propertyOwner(propertyOwner)
+//                    .build();
 
 
-//        propertyOwner.setUser(user);
-//        user.setPropertyOwner(propertyOwner);
+        User user = new User();
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
+
+        propertyOwner.setUser(user);
+        user.setPropertyOwner(propertyOwner);
             //take the saved user into the savedUser variable
            var savedUser = repository.save(user);
 
-           propertyOwner.setUser(savedUser);
-        propertyOwnerRepository.save(propertyOwner);
+
+//           propertyOwner.setUser(savedUser);
+//        propertyOwnerRepository.save(propertyOwner);
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
@@ -229,7 +225,7 @@ public class AuthenticationService {
     }
 
 
-    private void saveUserToken(User user, String jwtToken) {
+    public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
