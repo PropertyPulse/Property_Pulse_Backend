@@ -56,6 +56,7 @@
 
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestMonthlyPayementManpowerCompanyDto;
 import com.example.demo.dto.responseDto.MonthlyPaymentDto;
 import com.example.demo.entity.ManpowerCompanyPayments;
 import com.example.demo.repository.ManpowerCompanyPaymentsRepository;
@@ -147,6 +148,17 @@ public class ManpowerCompanyPaymentsServiceImpl implements ManpowerCompanyPaymen
             e.printStackTrace(); // Replace this with proper error handling
             return false; // Update failed
         }
+    }
+
+    @Override
+    public Boolean addManpowerCompanyPayment(RequestMonthlyPayementManpowerCompanyDto req) {
+        ManpowerCompanyPayments manpowerCompanyPayments = new ManpowerCompanyPayments();
+        manpowerCompanyPayments.setPaid(false);
+        manpowerCompanyPayments.setAmount(req.getAmount());
+//        LocalDate today = LocalDate.now();
+        manpowerCompanyPayments.setDate(req.getDate());
+        paymentsRepository.save(manpowerCompanyPayments);
+        return true;
     }
 
 

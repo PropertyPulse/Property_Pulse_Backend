@@ -1,16 +1,11 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.requestDto.PaymentRequestDto;
-import com.example.demo.dto.requestDto.RequestInsertincome;
-import com.example.demo.dto.requestDto.RequestUpdatePaymentDto;
-import com.example.demo.dto.responseDto.MonthlyPaymentDto;
-import com.example.demo.dto.responseDto.ReceivedPaymentDto;
-import com.example.demo.dto.responseDto.ResponseTaskEquipPaymentsDto;
+import com.example.demo.dto.requestDto.*;
+import com.example.demo.dto.responseDto.*;
 
 
-import com.example.demo.dto.responseDto.TransactionHistoryDto;
-import com.example.demo.entity.TransactionHistory;
+
 import com.example.demo.service.ManpowerCompanyPaymentsService;
 import com.example.demo.service.RecivedPaymentService;
 import com.example.demo.service.TaskEquipmentPaymentService;
@@ -30,6 +25,9 @@ public class PaymentController {
     private final ManpowerCompanyPaymentsService manpowerCompanyPaymentsService;
     private final TaskEquipmentPaymentService taskEquipmentPaymentService;
     private final TransactionHistoryService transactionHistoryService;
+
+
+
 
     public PaymentController(RecivedPaymentService recivedPaymentService, ManpowerCompanyPaymentsService manpowerCompanyPaymentsService, TaskEquipmentPaymentService taskEquipmentPaymentService, TransactionHistoryService transactionHistoryService) {
         this.recivedPaymentService = recivedPaymentService;
@@ -109,6 +107,8 @@ public class PaymentController {
         }
     }
 
+//    add monthly payments
+
     @PostMapping("/monthly")
     public ResponseEntity<String> addMonthlyPayment(@RequestBody PaymentRequestDto request) {
         if (recivedPaymentService.addMonthlyPayment(request.getPropertyId(), request.getAmount(), request.getDescription())) {
@@ -118,6 +118,8 @@ public class PaymentController {
         }
     }
 
+
+//    add task payments
     @PostMapping("/task")
     public ResponseEntity<String> addTaskPayment(@RequestBody PaymentRequestDto request) {
         if (recivedPaymentService.addTaskPayment(request.getPropertyId(), request.getAmount(), request.getDescription())) {
@@ -131,8 +133,64 @@ public class PaymentController {
         return transactionHistoryService.getAllTransactionHistory();
     }
 
+    @GetMapping("/getAllCurrentYearIncomesbymonthly")
+    public ResponseEntity<List<MonthlySummaryDto>> getAllCurrentYearIncomesbymonthly() {
+        return ResponseEntity.ok(transactionHistoryService.getMonthlyIncomeSummary());
+    }
+
+    @GetMapping("/getAllCurrentYearExpensesbymonthly")
+    public ResponseEntity<List<MonthlySummaryDto>> getAllCurrentYearExpensesbymonthly() {
+        return ResponseEntity.ok(transactionHistoryService.getMonthlyExpenseSummary());
+    }
 
 
+    @GetMapping("/getFMDashboardData")
+    public ResponseEntity<List<FinancialManagerDashboardDataDto>> getFMDashboardData() {
+        return ResponseEntity.ok(transactionHistoryService.getFMDashboardData());
+    }
+
+    @GetMapping("/getTotalIncome")
+    public ResponseEntity<Double> getTotalIncome() {
+        return ResponseEntity.ok(transactionHistoryService.getTotalIncome());
+    }
+
+    @GetMapping("/getTotalOutcome")
+    public ResponseEntity<Double> getTotalOutcome() {
+        return ResponseEntity.ok(transactionHistoryService.getTotalOutcome());
+    }
+
+
+//    add manpowrcompany payment
+
+    @PostMapping("/add_taskequipment_payment")
+    public ResponseEntity<String> addTaskEquipmentPayment(@RequestBody RequestAddTaskEquipmentPaymentDto req) {
+        try {
+            boolean result = taskEquipmentPaymentService.addTaskEquipmentPayment(req);
+
+            if (result) {
+                return ResponseEntity.ok("Task equipment payment added successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Failed to add task equipment payment");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+    @PostMapping("/add_manpowercompany_payments")
+    public ResponseEntity<String> addManpowerCompanyPayment(@RequestBody RequestMonthlyPayementManpowerCompanyDto req) {
+        try {
+            boolean result = manpowerCompanyPaymentsService.addManpowerCompanyPayment(req);
+
+            if (result) {
+                return ResponseEntity.ok("Payment added successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Failed to add payment");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
 
 
 }
