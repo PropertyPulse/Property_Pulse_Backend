@@ -59,7 +59,7 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
 
     @Override
     @Transactional
-    public List<ResponseUpcomingTasksDto> getUpcomingTasks(String email) throws UserException {
+    public Map<LocalDate, List<ResponseUpcomingTasksDto>> getUpcomingTasks(String email) throws UserException {
 
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -72,13 +72,20 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         }
 
 //        LocalDate currentDate = LocalDate.now();
-        List<ResponseUpcomingTasksDto> responseUpcomingTasksDto = upcomingTasks.stream()
-                .filter(task ->
+//        Map<LocalDate, List<ResponseUpcomingTasksDto>> responseUpcomingTasksDto = upcomingTasks.stream()
+//                .filter(task ->
 //                    task.getStartDate().isAfter(currentDate) ||
 //                    (task.getStartDate().equals(currentDate) && task.getStatus().equals("Start Pending")) ||
-                    task.getStatus().equals("Start Pending"))
+//                    task.getStatus().equals("Start Pending"))
+//                .map(this::mapTaskToDto)
+//                .collect(Collectors.groupingBy(dto -> dto.getStartDate()));
+
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> responseUpcomingTasksDto = upcomingTasks.stream()
+                .filter(task -> task.getStatus().equals("Start Pending"))
                 .map(this::mapTaskToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(dto -> dto.getStartDate(),
+                        LinkedHashMap::new,
+                        Collectors.toList()));
 
         return responseUpcomingTasksDto;
     }
@@ -90,6 +97,7 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setTaskId(task.getId());
         dto.setPropertyId(task.getProperty().getId());
         dto.setTask(task.getTask());
+        dto.setStartDate(task.getStartDate());
         dto.setRequestStatus(task.getManpowerCompanyRequestStatus());
         dto.setLocation(task.getProperty().getLocation());
         dto.setTaskStatus(task.getStatus());
@@ -110,8 +118,6 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             List<Task> tasksOfTheProperty = taskRepository.findByPropertyId(property.getId());
             for (Task task: tasksOfTheProperty) tasks.add(task);
         }
-
-//        LocalDate currentDate = LocalDate.now();
 
         List<ResponseOngoingTasksDto> ongoingTasks = tasks.stream()
                 .filter(task -> task.getStatus().equals("Ongoing") )
