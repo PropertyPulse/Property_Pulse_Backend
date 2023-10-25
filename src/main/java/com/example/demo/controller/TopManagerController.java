@@ -25,15 +25,15 @@ public class TopManagerController {
     private final FeedbackService feedbackService;
 //    private  final GeocodeController    geocodeController;
 
-    private   final TaskSupervisorRepository taskSupervisorRepository;
+
 
     private final TopManagerService topManagerService;
 
     @Autowired
-    public TopManagerController(FeedbackService feedbackService, GeocodeController geocodeController, TaskSupervisorRepository taskSupervisorRepository, TopManagerServiceImpl topManagerService) {
+    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService) {
         this.feedbackService = feedbackService;
 //        this.geocodeController = geocodeController;
-        this.taskSupervisorRepository = taskSupervisorRepository;
+
 
         this.topManagerService =  topManagerService;
     }
@@ -76,7 +76,4 @@ public class TopManagerController {
 
 
     }
-
-
-
 }
