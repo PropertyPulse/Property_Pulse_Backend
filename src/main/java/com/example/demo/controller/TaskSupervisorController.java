@@ -69,8 +69,8 @@ public class TaskSupervisorController {
 
     @GetMapping("/completed-tasks")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
-        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email.getEmail());
+    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestParam("email") String email) throws UserException {
+        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email);
         return ResponseEntity.ok(completedTasks);
     }
 
