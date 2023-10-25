@@ -1,5 +1,6 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.requestDto.RequestPasswordResetDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.PropertyOwnerService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -72,4 +73,9 @@ public class AuthenticationController {
         service.refreshToken(request,response);
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody RequestPasswordResetDto request) throws UserException {
+        service.resetPassword(request.getEmail());
+        return ResponseEntity.ok("Password reset successfully.");
+    }
 }

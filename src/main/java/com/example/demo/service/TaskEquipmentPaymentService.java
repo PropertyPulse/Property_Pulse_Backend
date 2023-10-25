@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.requestDto.RequestAddTaskEquipmentPaymentDto;
 import com.example.demo.dto.requestDto.RequestUpdatePaymentDto;
 import com.example.demo.dto.responseDto.MonthlyPaymentDto;
 import com.example.demo.dto.responseDto.ResponseTaskEquipPaymentsDto;
@@ -16,5 +17,7 @@ public interface TaskEquipmentPaymentService {
     List<ResponseTaskEquipPaymentsDto> getAllTaskEquipmentpayments();
 
     Boolean updatePaymentStatus(RequestUpdatePaymentDto payment);
+
+    Boolean addTaskEquipmentPayment(RequestAddTaskEquipmentPaymentDto req);
 
 }

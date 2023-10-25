@@ -1,12 +1,18 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestAddTaskEquipmentPaymentDto;
 import com.example.demo.dto.requestDto.RequestUpdatePaymentDto;
 import com.example.demo.dto.responseDto.ResponseTaskEquipPaymentsDto;
+import com.example.demo.entity.Property;
 import com.example.demo.entity.TaskEquipmentPayment;
+import com.example.demo.entity.TaskSupervisor;
+import com.example.demo.repository.PropertyRepository;
 import com.example.demo.repository.TaskEquipmentPaymentRepository;
+import com.example.demo.repository.TaskSupervisorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +21,14 @@ import java.util.List;
 public class TaskEquipmentPaymentServiceImpl implements TaskEquipmentPaymentService {
     private final TransactionHistoryService transactionHistoryService;
     private final TaskEquipmentPaymentRepository taskEquipmentPaymentRepository;
+    private final PropertyRepository propertyRepository;
+    private final TaskSupervisorRepository taskSupervisorRepository;
 
-    public TaskEquipmentPaymentServiceImpl(TransactionHistoryService transactionHistoryService, TaskEquipmentPaymentRepository taskEquipmentPaymentRepository) {
+    public TaskEquipmentPaymentServiceImpl(TransactionHistoryService transactionHistoryService, TaskEquipmentPaymentRepository taskEquipmentPaymentRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository) {
         this.transactionHistoryService = transactionHistoryService;
         this.taskEquipmentPaymentRepository = taskEquipmentPaymentRepository;
+        this.propertyRepository = propertyRepository;
+        this.taskSupervisorRepository = taskSupervisorRepository;
     }
 
     @Override
@@ -69,7 +79,28 @@ public class TaskEquipmentPaymentServiceImpl implements TaskEquipmentPaymentServ
         }
     }
 
+    @Override
+    public Boolean addTaskEquipmentPayment(RequestAddTaskEquipmentPaymentDto req) {
+        TaskEquipmentPayment payment = new TaskEquipmentPayment();
+//        System.out.println(req.getProperty_id());
+        var property = propertyRepository.findById(req.getProperty_id());
+        System.out.println(property.get().getId());
 
+        var taskSupervisor = taskSupervisorRepository.findById(req.getTaskSupervisor_id());
+
+        payment.setProperty(property.get());
+        payment.setTaskSupervisor(taskSupervisor.get());
+
+        payment.setDescription(req.getDescription());
+//        LocalDate today = LocalDate.now();
+        payment.setDate(req.getDate());
+        payment.setPaid(false);
+        payment.setAmount(req.getAmount());
+
+        taskEquipmentPaymentRepository.save(payment);
+
+        return true;
+    }
 
 
 }
