@@ -10,5 +10,6 @@ public class ResponseUpcomingTasksDto {
     private Integer taskId;
     private String task;
     private String requestStatus;
+    private String taskStatus;
 
 }

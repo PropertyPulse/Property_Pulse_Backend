@@ -10,7 +10,8 @@ public class ResponseCompletedTasksDto {
     private Integer propertyId;
     private Integer taskId;
     private String task;
-    private LocalDate startDate;
+    private String startDate;
     private LocalDate endDate;
+    private String taskStatus;
 
 }
