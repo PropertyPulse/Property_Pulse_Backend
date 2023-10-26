@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class PropertyServiceImpl implements PropertyService {
         PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
 
         // var propertyOwner = userRepository.findByEmail(req.getProperty_owner_email().toString());
-
+        System.out.println(req.getChecklist());
         Property property = new Property();
         property.setType(req.getType());
         property.setAddress(req.getAddress());
@@ -61,6 +62,7 @@ public class PropertyServiceImpl implements PropertyService {
         property.setRegistered_date(LocalDate.now());
         property.setWantInsurance(req.getWant_insurance());
         property.setPropertyOwner(propertyOwner);
+        property.setChecklist(req.getChecklist());
         // property.setPropertyOwner(user.get().getId());
 
         var savedProperty = propertyRepository.save(property);

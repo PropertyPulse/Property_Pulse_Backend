@@ -40,4 +40,5 @@ public class TaskRequestController {
         List<ResponseNewTaskRequestDto> responseDtos = taskRequestService.getAllNewTaskRequests();
         return ResponseEntity.ok(responseDtos);
     }
+
 }
