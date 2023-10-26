@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.requestDto.RequestUserDetailsDto;
-import com.example.demo.dto.responseDto.ResponseCompletedTasksDto;
-import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
-import com.example.demo.dto.responseDto.ResponseTsDetailsDto;
-import com.example.demo.dto.responseDto.ResponseUpcomingTasksDto;
+import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.Task;
 import com.example.demo.entity.TaskSupervisor;
@@ -195,6 +192,49 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setStartDate(task.getStartDate().toString());
         dto.setEndDate(task.getEndDate());
         dto.setTaskStatus(task.getStatus());
+
+        return dto;
+    }
+
+    @Override
+    public List<ResponseTaskApprovalsDto> getTaskApprovals(String email) throws UserException {
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        List<Property> properties = propertyRepository.findByTaskSupervisorId(user.get().getTaskSupervisor().getId());
+
+        List<Task> tasks = new ArrayList<>();
+        for (Property property : properties) {
+            List<Task> tasksOfTheProperty = taskRepository.findByPropertyId(property.getId());
+            for (Task task: tasksOfTheProperty) tasks.add(task);
+        }
+
+        LocalDate currentDate = LocalDate.now();
+
+        List<ResponseTaskApprovalsDto> taskApprovals = tasks.stream()
+                .filter(task ->
+                    task.getStartDate().isAfter(currentDate) ||
+                    (task.getStartDate().equals(currentDate) && task.getStatus().equals("Start Pending")))
+                .map(this::mapTaskApprovalsToDto)
+                .collect(Collectors.toList());
+
+        List<ResponseTaskApprovalsDto> sortedTaskApprovals = taskApprovals.stream()
+                .sorted(Comparator.comparing(task -> task.getStartDate()))
+                .collect(Collectors.toList());
+
+        return sortedTaskApprovals;
+    }
+
+    private ResponseTaskApprovalsDto mapTaskApprovalsToDto(Task task) {
+
+        ResponseTaskApprovalsDto dto = new ResponseTaskApprovalsDto();
+
+        dto.setPropertyId(task.getProperty().getId());
+        dto.setLocation(task.getProperty().getLocation());
+        dto.setTaskId(task.getId());
+        dto.setTask(task.getTask());
+        dto.setManpowerCompanyRequestStatus(task.getManpowerCompanyRequestStatus());
+        dto.setStartDate(task.getStartDate());
 
         return dto;
     }
