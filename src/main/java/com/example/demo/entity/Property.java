@@ -26,6 +26,12 @@ public class Property {
     private Integer id;
 
 
+    @ElementCollection
+    @CollectionTable(name = "property_checklist") // Specify the name of the table for the collection
+    @Column(name = "checklist_item") // Specify the column name for the strings
+    private List<String> checklist;
+
+
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskRequest> taskRequests = new ArrayList<>();
 

@@ -216,7 +216,7 @@ public class AdminServiceImpl implements AdminService {
             case PROPERTYOWNER:
                 PropertyOwner propertyOwner = user.getPropertyOwner();
                 if (propertyOwner != null) {
-                    dto.setContactNo(propertyOwner.getContactNo());
+                    dto.setContactNo(propertyOwner.getTelephone());
                 }
             case VE:
                 ValuationExpert valuationExpert = user.getValuationExpert();
