@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@PreAuthorize("hasRole('PROPERTYOWNER')")
+
 @RestController
 @RequestMapping("/api/v1/property")
 public class PropertyController {
-    private final PropertyService propertyService;
+    private PropertyService propertyService;
 
 
     public PropertyController(PropertyService propertyService) {
@@ -31,9 +31,19 @@ public class PropertyController {
 
         try {
             propertyService.addNewProperty(req);
+
             return ResponseEntity.ok("Property registered successfully");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering property: " + e.getMessage());
+        }
+        finally{        if (req instanceof RequestAddNewLandDTO) {
+            RequestAddNewLandDTO landDTO = (RequestAddNewLandDTO) req;
+            System.out.println(landDTO);
+        } else {
+
+            System.out.println("i am inside the home");
+        }
+
         }
     }
 

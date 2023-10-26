@@ -9,18 +9,18 @@ import java.util.List;
 
 @Data
 public class RequestAddNewPropertyDto {
-    private LocalDate accepted_date;
-    private LocalDate returned_date;
-    private LocalDate registered_date;
+
     private String address;
     private PropertyType type;
     private String location;
     private String district;
     private String duration;
-    private Integer property_owner_id;
+
     private Boolean want_insurance;
-    private List<MultipartFile> propertyImages;
-    private List<MultipartFile> propertyDocuments;
+    private List<MultipartFile> property_images
+            ;
+    private List<MultipartFile> insurance_documents
+            ;
 
 
 //    private Integer stories;

@@ -2,10 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -13,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +35,7 @@ public class PropertyOwner  {
     private String nic;
 
     @Pattern(regexp = "^\\d{10}$", message = "invalid mobile number entered")
-    private String ContactNo;
+    private String telephone;
     private String district;
     private String gender;
 
