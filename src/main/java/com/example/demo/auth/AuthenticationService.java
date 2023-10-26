@@ -101,7 +101,7 @@ public class AuthenticationService {
             throw new UserException("District is required");
         }
 
-        if (propertyOwner.getContactNo()==null || propertyOwner.getContactNo().equals("")) {
+        if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
             throw new UserException("Phone number is required");
         }
 
@@ -109,7 +109,7 @@ public class AuthenticationService {
             throw new UserException("District is not valid");
         }
 
-        if (propertyOwner.getContactNo().length() != 10) {
+        if (propertyOwner.getTelephone().length() != 10) {
             throw new UserException("Phone number is not valid");
         }
 
