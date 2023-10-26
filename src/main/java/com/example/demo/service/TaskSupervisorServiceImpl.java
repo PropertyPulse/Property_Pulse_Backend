@@ -80,14 +80,24 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
 //                .map(this::mapTaskToDto)
 //                .collect(Collectors.groupingBy(dto -> dto.getStartDate()));
 
-        Map<LocalDate, List<ResponseUpcomingTasksDto>> responseUpcomingTasksDto = upcomingTasks.stream()
+
+        List<ResponseUpcomingTasksDto> responseUpcomingTasksDto = upcomingTasks.stream()
                 .filter(task -> task.getStatus().equals("Start Pending"))
                 .map(this::mapTaskToDto)
-                .collect(Collectors.groupingBy(dto -> dto.getStartDate(),
-                        LinkedHashMap::new,
-                        Collectors.toList()));
+                .collect(Collectors.toList());
 
-        return responseUpcomingTasksDto;
+        responseUpcomingTasksDto.sort(Comparator.comparing(ResponseUpcomingTasksDto::getStartDate, Comparator.reverseOrder()));
+
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> tasksGroupedByDate = responseUpcomingTasksDto.stream()
+                .collect(Collectors.groupingBy(dto -> dto.getStartDate()));
+
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> sortedTasks = tasksGroupedByDate.entrySet()
+                .stream()
+                .sorted(Map.Entry.<LocalDate, List<ResponseUpcomingTasksDto>>comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return sortedTasks;
     }
 
     private ResponseUpcomingTasksDto mapTaskToDto(Task task) {
