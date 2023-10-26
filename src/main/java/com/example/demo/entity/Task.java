@@ -28,4 +28,5 @@ public class Task {
     private Float cost;
     private String ManpowerCompanyRequestStatus;
     private String ManpowerCompany;
+    private String status;
 }

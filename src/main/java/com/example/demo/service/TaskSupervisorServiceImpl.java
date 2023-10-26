@@ -16,12 +16,8 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +59,7 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
 
     @Override
     @Transactional
-    public List<ResponseUpcomingTasksDto> getUpcomingTasks(String email) throws UserException {
+    public Map<LocalDate, List<ResponseUpcomingTasksDto>> getUpcomingTasks(String email) throws UserException {
 
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -75,13 +71,33 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             for (Task task: tasks) upcomingTasks.add(task);
         }
 
-        LocalDate currentDate = LocalDate.now();
+//        LocalDate currentDate = LocalDate.now();
+//        Map<LocalDate, List<ResponseUpcomingTasksDto>> responseUpcomingTasksDto = upcomingTasks.stream()
+//                .filter(task ->
+//                    task.getStartDate().isAfter(currentDate) ||
+//                    (task.getStartDate().equals(currentDate) && task.getStatus().equals("Start Pending")) ||
+//                    task.getStatus().equals("Start Pending"))
+//                .map(this::mapTaskToDto)
+//                .collect(Collectors.groupingBy(dto -> dto.getStartDate()));
+
+
         List<ResponseUpcomingTasksDto> responseUpcomingTasksDto = upcomingTasks.stream()
-                .filter(task -> task.getStartDate() != null && task.getStartDate().isAfter(currentDate))
+                .filter(task -> task.getStatus().equals("Start Pending"))
                 .map(this::mapTaskToDto)
                 .collect(Collectors.toList());
 
-        return responseUpcomingTasksDto;
+        responseUpcomingTasksDto.sort(Comparator.comparing(ResponseUpcomingTasksDto::getStartDate, Comparator.reverseOrder()));
+
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> tasksGroupedByDate = responseUpcomingTasksDto.stream()
+                .collect(Collectors.groupingBy(dto -> dto.getStartDate()));
+
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> sortedTasks = tasksGroupedByDate.entrySet()
+                .stream()
+                .sorted(Map.Entry.<LocalDate, List<ResponseUpcomingTasksDto>>comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return sortedTasks;
     }
 
     private ResponseUpcomingTasksDto mapTaskToDto(Task task) {
@@ -91,8 +107,10 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setTaskId(task.getId());
         dto.setPropertyId(task.getProperty().getId());
         dto.setTask(task.getTask());
+        dto.setStartDate(task.getStartDate());
         dto.setRequestStatus(task.getManpowerCompanyRequestStatus());
         dto.setLocation(task.getProperty().getLocation());
+        dto.setTaskStatus(task.getStatus());
 
         return dto;
     }
@@ -111,12 +129,8 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             for (Task task: tasksOfTheProperty) tasks.add(task);
         }
 
-        LocalDate currentDate = LocalDate.now();
-
         List<ResponseOngoingTasksDto> ongoingTasks = tasks.stream()
-                .filter(task -> (task.getStartDate().isBefore(currentDate) && task.getEndDate().isAfter(currentDate))
-                        || task.getStartDate().equals(currentDate)
-                        || task.getEndDate().equals(currentDate))
+                .filter(task -> task.getStatus().equals("Ongoing") )
                 .map(this::mapOngoingTaskToDto)
                 .collect(Collectors.toList());
 
@@ -132,6 +146,7 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setPropertyId(task.getProperty().getId());
         dto.setManpowerCompany(task.getManpowerCompany());
         dto.setLocation(task.getProperty().getLocation());
+        dto.setTaskStatus(task.getStatus());
 
         return dto;
     }
@@ -150,17 +165,23 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             for (Task task: tasksOfTheProperty) tasks.add(task);
         }
 
-        LocalDate currentDate = LocalDate.now();
-
         List<ResponseCompletedTasksDto> completedTasks = tasks.stream()
-                .filter(task -> task.getEndDate().isBefore(currentDate))
+                .filter(task -> task.getStatus().equals("Completed"))
                 .map(this::mapCompletedTaskToDto)
                 .collect(Collectors.toList());
+
+        completedTasks.sort(Comparator.comparing(ResponseCompletedTasksDto::getEndDate, Comparator.reverseOrder()));
 
         Map<LocalDate, List<ResponseCompletedTasksDto>> tasksGroupedByDate = completedTasks.stream()
                 .collect(Collectors.groupingBy(dto -> dto.getEndDate()));
 
-        return tasksGroupedByDate;
+        Map<LocalDate, List<ResponseCompletedTasksDto>> sortedTasks = tasksGroupedByDate.entrySet()
+                .stream()
+                .sorted(Map.Entry.<LocalDate, List<ResponseCompletedTasksDto>>comparingByKey().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return sortedTasks;
 
     }
 
@@ -171,8 +192,9 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
         dto.setPropertyId(task.getProperty().getId());
         dto.setTaskId(task.getId());
         dto.setTask(task.getTask());
-        dto.setStartDate(task.getStartDate());
+        dto.setStartDate(task.getStartDate().toString());
         dto.setEndDate(task.getEndDate());
+        dto.setTaskStatus(task.getStatus());
 
         return dto;
     }

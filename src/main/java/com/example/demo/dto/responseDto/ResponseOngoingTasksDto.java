@@ -9,5 +9,6 @@ public class ResponseOngoingTasksDto {
     private String location;
     private Integer taskId;
     private String manpowerCompany;
+    private String taskStatus;
 
 }

@@ -55,22 +55,22 @@ public class TaskSupervisorController {
 
     @GetMapping("/upcoming-tasks")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<List<ResponseUpcomingTasksDto>> getUpcomingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
-        List<ResponseUpcomingTasksDto> upcomingTasks = taskSupervisorService.getUpcomingTasks(email.getEmail());
+    public ResponseEntity<Map<LocalDate, List<ResponseUpcomingTasksDto>>> getUpcomingTasks(@RequestParam("email") String email) throws UserException {
+        Map<LocalDate, List<ResponseUpcomingTasksDto>> upcomingTasks = taskSupervisorService.getUpcomingTasks(email);
         return ResponseEntity.ok(upcomingTasks);
     }
 
     @GetMapping("/ongoing-tasks")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<List<ResponseOngoingTasksDto>> getOngoingTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
-        List<ResponseOngoingTasksDto> ongoingTasks = taskSupervisorService.getOngoingTasks(email.getEmail());
+    public ResponseEntity<List<ResponseOngoingTasksDto>> getOngoingTasks(@RequestParam("email") String email) throws UserException {
+        List<ResponseOngoingTasksDto> ongoingTasks = taskSupervisorService.getOngoingTasks(email);
         return ResponseEntity.ok(ongoingTasks);
     }
 
     @GetMapping("/completed-tasks")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestBody RequestUserDetailsDto email) throws UserException {
-        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email.getEmail());
+    public ResponseEntity<Map<LocalDate, List<ResponseCompletedTasksDto>>> getCompletedTasks(@RequestParam("email") String email) throws UserException {
+        Map<LocalDate, List<ResponseCompletedTasksDto>> completedTasks = taskSupervisorService.getCompletedTasks(email);
         return ResponseEntity.ok(completedTasks);
     }
 

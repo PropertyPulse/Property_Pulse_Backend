@@ -4,8 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
+import java.util.Optional;
+
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Integer> {
+
 
     List<Property> findByTaskSupervisorId(Integer integer);
     List<Property> findBytaskSupervisor_id(Integer taskSupervisorId);
@@ -13,4 +16,6 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Property> findByTaskSupervisorIdAndAssignStage(Integer taskSupervisorId, String assign_stage);
 
     List<Property> findByPropertyOwnerId(Integer propertyOwner);
+   Optional<Property> findById (Integer pid);
+
 }
