@@ -24,11 +24,11 @@ public class AssignedPropertiesTSController {
         this.propertiesToBeManagedService = propertiesToBeManagedService;
     }
 
-//    @GetMapping("/assignedPropertiesTS")
-//    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestParam("email") String email) throws UserException {
-//        List<ResponseAssignedPropertiesTSDto> assignedProperties = assignedPropertiesTSService.assignedPropertiesTS(email);
-//        return ResponseEntity.ok(assignedProperties);
-//    }
+    @GetMapping("/assignedPropertiesTS")
+    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestParam("email") String email) throws UserException {
+        List<ResponseAssignedPropertiesTSDto> assignedProperties = assignedPropertiesTSService.assignedPropertiesTS(email);
+        return ResponseEntity.ok(assignedProperties);
+    }
 
     @GetMapping("/propertiesToBeManged")
     public ResponseEntity<List<ResponsePropertiesToBeManagedDto>> getPropertiesToBeManagedForTaskSupervisor (@RequestParam("email") String email) throws UserException{
