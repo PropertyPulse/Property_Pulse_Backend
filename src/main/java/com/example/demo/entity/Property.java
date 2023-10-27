@@ -97,6 +97,9 @@ public class Property {
     @Column(name = "registered_status")
     private String registeredStatus;
 
+    @Column(name = "visit_status")
+    private Boolean visitStatus;
+
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
 
