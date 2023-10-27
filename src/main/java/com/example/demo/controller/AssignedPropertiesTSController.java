@@ -8,10 +8,8 @@ import com.example.demo.service.AssignedPropertiesTSService;
 import com.example.demo.service.PropertiesToBeManagedService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -27,14 +25,14 @@ public class AssignedPropertiesTSController {
     }
 
     @GetMapping("/assignedPropertiesTS")
-    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestBody RequestUserDetailsDto email) throws UserException {
-        List<ResponseAssignedPropertiesTSDto> assignedProperties = assignedPropertiesTSService.assignedPropertiesTS(email.getEmail());
+    public ResponseEntity<List<ResponseAssignedPropertiesTSDto>> getAssignedPropertiesForTaskSupervisor(@RequestParam("email") String email) throws UserException {
+        List<ResponseAssignedPropertiesTSDto> assignedProperties = assignedPropertiesTSService.assignedPropertiesTS(email);
         return ResponseEntity.ok(assignedProperties);
     }
 
     @GetMapping("/propertiesToBeManged")
-    public ResponseEntity<List<ResponsePropertiesToBeManagedDto>> getPropertiesToBeManagedForTaskSupervisor (@RequestBody RequestUserDetailsDto email) throws UserException{
-        List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged = propertiesToBeManagedService.propertiesToBeManaged (email.getEmail());
+    public ResponseEntity<List<ResponsePropertiesToBeManagedDto>> getPropertiesToBeManagedForTaskSupervisor (@RequestParam("email") String email) throws UserException{
+        List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged = propertiesToBeManagedService.propertiesToBeManaged (email);
         return ResponseEntity.ok(propertiesToBeManaged);
     }
 }
