@@ -40,6 +40,7 @@ public class PropertiesToBeManagedServiceImpl implements PropertiesToBeManagedSe
             dto.setPropertyId(p.getId());
             dto.setPropertyOwnerName(p.getPropertyOwner().getUser().getFirstname());
             dto.setAddress(p.getAddress());
+            dto.setPropertyType(p.getType().toString());
             e.add(dto);
         }
         return e;

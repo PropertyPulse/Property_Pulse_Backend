@@ -17,4 +17,5 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
 
    Optional<Property> findById (Integer pid);
 
+    Optional<Property> findById(Long propertyId);
 }
