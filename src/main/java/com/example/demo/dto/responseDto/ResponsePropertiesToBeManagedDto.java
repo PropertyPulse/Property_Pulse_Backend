@@ -8,4 +8,5 @@ public class ResponsePropertiesToBeManagedDto {
     private String propertyOwnerName;
     private String address;
     private String propertyType;
+    private String visitStatus;
 }
