@@ -23,7 +23,7 @@ public class UpdatePropertyVisitStatusServiceImpl implements UpdatePropertyVisit
 
         if (propertyOptional.isPresent()) {
             Property property = propertyOptional.get();
-            property.setVisitStatus(visitStatus);
+            property.setVisitStatus(String.valueOf(visitStatus));
             propertyRepository.save(property); // Update the property's visit status
             return true; // Update successful
         }

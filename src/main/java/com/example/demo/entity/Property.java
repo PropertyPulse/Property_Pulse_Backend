@@ -98,7 +98,7 @@ public class Property {
     private String registeredStatus;
 
     @Column(name = "visit_status")
-    private Boolean visitStatus;
+    private String visitStatus;
 
     @Column(name = "want_insurance")
     private Boolean wantInsurance;

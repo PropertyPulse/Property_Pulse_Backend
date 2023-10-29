@@ -13,7 +13,7 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Property> findByTaskSupervisorId(Integer integer);
     List<Property> findBytaskSupervisor_id(Integer taskSupervisorId);
 
-    List<Property> findByTaskSupervisorIdAndAssignStage(Integer taskSupervisorId, String assign_stage);
+    List<Property> findByTaskSupervisorIdAndAssignStage(Integer task_supervisor_id, String assign_stage);
 
     List<Property> findByPropertyOwnerId(Integer propertyOwner);
    Optional<Property> findById (Integer pid);
