@@ -43,7 +43,7 @@ public class AssignedPropertiesTSController {
 
     @GetMapping("/propertiesToBeMangedVisited")
     public ResponseEntity<List<ResponsePropertiesToBeManagedDto>> getPropertiesToBeManaged_VisitedForTaskSupervisor (@RequestParam("email") String email) throws UserException{
-        List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged = propertiesToBeManagedService.propertiesToBeManaged (email);
+        List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged = propertiesToBeManagedService.propertiesToBeManagedVisited (email);
         return ResponseEntity.ok(propertiesToBeManaged);
     }
 

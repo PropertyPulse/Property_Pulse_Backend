@@ -106,6 +106,12 @@ public class Property {
     @Column (name = "assign_stage")
     private String assignStage;
 
+    @Column (name = "price_list_status")
+    private String priceListStatus;
+
+    @Column (name = "legal_contract_status")
+    private String legalContractStatus;
+
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)

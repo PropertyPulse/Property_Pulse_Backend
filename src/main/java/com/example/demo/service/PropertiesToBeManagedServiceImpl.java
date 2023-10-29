@@ -67,8 +67,24 @@ public class PropertiesToBeManagedServiceImpl implements PropertiesToBeManagedSe
             dto.setPropertyOwnerName(p.getPropertyOwner().getUser().getFirstname());
             dto.setAddress(p.getAddress());
             dto.setPropertyType(p.getType().toString());
+            dto.setPriceListStatus(p.getPriceListStatus());
+            dto.setLegalContractStatus(p.getLegalContractStatus());
 
         return dto;
+    }
+
+    @Override
+    public List<ResponsePropertiesToBeManagedDto> propertiesToBeManagedVisited(String email){
+
+        Optional<User> taskSupervisor = userRepository.findByEmail(email);
+
+        List<Property> properties = propertyRepository.findByTaskSupervisorId(taskSupervisor.get().getTaskSupervisor().getId());
+
+        List<ResponsePropertiesToBeManagedDto> responsePropertiesToBeManagedDto = properties.stream()
+                .filter(property -> property.getAssignStage().equals("ToBeManaged") && property.getVisitStatus().equals("true"))
+                .map(this::mapPropertyToDto)
+                .collect(Collectors.toList());
+        return responsePropertiesToBeManagedDto;
     }
 
 }
