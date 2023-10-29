@@ -84,7 +84,7 @@ public class Property {
     private String specialRooms;
 
     @Column(name = "land_size")
-    private Float landSize;
+    private Double landSize;
 
     @Column(name = "have_crops")
     private String haveCrops;
@@ -117,6 +117,15 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<File> files = new HashSet<>();
+//    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<File> files = new HashSet<>();
+
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private FileData document;
+
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private ImageData imageData;
+
 }
