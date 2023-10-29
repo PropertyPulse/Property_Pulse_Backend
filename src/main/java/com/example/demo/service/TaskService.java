@@ -15,7 +15,7 @@ public interface TaskService {
     Map<LocalDate, List<ResponseUpcomingTasksDto>> getUpcomingTasks(String email) throws UserException;
     List<ResponseOngoingTasksDto> getOngoingTasks(String email) throws UserException;
     Map<LocalDate, List<ResponseCompletedTasksDto>> getCompletedTasks(String email) throws UserException;
-
     Boolean startTask(int taskId);
+    Boolean endTask(int taskId);
 
 }
