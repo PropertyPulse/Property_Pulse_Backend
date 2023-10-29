@@ -27,7 +27,6 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
     private final PropertyRepository propertyRepository;
   
     public TaskServiceImpl(UserRepository userRepository, TaskRepository taskRepository, PropertyRepository propertyRepository) {
@@ -44,13 +43,13 @@ public class TaskServiceImpl implements TaskService {
 
         List<ResponseTaskListDto> responseTaskListDtos = tasks.stream()
                 .filter(task -> task.getProperty().getId().equals(propertyId))
-                .map(this::mapTaskToDto)
+                .map(this::mapTaskList)
                 .collect(Collectors.toList());
 
         return responseTaskListDtos;
     }
 
-    private ResponseTaskListDto mapTaskToDto(Task t) {
+    private ResponseTaskListDto mapTaskList(Task t) {
 
         ResponseTaskListDto dto = new ResponseTaskListDto();
 
@@ -59,7 +58,8 @@ public class TaskServiceImpl implements TaskService {
         dto.setTimeInDays(t.getTimeInDays());
         dto.setEstimatedPrice(t.getEstimatedPrice());
         dto.setTaskName(t.getTask());
-    
+        return dto;
+    }
 
     @Override
     @Transactional
