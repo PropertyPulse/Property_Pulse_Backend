@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Property;
 import com.example.demo.entity.TaskSupervisor;
+import com.example.demo.exception.ResourceNotFoundException;
 
 
 import java.io.IOException;
@@ -10,4 +12,12 @@ public interface TopManagerService {
 
     List<TaskSupervisor> SelectedSupervisors(String address) throws IOException;
 
+    void requestValuationandAcceptProperty(Long propertyId) throws ResourceNotFoundException;
+
+
+    List<Property> NewManagementRequests();
+
+
+
+    void AssignTaskSupervisor(Long propertyId, Long taskSupervisorId) throws ResourceNotFoundException;
 }

@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -32,6 +34,9 @@ public class TopManager {
     private String nic;
     private LocalDate dob;
     private Gender gender;
+
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Feedback> feedbackList = new ArrayList<>();
 
 }
 

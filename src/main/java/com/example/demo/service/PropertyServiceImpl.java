@@ -10,6 +10,9 @@ import com.example.demo.repository.LandRepository;
 import com.example.demo.repository.PropertyOwnerRepository;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,91 +57,98 @@ public class PropertyServiceImpl implements PropertyService {
 
 
 //        save in te resourcs folder and save the path in the database
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Integer id = userRepository.findByEmail(username).get().getId();
 
-
+  System.out.println("i am inside the service layer");
 
         if (req instanceof RequestAddNewLandDTO) {
-               RequestAddNewLandDTO requestAddNewLandDTO = (RequestAddNewLandDTO) req;
-               Land land = new Land();
-                land.setAddress(requestAddNewLandDTO.getAddress());
-                land.setHaveCrops(requestAddNewLandDTO.getHave_crops());
-                land.setCrops(requestAddNewLandDTO.getCrops());
-                land.setSpecialFacts(requestAddNewLandDTO.getSpecial_facts());
-                land.setRegisteredStatus(requestAddNewLandDTO.getRegistered_status());
-                land.setDistrict(requestAddNewLandDTO.getDistrict());
-                land.setAccepted_date(LocalDate.now());
-                land.setReturned_date(LocalDate.now());
-                land.setWantInsurance(requestAddNewLandDTO.getWant_insurance());
-                land.setDuration(requestAddNewLandDTO.getDuration());
-                land.setLocation(requestAddNewLandDTO.getLocation());
-                List<MultipartFile> propertyImages = requestAddNewLandDTO.getPropertyImages();
-                List<MultipartFile> propertyDocuments = requestAddNewLandDTO.getPropertyDocuments();
-                List<Document> files  = new ArrayList<>();
-                for (MultipartFile propertyImage : propertyImages) {
-                    Document doc = new Document();
+//            System.out.println("i am inside the  land service layer");
+//               RequestAddNewLandDTO requestAddNewLandDTO = (RequestAddNewLandDTO) req;
+//            System.out.println(requestAddNewLandDTO);
+//               Land land = new Land();
+//                land.setAddress(requestAddNewLandDTO.getAddress());
+//                land.setHaveCrops(requestAddNewLandDTO.getHave_crops());
+//                land.setCrops(requestAddNewLandDTO.getCrops());
+//                land.setSpecialFacts(requestAddNewLandDTO.getSpecialFacts());
 
-                    try {
-
-                        doc.setFileUrl(imageDirectory + "/" + propertyImage.getOriginalFilename());
-                        doc.setFileName(propertyImage.getOriginalFilename());
-                        doc.setProperty(land);
-                        doc.setFileType("PROPERTY_IMAGE");
-                        doc.setFileSize(propertyImage.getSize());
-                        Path fileNameAndPath = Paths.get(imageDirectory, propertyImage.getOriginalFilename());
-                        Files.write(fileNameAndPath, propertyImage.getBytes());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    for(MultipartFile propertyDocument : propertyDocuments){
-                        Document doc1 = new Document();
-                        try {
-                            doc1.setFileUrl(imageDirectory + "/" + propertyDocument.getOriginalFilename());
-                            doc1.setFileName(propertyDocument.getOriginalFilename());
-                            doc1.setProperty(land);
-                            doc1.setFileType("PROPERTY_DOCUMENT");
-                            doc1.setFileSize(propertyDocument.getSize());
-                            Path fileNameAndPath = Paths.get(imageDirectory, propertyDocument.getOriginalFilename());
-                            Files.write(fileNameAndPath, propertyDocument.getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        files.add(doc1);
-                    }
-                    files.add(doc);
-                }
-                PropertyOwner propertyOwner = propertyOwnerRepository.findById(requestAddNewLandDTO.getProperty_owner_id()).orElseThrow(() -> new UserException("Property Owner not found"));
-                land.setPropertyOwner(propertyOwner);
-                land.setFiles(files);
-                landRepository.save(land);
-
+//                land.setDistrict(requestAddNewLandDTO.getDistrict());
+//                land.setAccepted_date(LocalDate.now());
+//                land.setReturned_date(LocalDate.now());
+//                land.setWantInsurance(requestAddNewLandDTO.getWant_insurance());
+//                land.setDuration(requestAddNewLandDTO.getDuration());
+//                land.setLocation(requestAddNewLandDTO.getLocation());
+//                List<MultipartFile> propertyImages = requestAddNewLandDTO.getProperty_images();
+//                List<MultipartFile> propertyDocuments = requestAddNewLandDTO.getInsurance_documents();
+//                List<Document> files  = new ArrayList<>();
+//                for (MultipartFile propertyImage : propertyImages) {
+//                    Document doc = new Document();
+//
+//                    try {
+//
+//                        doc.setFileUrl(imageDirectory + "/" + propertyImage.getOriginalFilename());
+//                        doc.setFileName(propertyImage.getOriginalFilename());
+//                        doc.setProperty(land);
+//                        doc.setFileType("PROPERTY_IMAGE");
+//                        doc.setFileSize(propertyImage.getSize());
+//                        Path fileNameAndPath = Paths.get(imageDirectory, propertyImage.getOriginalFilename());
+//                        Files.write(fileNameAndPath, propertyImage.getBytes());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    for(MultipartFile propertyDocument : propertyDocuments){
+//                        Document doc1 = new Document();
+//                        try {
+//                            doc1.setFileUrl(imageDirectory + "/" + propertyDocument.getOriginalFilename());
+//                            doc1.setFileName(propertyDocument.getOriginalFilename());
+//                            doc1.setProperty(land);
+//                            doc1.setFileType("PROPERTY_DOCUMENT");
+//                            doc1.setFileSize(propertyDocument.getSize());
+//                            Path fileNameAndPath = Paths.get(imageDirectory, propertyDocument.getOriginalFilename());
+//                            Files.write(fileNameAndPath, propertyDocument.getBytes());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        files.add(doc1);
+//                    }
+//                    files.add(doc);
+//                }
+//
+//                PropertyOwner propertyOwner = propertyOwnerRepository.findById(id).orElseThrow(() -> new UserException("Property Owner not found"));
+//                land.setPropertyOwner(propertyOwner);
+//                land.setFiles(files);
+//                landRepository.save(land);
+//
 
 
 
             return "Successfully added the land property";
         } else if (req instanceof RequestAddNewHomeDTO) {
 
-                  RequestAddNewHomeDTO requestAddNewHomeDTO = (RequestAddNewHomeDTO) req;
-                  Home home = new Home();
-                    home.setAddress(requestAddNewHomeDTO.getAddress());
-                    home.setStories(requestAddNewHomeDTO.getStories());
-                    home.setBedrooms(requestAddNewHomeDTO.getBedrooms());
-                    home.setLivingRooms(requestAddNewHomeDTO.getLiving_rooms());
-                    home.setBathrooms(requestAddNewHomeDTO.getBathrooms());
-                    home.setDiningRooms(requestAddNewHomeDTO.getDining_rooms());
-                    home.setHaveSpecialRooms(requestAddNewHomeDTO.getHave_special_rooms());
-                    home.setSpecialRooms(requestAddNewHomeDTO.getSpecial_rooms());
-                    home.setDistrict(requestAddNewHomeDTO.getDistrict());
-                    home.setAccepted_date(LocalDate.now());
-                    home.setReturned_date(LocalDate.now());
-                    home.setWantInsurance(requestAddNewHomeDTO.getWant_insurance());
-                    home.setDuration(requestAddNewHomeDTO.getDuration());
-                    home.setLocation(requestAddNewHomeDTO.getLocation());
-                    PropertyOwner propertyOwner = propertyOwnerRepository.findById(requestAddNewHomeDTO.getProperty_owner_id()).orElseThrow(() -> new UserException("Property Owner not found"));
-                    home.setPropertyOwner(propertyOwner);
-
-
-                    homeRepository.save(home);
+//                  RequestAddNewHomeDTO requestAddNewHomeDTO = (RequestAddNewHomeDTO) req;
+//                  Home home = new Home();
+//                    home.setAddress(requestAddNewHomeDTO.getAddress());
+//                    home.setStories(requestAddNewHomeDTO.getStories());
+//                    home.setBedrooms(requestAddNewHomeDTO.getBedrooms());
+//                    home.setLivingRooms(requestAddNewHomeDTO.getLiving_rooms());
+//                    home.setBathrooms(requestAddNewHomeDTO.getBathrooms());
+//                    home.setDiningRooms(requestAddNewHomeDTO.getDining_rooms());
+//                    home.setHaveSpecialRooms(requestAddNewHomeDTO.getHave_special_rooms());
+//                    home.setSpecialRooms(requestAddNewHomeDTO.getSpecial_rooms());
+//                    home.setDistrict(requestAddNewHomeDTO.getDistrict());
+//                    home.setAccepted_date(LocalDate.now());
+//                    home.setReturned_date(LocalDate.now());
+//                    home.setWantInsurance(requestAddNewHomeDTO.getWant_insurance());
+//                    home.setDuration(requestAddNewHomeDTO.getDuration());
+//                    home.setLocation(requestAddNewHomeDTO.getLocation());
+//                    PropertyOwner propertyOwner = propertyOwnerRepository.findById(id).orElseThrow(() -> new UserException("Property Owner not found"));
+//                    home.setPropertyOwner(propertyOwner);
+//
+//
+//                    homeRepository.save(home);
                     return  "Successfully added the home property";
         } else {
             throw new UserException("Invalid Request");

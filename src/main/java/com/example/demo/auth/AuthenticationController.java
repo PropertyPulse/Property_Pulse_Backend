@@ -2,6 +2,7 @@ package com.example.demo.auth;
 
 import com.example.demo.exception.UserException;
 import com.example.demo.service.PropertyOwnerService;
+import com.example.demo.service.PropertyOwnerServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class AuthenticationController {
 
     private final PropertyOwnerService poservice;
 
-    public AuthenticationController(AuthenticationService service, PropertyOwnerService poservice) {
+    public AuthenticationController(AuthenticationService service, PropertyOwnerServiceImpl poservice) {
         this.service = service;
         this.poservice = poservice;
     }
@@ -33,7 +34,7 @@ public class AuthenticationController {
     ) throws UserException {
 
 //        poservice.addPropertyOwner(request);
-
+               System.out.println(request);
         return ResponseEntity.ok(service.register(request));
     }
 

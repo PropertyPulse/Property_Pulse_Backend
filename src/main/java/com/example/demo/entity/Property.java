@@ -49,8 +49,8 @@ public abstract class Property {
 
     @NotBlank(message = "Address is required")
     private String address;
-//    @Enumerated(EnumType.STRING)
-//    private PropertyType type;
+    @Enumerated(EnumType.STRING)
+    private PropertyType type;
 
     @NotBlank(message = "Location is required")
     private String location;
@@ -70,10 +70,18 @@ public abstract class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_supervisor_id")
+    private TaskSupervisor taskSupervisor;
 
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> files;
+
+
+    @OneToOne
+    @JoinColumn(name = "valuation_report_id")
+    private ValuationReport valuationReport;
 
 
 }

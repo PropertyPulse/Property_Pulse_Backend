@@ -37,11 +37,13 @@ public class PropertyOwner  {
     private String nic;
 
     @Pattern(regexp = "^\\d{10}$", message = "invalid mobile number entered")
-    private String ContactNo;
+    private String Telephone;
     private String district;
     private String gender;
 
         @OneToMany(mappedBy = "propertyOwner")
     private  List<Property> properties = new ArrayList<>();
+
+
 
 }

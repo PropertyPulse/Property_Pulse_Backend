@@ -47,4 +47,9 @@ public class TaskSupervisor {
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 
 
+
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id")
+    private  List<Property> properties;
 }
