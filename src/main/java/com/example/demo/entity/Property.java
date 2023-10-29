@@ -22,7 +22,7 @@ import java.util.Set;
 @Table(name = "property")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "property_type")
-public abstract class Property {
+public  class Property {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,8 +34,13 @@ public abstract class Property {
 
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+
     private List<RecivedPayment> payablePayemnts = new ArrayList<>();
 
+
+
+   @Column(name = "accepted_status", columnDefinition = "boolean default false")
+    private  boolean acceptedStatus;
 //    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 

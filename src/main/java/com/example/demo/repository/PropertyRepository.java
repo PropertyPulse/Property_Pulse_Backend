@@ -13,5 +13,9 @@ import java.util.List;
 public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Object> findAllById(Long propertyId);
 
+    List<Property> findByAcceptedStatus(boolean b);
+
+
+
 //    List<Property> findByAccepted_Status(boolean b);
 }

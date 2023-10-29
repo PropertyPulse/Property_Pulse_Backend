@@ -20,7 +20,6 @@ import java.util.*;
 
 
 @Service
-@Builder
 public class TopManagerServiceImpl  implements  TopManagerService {
 
 
@@ -107,11 +106,16 @@ public class TopManagerServiceImpl  implements  TopManagerService {
     @Override
     public List<Property> NewManagementRequests() {
 
-//        List<Property> properties = propertyRepository.findByAccepted_Status(false);
-//        return properties;
+        List<Property> properties = propertyRepository.findByAcceptedStatus(false);
+       if(properties.isEmpty())
+       {
+           System.out.println("No accepted records found in the database");
+           return null;
+       }
+        return properties;
 
 
-        return null;
+
     }
 
     @Override

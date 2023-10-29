@@ -42,7 +42,7 @@ public class TopManagerController {
         this.propertyRepository = propertyRepository;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/hello")
     @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<String> get() {
         // Replace the following string with an actual object you want to return as JSON
@@ -112,13 +112,19 @@ public class TopManagerController {
 
     }
 
-    @GetMapping("/NewManagmentRequests")
+    @GetMapping("/newmanagmentrequest")
+    public ResponseEntity<List<Property>> newmanagementrequest() {
+        try {
+            List<Property> properties = topManagerService.NewManagementRequests();
+            System.out.println("Hello, I am inside the controller");
+            System.out.println("Number of properties: " + properties.size());
 
-    public ResponseEntity<List<Property>> NewManagmentRequests() throws ResourceNotFoundException {
-
-        List<Property> properties = topManagerService.NewManagementRequests();
-        return ResponseEntity.ok(properties);
-
+            // Return the list of properties in the response body
+            return ResponseEntity.ok(properties);
+        } catch (Exception e) {
+            // Handle any exceptions and return a bad request response
+            return ResponseEntity.badRequest().build();
+        }
     }
     //    @GetMapping("/viewPendingProperties")
 //    public List<Property> viewPendingProperties() {
