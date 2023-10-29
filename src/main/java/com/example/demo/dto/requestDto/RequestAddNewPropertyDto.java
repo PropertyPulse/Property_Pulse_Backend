@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,5 +33,6 @@ public class RequestAddNewPropertyDto {
     private String registered_status;
     private String property_owner_email;
     private Boolean want_insurance;
+    private ArrayList<String> checklist;
 
 }

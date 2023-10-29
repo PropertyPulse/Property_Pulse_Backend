@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain  //this is a design pattern
     ) throws ServletException, IOException {
 
-        // here we firstly, doing extracting the request (header,jwt,useremail)
+        // here we firstly, doing extracting the request (header,jwt,user email)
         final String authHeader = request.getHeader("Authorization"); //extract the header
         final String jwt;
         final String userEmail;

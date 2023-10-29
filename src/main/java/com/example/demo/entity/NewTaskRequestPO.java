@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
@@ -12,21 +13,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "task")
-public class Task {
-
+@Table(name = "NewTaskRequest")
+public class NewTaskRequestPO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_id")
     private Property property;
-    private String task;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Float cost;
-    private String ManpowerCompanyRequestStatus;
-    private String ManpowerCompany;
-    private String status;
+
+    private String task_description;
+    private LocalDate proposed_start_date;
+    private String accepted_status;
+    private String special_remarks;
+    private String frequency;
 }

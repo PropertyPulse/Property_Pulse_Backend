@@ -26,6 +26,12 @@ public class Property {
     private Integer id;
 
 
+    @ElementCollection
+    @CollectionTable(name = "property_checklist") // Specify the name of the table for the collection
+    @Column(name = "checklist_item") // Specify the column name for the strings
+    private List<String> checklist;
+
+
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskRequest> taskRequests = new ArrayList<>();
 
@@ -91,11 +97,20 @@ public class Property {
     @Column(name = "registered_status")
     private String registeredStatus;
 
+    @Column(name = "visit_status")
+    private String visitStatus;
+
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
 
     @Column (name = "assign_stage")
     private String assignStage;
+
+    @Column (name = "price_list_status")
+    private String priceListStatus;
+
+    @Column (name = "legal_contract_status")
+    private String legalContractStatus;
 
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;

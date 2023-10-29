@@ -7,4 +7,8 @@ public class ResponsePropertiesToBeManagedDto {
     private int propertyId;
     private String propertyOwnerName;
     private String address;
+    private String propertyType;
+    private String visitStatus;
+    private String priceListStatus;
+    private String legalContractStatus;
 }

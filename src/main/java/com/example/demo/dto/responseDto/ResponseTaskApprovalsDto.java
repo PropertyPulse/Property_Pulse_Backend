@@ -5,13 +5,13 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class ResponseCompletedTasksDto {
+public class ResponseTaskApprovalsDto {
 
     private Integer propertyId;
+    private String location;
     private Integer taskId;
     private String task;
-    private String startDate;
-    private LocalDate endDate;
-    private String taskStatus;
+    private LocalDate startDate;
+    private String manpowerCompanyRequestStatus;
 
 }
