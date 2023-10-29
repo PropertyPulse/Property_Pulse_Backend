@@ -29,4 +29,7 @@ public class Task {
     private String ManpowerCompanyRequestStatus;
     private String ManpowerCompany;
     private String status;
+    private Integer estimatedPrice;
+    private Integer timeInDays;
+
 }
