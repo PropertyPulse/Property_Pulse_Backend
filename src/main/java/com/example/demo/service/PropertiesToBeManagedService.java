@@ -10,4 +10,7 @@ import java.util.List;
 @Transactional
 public interface PropertiesToBeManagedService {
     List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged (String email);
+    List<ResponsePropertiesToBeManagedDto> propertiesToBeManagedVisited (String email);
+
+
 }

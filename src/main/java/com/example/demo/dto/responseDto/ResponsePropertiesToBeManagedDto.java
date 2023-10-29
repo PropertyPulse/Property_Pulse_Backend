@@ -9,4 +9,6 @@ public class ResponsePropertiesToBeManagedDto {
     private String address;
     private String propertyType;
     private String visitStatus;
+    private String priceListStatus;
+    private String legalContractStatus;
 }
