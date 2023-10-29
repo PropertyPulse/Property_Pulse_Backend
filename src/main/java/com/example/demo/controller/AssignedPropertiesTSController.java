@@ -3,9 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.dto.requestDto.PropertyVisitStatusRequestDto;
 import com.example.demo.dto.responseDto.ResponseAssignedPropertiesTSDto;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
+import com.example.demo.dto.responseDto.ResponseTaskListDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.AssignedPropertiesTSService;
 import com.example.demo.service.PropertiesToBeManagedService;
+import com.example.demo.service.TaskService;
 import com.example.demo.service.UpdatePropertyVisitStatusService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,13 @@ import java.util.List;
 public class AssignedPropertiesTSController {
     private final AssignedPropertiesTSService assignedPropertiesTSService;
     private final PropertiesToBeManagedService propertiesToBeManagedService;
+    private final TaskService taskService;
 
     private final UpdatePropertyVisitStatusService updatePropertyVisitStatusService;
-    public AssignedPropertiesTSController(AssignedPropertiesTSService assignedPropertiesTSService, PropertiesToBeManagedService propertiesToBeManagedService, UpdatePropertyVisitStatusService updatePropertyVisitStatusService) {
+    public AssignedPropertiesTSController(AssignedPropertiesTSService assignedPropertiesTSService, PropertiesToBeManagedService propertiesToBeManagedService, TaskService taskService, UpdatePropertyVisitStatusService updatePropertyVisitStatusService) {
         this.assignedPropertiesTSService = assignedPropertiesTSService;
         this.propertiesToBeManagedService = propertiesToBeManagedService;
+        this.taskService = taskService;
         this.updatePropertyVisitStatusService = updatePropertyVisitStatusService;
     }
 
@@ -45,6 +49,12 @@ public class AssignedPropertiesTSController {
     public ResponseEntity<List<ResponsePropertiesToBeManagedDto>> getPropertiesToBeManaged_VisitedForTaskSupervisor (@RequestParam("email") String email) throws UserException{
         List<ResponsePropertiesToBeManagedDto> propertiesToBeManaged = propertiesToBeManagedService.propertiesToBeManagedVisited (email);
         return ResponseEntity.ok(propertiesToBeManaged);
+    }
+
+    @GetMapping("/getTaskList")
+    public ResponseEntity<List<ResponseTaskListDto>> getTaskList (@RequestParam("propertyId") Integer propertyId) throws UserException{
+        List<ResponseTaskListDto> tasksList = taskService.getTaskList (propertyId);
+        return ResponseEntity.ok(tasksList);
     }
 
     @PostMapping("/updatePropertyVisitStatus")

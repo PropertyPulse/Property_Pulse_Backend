@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
+import com.example.demo.dto.responseDto.ResponseTaskListDto;
+import com.example.demo.entity.*;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.Task;
@@ -10,22 +13,53 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.*;
+
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
+    private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final PropertyRepository propertyRepository;
+  
     public TaskServiceImpl(UserRepository userRepository, TaskRepository taskRepository, PropertyRepository propertyRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.propertyRepository = propertyRepository;
     }
+
+    @Override
+    public List<ResponseTaskListDto> getTaskList(Integer propertyId){
+
+        List<Task> tasks = taskRepository.findByPropertyId(propertyId);
+
+
+        List<ResponseTaskListDto> responseTaskListDtos = tasks.stream()
+                .filter(task -> task.getProperty().getId().equals(propertyId))
+                .map(this::mapTaskToDto)
+                .collect(Collectors.toList());
+
+        return responseTaskListDtos;
+    }
+
+    private ResponseTaskListDto mapTaskToDto(Task t) {
+
+        ResponseTaskListDto dto = new ResponseTaskListDto();
+
+        dto.setCost(t.getCost());
+        dto.setPropertyId(t.getProperty().getId());
+        dto.setTimeInDays(t.getTimeInDays());
+        dto.setEstimatedPrice(t.getEstimatedPrice());
+        dto.setTaskName(t.getTask());
+    
 
     @Override
     @Transactional
@@ -78,6 +112,7 @@ public class TaskServiceImpl implements TaskService {
 
         return dto;
     }
+
 
     @Override
     @Transactional
