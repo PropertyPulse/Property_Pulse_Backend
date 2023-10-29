@@ -16,11 +16,9 @@ import java.util.List;
 public class TaskRequestController {
 
     private final TaskRequestService taskRequestService;
-    private final TaskSupervisorService taskSupervisorService;
 
-    public TaskRequestController(TaskRequestService taskRequestService, TaskSupervisorService taskSupervisorService) {
+    public TaskRequestController(TaskRequestService taskRequestService) {
         this.taskRequestService = taskRequestService;
-        this.taskSupervisorService = taskSupervisorService;
     }
 
     @GetMapping("/get")
@@ -38,7 +36,7 @@ public class TaskRequestController {
     @GetMapping("/task-approvals")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
     public ResponseEntity<List<ResponseTaskApprovalsDto>> getTaskApprovals(@RequestParam("email") String email) throws UserException {
-        List<ResponseTaskApprovalsDto> taskApprovals = taskSupervisorService.getTaskApprovals(email);
+        List<ResponseTaskApprovalsDto> taskApprovals = taskRequestService.getTaskApprovals(email);
         return ResponseEntity.ok(taskApprovals);
     }
 
