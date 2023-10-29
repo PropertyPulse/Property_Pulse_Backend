@@ -54,9 +54,9 @@ public class TaskController {
         return ResponseEntity.ok(completedTasks);
     }
 
-    @PutMapping("/upcoming-tasks/update-task-status")
-    @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<String> updateTaskStatus(@RequestBody RequestTaskStatusDto req){
+    @PutMapping("/upcoming-tasks/start-task")
+    @PreAuthorize("hasAuthority('tasksupervisor:update')")
+    public ResponseEntity<String> startTask(@RequestBody RequestTaskStatusDto req){
 
         try{
 
@@ -65,6 +65,24 @@ public class TaskController {
                 return ResponseEntity.ok("Task Started");
             }else {
                 return ResponseEntity.badRequest().body("Failed to mark the task as started at the moment");
+            }
+
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
+        }
+    }
+
+    @PutMapping("/ongoing-tasks/end-task")
+    @PreAuthorize("hasAuthority('tasksupervisor:update')")
+    public ResponseEntity<String> endTask(@RequestBody RequestTaskStatusDto req){
+
+        try{
+
+            Boolean isTaskEnded = taskService.endTask(req.getTaskId());
+            if (isTaskEnded) {
+                return ResponseEntity.ok("Task marked as Ended");
+            }else {
+                return ResponseEntity.badRequest().body("Failed to mark the task as ended at the moment");
             }
 
         }catch (Exception e) {

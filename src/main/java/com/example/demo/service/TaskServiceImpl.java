@@ -175,4 +175,16 @@ public class TaskServiceImpl implements TaskService {
         return false;
     }
 
+    @Override
+    public Boolean endTask(int taskId) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            Task endingTask = task.get();
+            endingTask.setStatus("Completed");
+            taskRepository.save(endingTask);
+            return true;
+        }
+        return false;
+    }
+
 }
