@@ -308,7 +308,7 @@ public class AuthenticationService {
                 }
             }
         }
-
+        System.out.println("rf token "+refreshToken);
         if (refreshToken == null) {
             return;
         }
@@ -321,6 +321,7 @@ public class AuthenticationService {
 
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
+                System.out.println("new token "+accessToken);
 //                revokeAllUserTokens(user);
 //                saveUserToken(user, accessToken);
                 updateUserToken(user, accessToken);
