@@ -4,6 +4,8 @@ import com.example.demo.dto.requestDto.RequestAddNewInternalUserDto;
 import com.example.demo.dto.responseDto.ResponseViewUsersDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.service.AdminService;
+import com.example.demo.service.EmailSenderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,10 +19,17 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
+    @Autowired
     private final AdminService adminService;
 
-    public AdminController(AdminService adminService) {
+    @Autowired
+    private final EmailSenderService emailSenderService;
+
+
+    @Autowired
+    public AdminController(AdminService adminService, EmailSenderService emailSenderService) {
         this.adminService = adminService;
+        this.emailSenderService = emailSenderService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,6 +88,15 @@ public class AdminController {
         return ResponseEntity.ok(adminService.viewUsers());
     }
 
+    @GetMapping("/testmail")
+    public ResponseEntity<String> testmail() throws UserException{
+
+        emailSenderService.sendSimpleEmail("janith.shashika@gmail.com",
+                "This is email body",
+                "This is email subject");
+
+        return ResponseEntity.ok("mailsent");
+    }
 
 
 
