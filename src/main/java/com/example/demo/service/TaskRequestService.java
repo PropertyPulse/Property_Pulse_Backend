@@ -16,5 +16,5 @@ public interface TaskRequestService {
 
     List<ResponseTaskApprovalsDto> getTaskApprovals(String email) throws UserException;
 
-
+    Boolean updateManpowerCompanyResponse(int taskId, String requestStatus);
 }

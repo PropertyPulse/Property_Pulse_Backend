@@ -30,13 +30,11 @@ public class TaskRequestServiceImpl implements TaskRequestService {
 
     public final TaskRequestRepository taskRequestRepository;
     private final UserRepository userRepository;
-    private final TaskSupervisorRepository taskSupervisorRepository;
     private final TaskRepository taskRepository;
     private final PropertyRepository propertyRepository;
-    public TaskRequestServiceImpl(UserRepository userRepository, TaskSupervisorRepository taskSupervisorRepository,
-                                     TaskRepository taskRepository, PropertyRepository propertyRepository, TaskRequestRepository taskRequestRepository) {
+    public TaskRequestServiceImpl(UserRepository userRepository, TaskRepository taskRepository, PropertyRepository propertyRepository,
+                                  TaskRequestRepository taskRequestRepository) {
         this.userRepository = userRepository;
-        this.taskSupervisorRepository = taskSupervisorRepository;
         this.taskRepository = taskRepository;
         this.propertyRepository = propertyRepository;
         this.taskRequestRepository = taskRequestRepository;
@@ -111,5 +109,17 @@ public class TaskRequestServiceImpl implements TaskRequestService {
         dto.setStartDate(task.getStartDate());
 
         return dto;
+    }
+
+    @Override
+    public Boolean updateManpowerCompanyResponse(int taskId, String requestStatus) {
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isPresent()) {
+            Task updatingTask = task.get();
+            updatingTask.setManpowerCompanyRequestStatus(requestStatus);
+            taskRepository.save(updatingTask);
+            return true;
+        }
+        return false;
     }
 }
