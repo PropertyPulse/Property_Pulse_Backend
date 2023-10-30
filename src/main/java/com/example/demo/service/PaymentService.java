@@ -13,14 +13,15 @@ public class PaymentService {
     @Value("sk_test_51O6YMFDe6Cwf3TWUBu3VBJTFoeHmu6OlZoYXvjCT8ftjXu4zJ1vykiONIaBqN3ivQr93wAj5mMq218cCTLULw4RK00CPggqcsq")
     private String stripeSecretKey;
 
-    public void processPayment(String token) {
+    public void processPayment(String token,float amount,String description) {
         Stripe.apiKey = stripeSecretKey;
 
         try {
             ChargeCreateParams params = ChargeCreateParams.builder()
-                    .setAmount((long) 1000.00)
-                    .setCurrency("usd")
-                    .setDescription("Payment for services")
+                    .setAmount( (long)(amount*1000))
+                    .setCurrency("USD")
+                    .setDescription(description)
+//                    .setCustomer("Thilanka ")
                     .setSource(token) // Make sure 'token' contains the valid payment token
                     .build();
 

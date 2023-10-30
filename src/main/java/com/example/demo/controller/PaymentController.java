@@ -35,10 +35,11 @@ public class PaymentController {
     }
 
     @PostMapping("/charge")
-    public ResponseEntity<String> charge(@RequestParam String token) {
+    public ResponseEntity<String> charge(@RequestParam("token") String token , @RequestParam("amount") float amount , @RequestParam("description") String description ) {
         try {
             // Perform payment processing here
-            paymentService.processPayment(token);
+            paymentService.processPayment(token,amount,description);
+            System.out.println("tokenstrin"+token);
             return ResponseEntity.ok("Payment successful");
         } catch (Exception e) {
             // Handle any exceptions that occur during payment processing
