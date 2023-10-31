@@ -141,6 +141,8 @@ public  class Property {
     @JsonBackReference
     private TaskSupervisor taskSupervisor;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean isDeleted;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> files;

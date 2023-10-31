@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestFeedbackDTO;
-import com.example.demo.dto.responseDto.ResponseComplaintDTO;
-import com.example.demo.dto.responseDto.ResponseNewManagementRequestDto;
-import com.example.demo.dto.responseDto.ResponseTaskSupervisorDTO;
-import com.example.demo.dto.responseDto.ResponseValuationDTO;
+import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ComplaintRepository;
@@ -22,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/tm")
@@ -36,6 +34,9 @@ public class TopManagerController {
     private final TopManagerService topManagerService;
     private final ValuationReportService valuationReportService;
 
+
+    private final  PropertyService propertyService;
+
     private final ComplaintRepository complaintRepository;
     private final PropertyRepository propertyRepository;
     private   final TaskSupervisorRepository taskSupervisorRepository;
@@ -43,13 +44,14 @@ public class TopManagerController {
     private final PropertyOwnerRepository propertyOwnerRepository;
 
     @Autowired
-    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, ComplaintRepository complaintRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository, PropertyOwnerRepository propertyOwnerRepository) {
+    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, PropertyService propertyService, ComplaintRepository complaintRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository, PropertyOwnerRepository propertyOwnerRepository) {
         this.feedbackService = feedbackService;
 //        this.geocodeController = geocodeController;
 
 
         this.topManagerService = topManagerService;
         this.valuationReportService = valuationReportService;
+        this.propertyService = propertyService;
         this.complaintRepository = complaintRepository;
 
         this.propertyRepository = propertyRepository;
@@ -149,7 +151,7 @@ public class TopManagerController {
     @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseNewManagementRequestDto>> newmanagementrequest() {
         try {
-            List<Property> unacceptedProperties = propertyRepository.findByAcceptedStatus(false);
+            List<Property> unacceptedProperties = propertyRepository.findByIsDeletedFalseAndAcceptedStatusFalse();
             System.out.println(unacceptedProperties.size());
             List<ResponseNewManagementRequestDto> responseDTOs = new ArrayList<>();
 
@@ -308,6 +310,44 @@ public class TopManagerController {
 
 
 
+
+    @GetMapping("/accepted")
+    @PreAuthorize("hasAuthority('topmanager:read')")
+
+    public ResponseEntity<List<UpdateTaskSupervisorResponseDTO>> getAllAcceptedProperties() {
+        List<Property> propertyList =  propertyRepository.findByAcceptedStatus(true);
+        List<UpdateTaskSupervisorResponseDTO> updateTaskSupervisorResponseDTOList = new ArrayList<>();
+        if(propertyList.isEmpty())
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        for(Property property:propertyList )
+        {
+            UpdateTaskSupervisorResponseDTO updateTaskSupervisorResponseDTO = new UpdateTaskSupervisorResponseDTO();
+            updateTaskSupervisorResponseDTO.setPropertyId(property.getId());
+            updateTaskSupervisorResponseDTO.setLocation(property.getLocation());
+            updateTaskSupervisorResponseDTO.setName(property.getTaskSupervisor().getUser().getFirstname() + " " + property.getTaskSupervisor().getUser().getLastname());
+//            updateTaskSupervisorResponseDTO.setOngoingTask(property.getTaskSupervisor().getProperties().size());
+            updateTaskSupervisorResponseDTOList.add(updateTaskSupervisorResponseDTO);
+        }
+
+        return ResponseEntity.ok(updateTaskSupervisorResponseDTOList);
+    }
+    @PostMapping("/reject-property")
+    @PreAuthorize("hasAuthority('topmanager:create')")
+    public ResponseEntity<String> rejectProperty(Integer propertyId) {
+        Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
+
+        if (propertyOptional.isPresent()) {
+            Property property = propertyOptional.get();
+            property.setDeleted(true); // Set the isDeleted flag to true
+             propertyRepository.save(property);
+            return ResponseEntity.ok("Property rejected successfully");
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 }
 
