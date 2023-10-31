@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.requestDto.RequestAddContactPersonDto;
 import com.example.demo.dto.requestDto.RequestUpdateRequestStatusDto;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.exception.UserException;
@@ -57,6 +58,12 @@ public class TaskRequestController {
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
         }
+    }
+
+    @PostMapping("/task-approvals/add-contact-person")
+    @PreAuthorize("hasAuthority('tasksupervisor:create')")
+    public ResponseEntity<Boolean> addContactPerson(@RequestBody RequestAddContactPersonDto req) throws UserException {
+        return ResponseEntity.ok(taskRequestService.addContactPerson(req));
     }
 
 }

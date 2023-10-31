@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestAddContactPersonDto;
 import com.example.demo.dto.responseDto.ResponseNewTaskRequestDto;
 import com.example.demo.dto.responseDto.ResponseTaskApprovalsDto;
 import com.example.demo.entity.Property;
@@ -10,12 +11,10 @@ import com.example.demo.exception.UserException;
 import com.example.demo.repository.PropertyRepository;
 import com.example.demo.repository.TaskRepository;
 import com.example.demo.repository.TaskRequestRepository;
-import com.example.demo.repository.TaskSupervisorRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -117,6 +116,19 @@ public class TaskRequestServiceImpl implements TaskRequestService {
         if (task.isPresent()) {
             Task updatingTask = task.get();
             updatingTask.setManpowerCompanyRequestStatus(requestStatus);
+            taskRepository.save(updatingTask);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean addContactPerson(RequestAddContactPersonDto req) {
+        Optional<Task> task = taskRepository.findById(req.getTaskId());
+        if (task.isPresent()) {
+            Task updatingTask = task.get();
+            updatingTask.setContactPersonName(req.getContactPersonName());
+            updatingTask.setContactPersonTelNo(req.getContactPersonNumber());
             taskRepository.save(updatingTask);
             return true;
         }
