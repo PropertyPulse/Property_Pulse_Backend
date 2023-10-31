@@ -246,13 +246,13 @@ public class TopManagerController {
     @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseComplaintDTO>> getAllComplaints() {
         try {
-            List<Complaint> complaints = complaintRepository.findAllWithComplainantByIssolvedFalse();
+            List<NewComplaint> complaints = complaintRepository.findAllWithComplainantByIssolvedFalse();
             List<ResponseComplaintDTO> complaintDTOList = new ArrayList<>();
             if(complaints == null)
             {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            for (Complaint complaint : complaints) {
+            for (NewComplaint complaint : complaints) {
 
                 ResponseComplaintDTO complaintDTO = new ResponseComplaintDTO();
                 complaintDTO.setComplaint_id(complaint.getComplaint_id());

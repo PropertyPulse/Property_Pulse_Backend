@@ -48,6 +48,7 @@ public class TaskSupervisor {
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
 
 
+<<<<<<< HEAD
 
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -55,3 +56,6 @@ public class TaskSupervisor {
     @JsonManagedReference
     private  List<Property> properties;
 }
+=======
+}
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd

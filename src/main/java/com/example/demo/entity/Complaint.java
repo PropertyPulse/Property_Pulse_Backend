@@ -36,9 +36,7 @@ public class Complaint  {
     @JsonIgnore
     private  User complainant;
 //
-    @OneToOne
-    @JoinColumn(name = "category_id")
-    private ComplaintCategory category;
+
 
     @Column(name = "description", length = 1000)
     private String description;

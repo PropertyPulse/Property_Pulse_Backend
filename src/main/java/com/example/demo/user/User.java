@@ -3,6 +3,7 @@ package com.example.demo.user;
 
 //import com.example.demo.token.Token;
 import com.example.demo.entity.*;
+import com.example.demo.token.PasswordResetToken;
 import com.example.demo.token.Token;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -64,6 +65,10 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private TopManager topManager;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private PasswordResetToken pwresettoken;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ManPowerCompany manPowerCompany;

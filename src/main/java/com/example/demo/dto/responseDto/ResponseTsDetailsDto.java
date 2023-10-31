@@ -3,7 +3,7 @@ package com.example.demo.dto.responseDto;
 import lombok.Data;
 
 @Data
-public class ResponseTsdetails {
+public class ResponseTsDetailsDto {
 
     private String firstname;
     private String lastname;

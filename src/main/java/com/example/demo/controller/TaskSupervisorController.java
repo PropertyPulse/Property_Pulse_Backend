@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.requestDto.RequestUserdetails;
-import com.example.demo.dto.responseDto.ResponseTsdetails;
+import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.*;
 import com.example.demo.service.TaskSupervisorService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/v1/ts")
@@ -38,20 +38,12 @@ public class TaskSupervisorController {
 
     @PostMapping("/tsdetails")
     @PreAuthorize("hasAuthority('tasksupervisor:read')")
-    public ResponseEntity<ResponseTsdetails> getTsdetails(@RequestBody final RequestUserdetails requestUserdetails){
-        ResponseTsdetails responseTsdetails ;
+    public ResponseEntity<ResponseTsDetailsDto> getTsdetails(@RequestBody final RequestUserDetailsDto requestUserdetails){
 
+        ResponseTsDetailsDto responseTsdetailsDto;
+        responseTsdetailsDto = taskSupervisorService.getTasksupervisorDetails(requestUserdetails);
 
-        responseTsdetails = taskSupervisorService.getTasksupervisorDetails(requestUserdetails);
-
-
-
-        return ResponseEntity.ok(responseTsdetails);
+        return ResponseEntity.ok(responseTsdetailsDto);
     }
-
-
-
-
-
 
 }

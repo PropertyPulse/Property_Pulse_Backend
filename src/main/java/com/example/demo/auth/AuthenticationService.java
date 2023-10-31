@@ -1,12 +1,18 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.requestDto.RequestPasswordResetDto;
 import com.example.demo.exception.UserException;
 import com.example.demo.config.JwtService;
 import com.example.demo.entity.PropertyOwner;
 import com.example.demo.repository.PropertyOwnerRepository;
+
 import com.example.demo.token.Token;
 import com.example.demo.token.TokenRepository;
 import com.example.demo.token.TokenType;
+
+import com.example.demo.token.*;
+import com.example.demo.user.Role;
+
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +45,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
     private final PropertyOwnerRepository propertyOwnerRepository;
+
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
 
     @Transactional
@@ -93,9 +101,10 @@ public class AuthenticationService {
             throw new UserException("District is required");
         }
 
-        if (propertyOwner.getTelephone() == null || propertyOwner.getTelephone().equals("")) {
-            System.out.println("I am here baby");
-            throw new UserException("Phone number is  not required");
+
+        if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
+            throw new UserException("Phone number is required");
+
         }
 
         if (!Arrays.asList(districts).contains(propertyOwner.getDistrict())) {
@@ -183,7 +192,7 @@ public class AuthenticationService {
 //
 //    }
 
-
+    @Transactional
     public AuthenticationResponse authenticate(HttpServletResponse response, AuthenticationRequest request) throws UserException {
         try {
             authenticationManager.authenticate(
@@ -303,7 +312,7 @@ public class AuthenticationService {
                 }
             }
         }
-
+        System.out.println("rf token "+refreshToken);
         if (refreshToken == null) {
             return;
         }
@@ -316,6 +325,7 @@ public class AuthenticationService {
 
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
+                System.out.println("new token "+accessToken);
 //                revokeAllUserTokens(user);
 //                saveUserToken(user, accessToken);
                 updateUserToken(user, accessToken);
@@ -374,4 +384,31 @@ public class AuthenticationService {
         refreshTokenCookie.setPath("/");  // Set the cookie's path to the root
         response.addCookie(refreshTokenCookie);
     }
+
+    public void resetPassword(String email) throws UserException {
+        if (repository.findByEmail(email).isEmpty()) {
+            throw new UserException("User not found");
+        } else {
+            var user = repository.findByEmail(email).orElseThrow();
+            String token = jwtService.generateToken(user);
+
+            PasswordResetToken existingToken = user.getPwresettoken();
+            if (existingToken == null) {
+                // If no existing token, create a new one
+                PasswordResetToken passwordResetToken = new PasswordResetToken();
+                passwordResetToken.setToken(token);
+                passwordResetToken.setUser(user);
+                user.setPwresettoken(passwordResetToken);
+                passwordResetTokenRepository.save(passwordResetToken);
+            } else {
+                // Update the existing token if needed
+                existingToken.setToken(token);
+                passwordResetTokenRepository.save(existingToken);
+            }
+
+
+
+        }
+    }
+
 }

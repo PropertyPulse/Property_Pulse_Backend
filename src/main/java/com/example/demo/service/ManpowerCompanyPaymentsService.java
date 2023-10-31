@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestMonthlyPayementManpowerCompanyDto;
 import com.example.demo.dto.responseDto.MonthlyPaymentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,5 +14,8 @@ public interface ManpowerCompanyPaymentsService {
     List<MonthlyPaymentDto> getTotalUnpaidPaymentsPerMonth() ;
 
     Boolean updatePaymentStatus(MonthlyPaymentDto monthlyPaymentDto);
+
+    Boolean addManpowerCompanyPayment(RequestMonthlyPayementManpowerCompanyDto req);
+
 
 }

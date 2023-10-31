@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.responseDto.ResponseNewTaskRequestDto;
-import com.example.demo.entity.TaskRequest;
+import com.example.demo.dto.requestDto.RequestAddContactPersonDto;
+import com.example.demo.dto.requestDto.RequestUpdateRequestStatusDto;
+import com.example.demo.dto.responseDto.*;
+import com.example.demo.exception.UserException;
 import com.example.demo.service.TaskRequestService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,22 +25,45 @@ public class TaskRequestController {
 
     @GetMapping("/get")
     public ResponseEntity<String> getTaskRequests() {
-        // Your logic to retrieve task requests
         return ResponseEntity.ok("Task requests");
     }
 
-
-    @PostMapping("/addnewtask")
-    public ResponseEntity<String> addNewTask(@RequestBody TaskRequest taskRequest) {
-        // Your logic to add new task
-        return ResponseEntity.ok("New task added");
-    }
-
-    // Add more endpoints for updating, deleting, etc.
 
     @GetMapping("/getAllnewtaskrequests")
     public ResponseEntity<List<ResponseNewTaskRequestDto>> getAllnewTaskRequests() {
         List<ResponseNewTaskRequestDto> responseDtos = taskRequestService.getAllNewTaskRequests();
         return ResponseEntity.ok(responseDtos);
     }
+
+    @GetMapping("/task-approvals")
+    @PreAuthorize("hasAuthority('tasksupervisor:read')")
+    public ResponseEntity<List<ResponseTaskApprovalsDto>> getTaskApprovals(@RequestParam("email") String email) throws UserException {
+        List<ResponseTaskApprovalsDto> taskApprovals = taskRequestService.getTaskApprovals(email);
+        return ResponseEntity.ok(taskApprovals);
+    }
+
+    @PutMapping("/task-approvals/update-mc-status")
+    @PreAuthorize("hasAuthority('tasksupervisor:update')")
+    public ResponseEntity<String> updateRequestStatus(@RequestBody RequestUpdateRequestStatusDto req){
+
+        try{
+
+            Boolean isStatusUpdated = taskRequestService.updateManpowerCompanyResponse(req.getTaskId(), req.getRequestStatus());
+            if (isStatusUpdated) {
+                return ResponseEntity.ok("Status successfully updated");
+            }else {
+                return ResponseEntity.badRequest().body("Failed to update the request status at the moment");
+            }
+
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
+        }
+    }
+
+    @PostMapping("/task-approvals/add-contact-person")
+    @PreAuthorize("hasAuthority('tasksupervisor:create')")
+    public ResponseEntity<Boolean> addContactPerson(@RequestBody RequestAddContactPersonDto req) throws UserException {
+        return ResponseEntity.ok(taskRequestService.addContactPerson(req));
+    }
+
 }

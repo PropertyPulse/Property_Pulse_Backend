@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.requestDto.RequestUserdetails;
-import com.example.demo.dto.responseDto.ResponseTsdetails;
+import com.example.demo.dto.requestDto.RequestUserDetailsDto;
+import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.TaskSupervisor;
 import com.example.demo.repository.TaskSupervisorRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -23,10 +22,10 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
     }
 
     @Override
-    public ResponseTsdetails getTasksupervisorDetails(RequestUserdetails req) {
+    public ResponseTsDetailsDto getTasksupervisorDetails(RequestUserDetailsDto req) {
 
 
-        ResponseTsdetails responseTsdetails = new ResponseTsdetails();
+        ResponseTsDetailsDto responseTsdetailsDto = new ResponseTsDetailsDto();
 
         Optional<User> userOptional = userRepository.findByEmail(req.getEmail());
 
@@ -34,12 +33,13 @@ public class TaskSupervisorServiceImpl implements TaskSupervisorService {
             User user = userOptional.get();
 
             TaskSupervisor taskSupervisor = taskSupervisorRepository.findTaskSupervisorByUser(user);
-//
+
 //            responseTsdetails.setFirstname(taskSupervisor.getFirstname());
 //            responseTsdetails.setLastname(taskSupervisor.getLastname());
         }
 
 
-        return responseTsdetails;
+        return responseTsdetailsDto;
     }
+
 }

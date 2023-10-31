@@ -1,18 +1,16 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Complaint;
+
+import com.example.demo.entity.NewComplaint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
-
-
-  @Query("SELECT c FROM Complaint c LEFT JOIN FETCH c.complainant WHERE c.issolved = false")
-  List<Complaint> findAllWithComplainantByIssolvedFalse();
-
-
-
+@Repository
+public interface ComplaintRepository extends JpaRepository<NewComplaint, Integer> {
+  @Query("SELECT c FROM NewComplaint  c LEFT JOIN FETCH c.complainant WHERE c.issolved = false")
+  List<NewComplaint> findAllWithComplainantByIssolvedFalse();
 
 }

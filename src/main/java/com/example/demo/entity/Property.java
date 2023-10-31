@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,12 +34,19 @@ public  class Property {
     private Integer id;
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd
     @ElementCollection
     @CollectionTable(name = "property_checklist") // Specify the name of the table for the collection
     @Column(name = "checklist_item") // Specify the column name for the strings
     private List<String> checklist;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskRequest> taskRequests = new ArrayList<>();
 
@@ -51,6 +61,10 @@ public  class Property {
     private  boolean acceptedStatus;
 //    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 //    private List<ReceivablePayment> receivablePayments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_supervisor_id")
+    private TaskSupervisor taskSupervisor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_owner_id")
@@ -110,6 +124,7 @@ public  class Property {
     @Column(name = "visit_status")
     private String visitStatus;
 
+<<<<<<< HEAD
     @Column (name = "price_list_status")
     private String priceListStatus;
 
@@ -128,14 +143,26 @@ public  class Property {
 
 
 
+=======
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd
     @Column(name = "want_insurance")
     private Boolean wantInsurance;
+
+    @Column (name = "assign_stage")
+    private String assignStage;
+
+    @Column (name = "price_list_status")
+    private String priceListStatus;
+
+    @Column (name = "legal_contract_status")
+    private String legalContractStatus;
 
     // @Column(name = "property_owner")
     // private Integer propertyOwnerId;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private List<TaskEquipmentPayment> equipmentPayments = new ArrayList<>();
 
+<<<<<<< HEAD
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_supervisor_id")
     @JsonBackReference
@@ -153,5 +180,17 @@ public  class Property {
     private ValuationReport valuationReport;
 
 
+=======
+//    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<File> files = new HashSet<>();
+
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private FileData document;
+
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private ImageData imageData;
+>>>>>>> 7ce746af198b1f9077a84d673befbd1ef13e1fcd
 
 }
