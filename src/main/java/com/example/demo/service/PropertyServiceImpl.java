@@ -2,19 +2,21 @@ package com.example.demo.service;
 
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyOwner;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.PropertyOwnerRepository;
 import com.example.demo.repository.PropertyRepository;
+import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,7 +34,7 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     @Transactional
-    public String addNewProperty(RequestAddNewPropertyDto req) throws UserException {
+    public ResponseAddNewPropertyDto addNewProperty(RequestAddNewPropertyDto req) throws UserException {
         ResponseAddNewPropertyDto responseAddNewPropertyDto = new ResponseAddNewPropertyDto();
 
         var user = userRepository.findByEmail(req.getProperty_owner_email());
@@ -67,9 +69,65 @@ public class PropertyServiceImpl implements PropertyService {
 
         var savedProperty = propertyRepository.save(property);
 
-        return "Property added successfully";
+        responseAddNewPropertyDto.setId(savedProperty.getId());
+
+        return responseAddNewPropertyDto;
     }
 
 
+    @Override
+    public List<ResponseGetAllPropertiesByUserDto> getAllPropertiesByUser(String email) {
+        Optional<User> propertyOwner = userRepository.findByEmail(email);
+
+        List<Property> properties = propertyRepository.findByPropertyOwnerId(propertyOwner.get().getPropertyOwner().getId());
+
+        List<ResponseGetAllPropertiesByUserDto> responseDtos = properties
+                .stream()
+                .map(this::convertToDtos)
+                .collect(Collectors.toList());
+
+        return responseDtos;
+    }
+
+    private ResponseGetAllPropertiesByUserDto convertToDtos(Property property) {
+        ResponseGetAllPropertiesByUserDto responseDto = new ResponseGetAllPropertiesByUserDto();
+
+        responseDto.setPropertyId(property.getId());
+        responseDto.setPropertyType(property.getType().toString());
+        responseDto.setAddress(property.getAddress());
+        responseDto.setDistrict(property.getDistrict());
+        responseDto.setTaskSupervisor(property.getTaskSupervisor());
+        responseDto.setRegisteredStatus(property.getRegisteredStatus());
+        responseDto.setRegisteredDate(property.getRegistered_date());
+        responseDto.setDuration(property.getDuration());
+
+        return responseDto;
+    }
+
+
+    @Override
+    public ResponseAddNewPropertyDto getPropertyById(Integer id) {
+        Optional<Property> propertyOptional = propertyRepository.findById(id);
+
+        Property property = propertyOptional.get();
+
+        ResponseAddNewPropertyDto responseDto = convertToDto(property);
+
+        return responseDto;
+    }
+
+    private ResponseAddNewPropertyDto convertToDto(Property property) {
+        ResponseAddNewPropertyDto dto = new ResponseAddNewPropertyDto();
+
+        dto.setType(property.getType());
+        dto.setDuration(property.getDuration());
+        dto.setAddress(property.getAddress());
+        dto.setDistrict(property.getDistrict());
+        dto.setAccepted_date(property.getAccepted_date());
+        dto.setProperty_owner(property.getPropertyOwner().getId());
+        dto.setRegistered_date(property.getRegistered_date());
+
+        return dto;
+    }
 
 }

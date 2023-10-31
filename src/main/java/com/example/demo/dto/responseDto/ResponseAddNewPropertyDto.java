@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class ResponseAddNewPropertyDto {
+    private Integer id;
     private LocalDate accepted_date;
     private LocalDate returned_date;
     private LocalDate registered_date;
