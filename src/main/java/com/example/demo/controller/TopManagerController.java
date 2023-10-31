@@ -315,7 +315,8 @@ public class TopManagerController {
     @PreAuthorize("hasAuthority('topmanager:read')")
 
     public ResponseEntity<List<UpdateTaskSupervisorResponseDTO>> getAllAcceptedProperties() {
-        List<Property> propertyList =  propertyRepository.findByAcceptedStatus(true);
+        List<Property> propertyList =  propertyRepository.findByAcceptedStatusTrueAndTaskSupervisorIsNotNull();
+        System.out.println(propertyList.size());
         List<UpdateTaskSupervisorResponseDTO> updateTaskSupervisorResponseDTOList = new ArrayList<>();
         if(propertyList.isEmpty())
         {
@@ -326,7 +327,7 @@ public class TopManagerController {
             UpdateTaskSupervisorResponseDTO updateTaskSupervisorResponseDTO = new UpdateTaskSupervisorResponseDTO();
             updateTaskSupervisorResponseDTO.setPropertyId(property.getId());
             updateTaskSupervisorResponseDTO.setLocation(property.getLocation());
-            updateTaskSupervisorResponseDTO.setName(property.getTaskSupervisor().getUser().getFirstname() + " " + property.getTaskSupervisor().getUser().getLastname());
+//            updateTaskSupervisorResponseDTO.setName(property.getTaskSupervisor().getUser().getFirstname() + " " + property.getTaskSupervisor().getUser().getLastname());
 //            updateTaskSupervisorResponseDTO.setOngoingTask(property.getTaskSupervisor().getProperties().size());
             updateTaskSupervisorResponseDTOList.add(updateTaskSupervisorResponseDTO);
         }

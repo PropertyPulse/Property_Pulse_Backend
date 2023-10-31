@@ -25,7 +25,7 @@ public class Feedback {
 
         @OneToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "complaint_id")
-        private Complaint complaint; // Reference to the Complaint entity
+        private NewComplaint complaint; // Reference to the Complaint entity
 
         private String feedbackContent; // Feedback content
 

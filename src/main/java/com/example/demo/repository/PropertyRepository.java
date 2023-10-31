@@ -18,6 +18,9 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Property> findByIsDeletedFalseAndAcceptedStatusFalse();
 
     List<Property> findByAcceptedStatus(boolean b);
+
+    @Query("SELECT p FROM Property p WHERE  p.acceptedStatus = true AND  p.taskSupervisor IS NOT NULL")
+    List<Property> findByAcceptedStatusTrueAndTaskSupervisorIsNotNull();
     List<Property> findByIsDeleted(boolean isDeleted);
 
 

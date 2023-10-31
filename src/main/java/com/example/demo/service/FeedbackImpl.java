@@ -4,6 +4,7 @@ package com.example.demo.service;
 import com.example.demo.dto.requestDto.RequestFeedbackDTO;
 import com.example.demo.entity.Complaint;
 import com.example.demo.entity.Feedback;
+import com.example.demo.entity.NewComplaint;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.repository.FeedbackRepository;
 import com.example.demo.repository.TopManagerRepository;
@@ -60,7 +61,7 @@ public class FeedbackImpl implements FeedbackService{
                     feedback1.setTopManager(topManagerRepository.getReferenceById(userId));
                     feedback1.setCreatedAt(new java.util.Date());
                     feedback1.setStatus("Pending");
-                    Complaint complaint = complaintRepository.getReferenceById(Math.toIntExact(complaintId));
+                     NewComplaint complaint = complaintRepository.getReferenceById(Math.toIntExact(complaintId));
                     complaint.setIssolved(true);
                     complaintRepository.save(complaint);
                     feedbackRepository.save(feedback1);
