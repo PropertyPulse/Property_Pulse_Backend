@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Table(name = "valuation_reports")
 public class ValuationReport {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reportId;
 
     @Column(nullable = true)

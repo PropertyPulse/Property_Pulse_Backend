@@ -1,19 +1,26 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestFeedbackDTO;
+import com.example.demo.dto.responseDto.ResponseComplaintDTO;
+import com.example.demo.dto.responseDto.ResponseNewManagementRequestDto;
+import com.example.demo.dto.responseDto.ResponseTaskSupervisorDTO;
 import com.example.demo.dto.responseDto.ResponseValuationDTO;
-import com.example.demo.entity.Property;
-import com.example.demo.entity.TaskSupervisor;
+import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ComplaintRepository;
+import com.example.demo.repository.PropertyOwnerRepository;
 import com.example.demo.repository.PropertyRepository;
+import com.example.demo.repository.TaskSupervisorRepository;
 import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -29,17 +36,25 @@ public class TopManagerController {
     private final TopManagerService topManagerService;
     private final ValuationReportService valuationReportService;
 
+    private final ComplaintRepository complaintRepository;
     private final PropertyRepository propertyRepository;
+    private   final TaskSupervisorRepository taskSupervisorRepository;
+
+    private final PropertyOwnerRepository propertyOwnerRepository;
 
     @Autowired
-    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, PropertyRepository propertyRepository) {
+    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, ComplaintRepository complaintRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository, PropertyOwnerRepository propertyOwnerRepository) {
         this.feedbackService = feedbackService;
 //        this.geocodeController = geocodeController;
 
 
         this.topManagerService = topManagerService;
         this.valuationReportService = valuationReportService;
+        this.complaintRepository = complaintRepository;
+
         this.propertyRepository = propertyRepository;
+        this.taskSupervisorRepository = taskSupervisorRepository;
+        this.propertyOwnerRepository = propertyOwnerRepository;
     }
 
     @GetMapping("/hello")
@@ -66,13 +81,29 @@ public class TopManagerController {
 
     @GetMapping("/select-a-task-supervisor")
     @PreAuthorize("hasAuthority('topmanager:read')")
-    public ResponseEntity<List<TaskSupervisor>> SelectedTaskSupervisor(@RequestParam String address) throws IOException {
+    public ResponseEntity<List<ResponseTaskSupervisorDTO>> SelectedTaskSupervisor(@RequestParam String address) throws IOException {
 
 
         if (address != null) {
             List<TaskSupervisor> taskSupervisor = topManagerService.SelectedSupervisors(address);
+            List<ResponseTaskSupervisorDTO> responseTaskSupervisorDTOList = new ArrayList<>();
+            for(TaskSupervisor taskSupervisor1 : taskSupervisor)
+            {
+                ResponseTaskSupervisorDTO responseTaskSupervisorDTO = new ResponseTaskSupervisorDTO();
+                 responseTaskSupervisorDTO.setId(taskSupervisor1.getId());
+                    responseTaskSupervisorDTO.setAddress(taskSupervisor1.getAddress());
+                    responseTaskSupervisorDTO.setNearestTown(taskSupervisor1.getNearestTown());
+                    responseTaskSupervisorDTO.setDistrict(taskSupervisor1.getDistrict());
+                    responseTaskSupervisorDTO.setContactNo(taskSupervisor1.getContactNo());
+                    responseTaskSupervisorDTO.setNic(taskSupervisor1.getNic());
+                    responseTaskSupervisorDTO.setDob(taskSupervisor1.getDob());
+                    responseTaskSupervisorDTO.setGender(taskSupervisor1.getGender());
+                    responseTaskSupervisorDTOList.add(responseTaskSupervisorDTO);
+
+                System.out.println(taskSupervisor1.getAddress());
+            }
             System.out.println("No issues at all");
-            return ResponseEntity.ok(taskSupervisor);
+            return ResponseEntity.ok(responseTaskSupervisorDTOList);
         }
 
         return ResponseEntity.ok(null);
@@ -81,13 +112,14 @@ public class TopManagerController {
     }
 
     @GetMapping("/valuation-reports")
+    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseValuationDTO>> getValuationReports(
             @RequestParam(name = "status") String status
     ) throws ResourceNotFoundException {
         List<ResponseValuationDTO> reports;
-
+        System.out.println(status);
         if (status != null) {
-            reports = valuationReportService.getValuationReports(status);
+            reports = valuationReportService.getValuationReports(status.toLowerCase());
         } else {
             // Handle invalid status parameter or return an error response
             return ResponseEntity.badRequest().build();
@@ -99,7 +131,8 @@ public class TopManagerController {
 
 
     @GetMapping("/requestValuationandAcceptProperty")
-    public ResponseEntity<String> requestValuationandAcceptProperty(@RequestParam(name = "propertyId") Long propertyId) throws ResourceNotFoundException {
+    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<String> requestValuationandAcceptProperty(@RequestParam(name = "propertyId") Integer propertyId) throws ResourceNotFoundException {
 
         if (propertyId != null) {
 
@@ -113,19 +146,71 @@ public class TopManagerController {
     }
 
     @GetMapping("/newmanagmentrequest")
-    public ResponseEntity<List<Property>> newmanagementrequest() {
+    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<List<ResponseNewManagementRequestDto>> newmanagementrequest() {
         try {
-            List<Property> properties = topManagerService.NewManagementRequests();
-            System.out.println("Hello, I am inside the controller");
-            System.out.println("Number of properties: " + properties.size());
+            List<Property> unacceptedProperties = propertyRepository.findByAcceptedStatus(false);
+            System.out.println(unacceptedProperties.size());
+            List<ResponseNewManagementRequestDto> responseDTOs = new ArrayList<>();
 
-            // Return the list of properties in the response body
-            return ResponseEntity.ok(properties);
+            for (Property property : unacceptedProperties) {
+                ResponseNewManagementRequestDto responseDTO = new ResponseNewManagementRequestDto();
+                responseDTO.setId(property.getId());
+                responseDTO.setAddress(property.getAddress());
+                responseDTO.setPropertyOwnerContactNo(property.getPropertyOwner().getTelephone());
+                responseDTO.setRegisteredStatus(property.getRegisteredStatus());
+                responseDTO.setVisitStatus(property.getVisitStatus());
+                responseDTO.setPriceListStatus(property.getPriceListStatus());
+//                responseDTO.setAcceptedStatus(property.setAcceptedStatus(true));;
+                responseDTO.setAcceptedDate(property.getAccepted_date());
+                responseDTO.setLegalContractStatus(property.getLegalContractStatus());
+
+                responseDTO.setLocation(property.getLocation());
+                responseDTO.setSpecialFacts(property.getSpecialFacts());
+                responseDTO.setWantInsurance(property.getWantInsurance());
+                responseDTO.setDuration(property.getDuration());
+                responseDTO.setDistrict(property.getDistrict());
+
+
+                if (property.getType() == PropertyType.LAND) {
+                    // Set variables specific to LAND
+                    responseDTO.setHaveCrops(property.getHaveCrops());
+                    responseDTO.setCrops(property.getCrops());
+                    responseDTO.setLandSize(property.getLandSize());
+                    responseDTO.setType(PropertyType.LAND);
+                    // Set other LAND-specific variables
+                } else if (property.getType() == PropertyType.HOME) {
+                    // Set variables specific to HOME
+                    responseDTO.setBedrooms(property.getBedrooms());
+                    responseDTO.setBathrooms(property.getBathrooms());
+                    responseDTO.setLivingRooms(property.getLivingRooms());
+
+                    responseDTO.setSpecialRooms(property.getSpecialRooms());
+                    responseDTO.setStories(property.getStories());
+
+
+                    responseDTO.setType(PropertyType.HOME);
+                    // Set other HOME-specific variables
+                }
+
+                responseDTOs.add(responseDTO);
+            }
+
+            return ResponseEntity.ok(responseDTOs);
         } catch (Exception e) {
-            // Handle any exceptions and return a bad request response
-            return ResponseEntity.badRequest().build();
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
+
     }
+
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<List<Property>> getAllProperties() {
+        return ResponseEntity.ok(propertyRepository.findAll());
+    }
+
     //    @GetMapping("/viewPendingProperties")
 //    public List<Property> viewPendingProperties() {
 //
@@ -140,9 +225,8 @@ public class TopManagerController {
 //    }
 
 
-
-
     @PostMapping("/Assign-a-task-supervisor")
+    @PreAuthorize("hasAuthority('topmanager:create')")
     public ResponseEntity<String> AssignTaskSupervisor(@RequestParam(name = "propertyId") Long propertyId, @RequestParam(name = "taskSupervisorName") Long taskSupervisorId) throws ResourceNotFoundException {
 
         if (propertyId != null && taskSupervisorId != null) {
@@ -155,6 +239,76 @@ public class TopManagerController {
         }
 
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<List<ResponseComplaintDTO>> getAllComplaints() {
+        try {
+            List<Complaint> complaints = complaintRepository.findAllWithComplainantByIssolvedFalse();
+            List<ResponseComplaintDTO> complaintDTOList = new ArrayList<>();
+            if(complaints == null)
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            for (Complaint complaint : complaints) {
+
+                ResponseComplaintDTO complaintDTO = new ResponseComplaintDTO();
+                complaintDTO.setComplaint_id(complaint.getComplaint_id());
+                complaintDTO.setDescription(complaint.getDescription());
+                complaintDTO.setIssolved(complaint.isIssolved());
+                complaintDTO.setComplainant_id(complaint.getComplainant().getId());
+                complaintDTO.setTitle(complaint.getTitle());
+                complaintDTO.setReason(complaint.getReason());
+                complaintDTO.setTelephone(propertyOwnerRepository.findById(complaint.getComplainant().getId()).get().getTelephone());
+
+                complaintDTOList.add(complaintDTO);
+
+
+            }
+            System.out.println("Number of complaints: " + complaints.size());
+            return ResponseEntity.ok(complaintDTOList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+    }
+
+
+
+
+    @PostMapping("/update-task-supervisor")
+    @PreAuthorize("hasAuthority('topmanager:create')")
+    public ResponseEntity<ResponseTaskSupervisorDTO> updateTaskSupervisor(@RequestBody Integer PropertyId) throws IOException {
+        Property property = propertyRepository.findById(PropertyId).get();
+        String address = propertyRepository.findById(PropertyId).get().getAddress();
+
+        // Check if the property and new task supervisor exist
+        if (property == null) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+
+        List<ResponseTaskSupervisorDTO> responseTaskSupervisorDTOList = this.SelectedTaskSupervisor(address).getBody();
+        if(responseTaskSupervisorDTOList == null)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        ResponseTaskSupervisorDTO responseTaskSupervisorDTO = responseTaskSupervisorDTOList.remove(0);
+        TaskSupervisor taskSupervisor = taskSupervisorRepository.getReferenceById(responseTaskSupervisorDTO.getId());
+        property.setTaskSupervisor(taskSupervisor);
+        propertyRepository.save(property);
+        taskSupervisor.getProperties().add(property);
+        taskSupervisorRepository.save(taskSupervisor);
+        propertyRepository.save(property);
+
+
+
+        return ResponseEntity.ok(responseTaskSupervisorDTO);
+    }
+
+
+
+
+
 }
 
 

@@ -82,17 +82,19 @@ public class TopManagerServiceImpl  implements  TopManagerService {
     }
 
     @Override
-    public void requestValuationandAcceptProperty(Long propertyId) throws ResourceNotFoundException {
+    public void requestValuationandAcceptProperty(Integer propertyId) throws ResourceNotFoundException {
 
         Property property = propertyRepository.findById(Math.toIntExact(propertyId))
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found"));
         ValuationReport valuationReport = new ValuationReport();
-        valuationReport.setStatus("accepted");
+        valuationReport.setStatus("pending");
         valuationReport.setRequestedDate(LocalDate.now());
         valuationReport.setProperty(property);
 
        property.setAccepted_date(LocalDate.now());
        property.setValuationReport(valuationReport);
+       property.setAcceptedStatus(true);
+
 //       property.setAccepted_status(true);
         valuationReportRepository.save(valuationReport);
         propertyRepository.save(property);
@@ -107,6 +109,9 @@ public class TopManagerServiceImpl  implements  TopManagerService {
     public List<Property> NewManagementRequests() {
 
         List<Property> properties = propertyRepository.findByAcceptedStatus(false);
+
+
+
        if(properties.isEmpty())
        {
            System.out.println("No accepted records found in the database");

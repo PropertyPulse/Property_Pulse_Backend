@@ -18,5 +18,13 @@ public class ResponseValuationDTO {
     private List<TaskRequest> taskList;
     private String contact;
     private String status;
+
     private String fileLink;
+    private String district;
+    private String address;
+    private Double landSize;
+    private String haveCrops;
+
+    private String specialFacts;
+    private String crops;
 }

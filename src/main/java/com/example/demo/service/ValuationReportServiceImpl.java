@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.responseDto.ResponseValuationDTO;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyOwner;
+import com.example.demo.entity.PropertyType;
 import com.example.demo.entity.ValuationReport;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.PropertyRepository;
@@ -59,6 +60,24 @@ public class ValuationReportServiceImpl implements ValuationReportService
                 responseValuationDTO.setContact(propertyOwner.getTelephone());
                 responseValuationDTO.setStatus(valuationReport.getStatus());
                 responseValuationDTO.setFileLink(valuationReport.getPdfPath());
+                responseValuationDTO.setDistrict(property.getDistrict());
+                responseValuationDTO.setSpecialFacts(property.getSpecialFacts());
+
+
+                if(property.getType() == PropertyType.LAND)
+                {
+                    responseValuationDTO.setHaveCrops(property.getHaveCrops());
+                    responseValuationDTO.setCrops(property.getCrops());
+                    responseValuationDTO.setLandSize(property.getLandSize());
+                    responseValuationDTO.setAddress(property.getAddress());
+
+
+
+                }
+                else if(property.getType() == PropertyType.HOME)
+                {
+
+                }
                 responseValuationDTOList.add(responseValuationDTO);
             }
         }

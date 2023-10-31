@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +29,17 @@ public class Complaint  {
     private  long complaint_id;
 
 
-    @ManyToOne
-    @JoinColumn(name = "complainant_id")
-    private  User complainant;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "complainant_id")
+
+    @JsonIgnore
+    private  User complainant;
+//
     @OneToOne
     @JoinColumn(name = "category_id")
     private ComplaintCategory category;
+
     @Column(name = "description", length = 1000)
     private String description;
 
@@ -42,7 +48,12 @@ public class Complaint  {
     private String reason;
 
     private String title;
-//
+
+
+
+    @Column(name = "issolved")
+    private boolean issolved = false; // Set the default value to false
+
 //    @OneToOne( fetch = FetchType.LAZY)
 //    @JoinColumn(name = "feedback")
 //    private Feedback feedback;

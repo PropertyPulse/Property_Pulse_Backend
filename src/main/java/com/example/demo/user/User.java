@@ -4,6 +4,7 @@ package com.example.demo.user;
 //import com.example.demo.token.Token;
 import com.example.demo.entity.*;
 import com.example.demo.token.Token;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -67,6 +68,11 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ManPowerCompany manPowerCompany;
 
+
+
+    @OneToMany(mappedBy = "complainant",fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Complaint> complaints;
 
     //    returns the authorities of the user
     @Override

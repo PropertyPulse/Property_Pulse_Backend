@@ -12,7 +12,7 @@ public interface TopManagerService {
 
     List<TaskSupervisor> SelectedSupervisors(String address) throws IOException;
 
-    void requestValuationandAcceptProperty(Long propertyId) throws ResourceNotFoundException;
+    void requestValuationandAcceptProperty(Integer propertyId) throws ResourceNotFoundException;
 
 
     List<Property> NewManagementRequests();
