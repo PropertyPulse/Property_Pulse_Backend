@@ -1,14 +1,23 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.UserException;
+import com.example.demo.repository.*;
+
+import com.example.demo.entity.FileData;
+import com.example.demo.entity.ImageData;
+import com.example.demo.entity.Property;
+import com.example.demo.entity.PropertyOwner;
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.entity.*;
-import com.example.demo.exception.UserException;
-import com.example.demo.repository.*;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,12 +33,18 @@ import java.util.Optional;
 public class PropertyServiceImpl implements PropertyService {
 
 
+
+    private final PropertyOwnerRepository propertyOwnerRepository;
+    private final UserRepository userRepository;
+
+
+
+
+
+
     @Autowired
     private final PropertyRepository propertyRepository;
-    @Autowired
-    private final PropertyOwnerRepository propertyOwnerRepository;
-    @Autowired
-    private final UserRepository userRepository;
+
     @Autowired
     private FileDataRepository fileDataRepository;
 
@@ -54,8 +69,11 @@ public class PropertyServiceImpl implements PropertyService {
 //    private final String FOLDER_PATH_DOCS = "C:/Users/MSI/Desktop/MyFiles/Documents/";
     public PropertyServiceImpl(PropertyRepository propertyRepository, UserRepository userRepository, PropertyOwnerRepository propertyOwnerRepository) {
         this.propertyRepository = propertyRepository;
+
         this.userRepository = userRepository;
         this.propertyOwnerRepository = propertyOwnerRepository;
+
+
     }
 
     @Override

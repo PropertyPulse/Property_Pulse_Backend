@@ -5,12 +5,15 @@ import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyType;
 import com.example.demo.exception.UserException;
+import com.example.demo.repository.PropertyRepository;
 import com.example.demo.service.PropertyService;
+
 import com.example.demo.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +30,16 @@ import java.util.List;
 public class PropertyController {
     private final PropertyService propertyService;
 
+
+
+
+
+
+
     @Autowired
     public PropertyController(PropertyService propertyService) {
         this.propertyService = propertyService;
+
 
     }
 
@@ -147,6 +157,7 @@ public class PropertyController {
     public ResponseEntity<List<ResponseAddNewPropertyDto>> getAllProperties(@RequestBody RequestAddNewPropertyDto req) throws UserException {
         return propertyService.getAllProperties();
     }*/
+
 
     @PostMapping("/hello")
     //read the provided form data

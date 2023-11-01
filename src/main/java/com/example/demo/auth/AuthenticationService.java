@@ -53,9 +53,9 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) throws UserException {
 
 //check existing users
-
+       System.out.println("inside the register authentiation service now!!");
         if(repository.findByEmail(request.getEmail()).isPresent()){
-
+            System.out.println("inwdside the register authentiation service now!!");
             throw new UserException("User with this email already exists");
         }
 
@@ -73,7 +73,7 @@ public class AuthenticationService {
 
         PropertyOwner propertyOwner = request.getPropertyOwner();
 
-
+      System.out.println(propertyOwner.toString());
 
 
         if (propertyOwner.getNic()==null || propertyOwner.getNic().equals("")) {
@@ -101,8 +101,10 @@ public class AuthenticationService {
             throw new UserException("District is required");
         }
 
+
         if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
             throw new UserException("Phone number is required");
+
         }
 
         if (!Arrays.asList(districts).contains(propertyOwner.getDistrict())) {
@@ -138,7 +140,7 @@ public class AuthenticationService {
         user.setPropertyOwner(propertyOwner);
             //take the saved user into the savedUser variable
            var savedUser = repository.save(user);
-
+     System.out.println(savedUser);
 
 //           propertyOwner.setUser(savedUser);
 //        propertyOwnerRepository.save(propertyOwner);
@@ -148,6 +150,8 @@ public class AuthenticationService {
 
 
         saveUserToken(savedUser, jwtToken);
+
+
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
