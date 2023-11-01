@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
-import com.example.demo.entity.*;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.Task;
@@ -139,7 +138,7 @@ public class TaskServiceImpl implements TaskService {
         dto.setTask(task.getTask());
         dto.setStartDate(task.getStartDate());
         dto.setRequestStatus(task.getManpowerCompanyRequestStatus());
-        dto.setLocation(task.getProperty().getLocation());
+        dto.setAddress(task.getProperty().getAddress());
         dto.setTaskStatus(task.getStatus());
 
         return dto;
@@ -203,7 +202,7 @@ public class TaskServiceImpl implements TaskService {
         dto.setTaskId(task.getId());
         dto.setPropertyId(task.getProperty().getId());
         dto.setManpowerCompany(task.getManpowerCompany());
-        dto.setLocation(task.getProperty().getLocation());
+        dto.setAddress(task.getProperty().getAddress());
         dto.setTaskStatus(task.getStatus());
 
         return dto;

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class ResponseOngoingTasksDto {
 
     private Integer propertyId;
-    private String location;
+    private String address;
     private Integer taskId;
     private String task;
     private String manpowerCompany;
