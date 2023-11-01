@@ -18,7 +18,7 @@ public class PaymentService {
 
         try {
             ChargeCreateParams params = ChargeCreateParams.builder()
-                    .setAmount( (long)(amount*1000))
+                    .setAmount( (long)(amount*100))
                     .setCurrency("USD")
                     .setDescription(description)
 //                    .setCustomer("Thilanka ")
