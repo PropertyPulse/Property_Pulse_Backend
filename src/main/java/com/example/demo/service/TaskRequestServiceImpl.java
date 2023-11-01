@@ -101,7 +101,7 @@ public class TaskRequestServiceImpl implements TaskRequestService {
         ResponseTaskApprovalsDto dto = new ResponseTaskApprovalsDto();
 
         dto.setPropertyId(task.getProperty().getId());
-        dto.setLocation(task.getProperty().getLocation());
+        dto.setAddress(task.getProperty().getAddress());
         dto.setTaskId(task.getId());
         dto.setTask(task.getTask());
         dto.setManpowerCompanyRequestStatus(task.getManpowerCompanyRequestStatus());

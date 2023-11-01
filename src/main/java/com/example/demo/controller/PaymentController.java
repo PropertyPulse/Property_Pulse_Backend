@@ -5,17 +5,13 @@ import com.example.demo.dto.requestDto.*;
 import com.example.demo.dto.responseDto.*;
 
 
-
-import com.example.demo.service.ManpowerCompanyPaymentsService;
-import com.example.demo.service.RecivedPaymentService;
-import com.example.demo.service.TaskEquipmentPaymentService;
-import com.example.demo.service.TransactionHistoryService;
+import com.example.demo.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
@@ -27,13 +23,28 @@ public class PaymentController {
     private final TransactionHistoryService transactionHistoryService;
 
 
+    private final PaymentService paymentService;
 
-
-    public PaymentController(RecivedPaymentService recivedPaymentService, ManpowerCompanyPaymentsService manpowerCompanyPaymentsService, TaskEquipmentPaymentService taskEquipmentPaymentService, TransactionHistoryService transactionHistoryService) {
+    @Autowired
+    public PaymentController(RecivedPaymentService recivedPaymentService, ManpowerCompanyPaymentsService manpowerCompanyPaymentsService, TaskEquipmentPaymentService taskEquipmentPaymentService, TransactionHistoryService transactionHistoryService,PaymentService paymentService) {
         this.recivedPaymentService = recivedPaymentService;
         this.manpowerCompanyPaymentsService = manpowerCompanyPaymentsService;
         this.taskEquipmentPaymentService = taskEquipmentPaymentService;
         this.transactionHistoryService = transactionHistoryService;
+        this.paymentService = paymentService;
+    }
+
+    @PostMapping("/charge")
+    public ResponseEntity<String> charge(@RequestParam("token") String token , @RequestParam("amount") float amount , @RequestParam("description") String description ) {
+        try {
+            // Perform payment processing here
+            paymentService.processPayment(token,amount,description);
+            System.out.println("tokenstrin"+token);
+            return ResponseEntity.ok("Payment successful");
+        } catch (Exception e) {
+            // Handle any exceptions that occur during payment processing
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment failed");
+        }
     }
 
     @GetMapping("/all-received-monthly-payments")

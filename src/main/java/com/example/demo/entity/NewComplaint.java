@@ -26,8 +26,22 @@ public class NewComplaint {
     private PropertyOwner complainant;
 
     private String type;
+
+
+    @Column(name = "description", length = 1000)
     private String description;
+
+
+    @Column(name = "reason", length = 500)
+    private String reason;
+
     private String title;
+
+
+
+    @Column(name = "issolved")
+    private boolean issolved = false;
+
     private LocalDate complained_date;
     private String response;
     private String status;
