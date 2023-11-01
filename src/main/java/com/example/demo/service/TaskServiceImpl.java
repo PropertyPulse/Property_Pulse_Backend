@@ -1,8 +1,18 @@
 package com.example.demo.service;
-
+import com.example.demo.dto.requestDto.RequestAddNewScheduledTaskDto;
+import com.example.demo.dto.responseDto.ResponseAddNewScheduledTask;
+import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
+import com.example.demo.entity.ScheduleTask;
+import com.example.demo.entity.Task;
+import com.example.demo.exception.UserException;
+import com.example.demo.repository.ScheduledTaskRepository;
+import com.example.demo.repository.TaskRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
-import com.example.demo.entity.*;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.Task;
@@ -13,12 +23,10 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.util.*;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +36,34 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
+    private final ScheduledTaskRepository scheduledTaskRepository;
   
-    public TaskServiceImpl(UserRepository userRepository, TaskRepository taskRepository, PropertyRepository propertyRepository) {
+    public TaskServiceImpl(UserRepository userRepository, TaskRepository taskRepository, PropertyRepository propertyRepository, ScheduledTaskRepository scheduledTaskRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.propertyRepository = propertyRepository;
+        this.scheduledTaskRepository = scheduledTaskRepository;
+    }
+  
+     @Override
+    public ResponseOngoingTasksDto getTaskById(Integer id) {
+        Optional<Task> taskOptional = taskRepository.findById(id);
+
+        Task task = taskOptional.get();
+
+        ResponseOngoingTasksDto responseDto = convertToDto(task);
+
+        return responseDto;
+    }
+
+    private ResponseOngoingTasksDto convertToDto(Task task) {
+        ResponseOngoingTasksDto dto = new ResponseOngoingTasksDto();
+
+        dto.setTask(task.getTask());
+        dto.setStartedDate(task.getStartDate());
+        dto.setEndingDate(task.getEndDate());
+        dto.setTaskStatus(task.getStatus());
+        dto.setPropertyId(task.getProperty().getId());
     }
 
     @Override
@@ -107,12 +138,39 @@ public class TaskServiceImpl implements TaskService {
         dto.setTask(task.getTask());
         dto.setStartDate(task.getStartDate());
         dto.setRequestStatus(task.getManpowerCompanyRequestStatus());
-        dto.setLocation(task.getProperty().getLocation());
+        dto.setAddress(task.getProperty().getAddress());
         dto.setTaskStatus(task.getStatus());
 
         return dto;
     }
 
+    @Override
+    @Transactional
+    public String addNewScheduledTask(RequestAddNewScheduledTaskDto req) throws UserException {
+        ScheduleTask task = new ScheduleTask();
+        task.setTask(req.getTask());
+
+        var savedTask = scheduledTaskRepository.save(task);
+        return "Schedule task added successfully";
+    }
+
+    @Override
+    public List<ResponseAddNewScheduledTask> getAllScheduledTasks() {
+        List<ScheduleTask> scheduleTasks = scheduledTaskRepository.findAll();
+
+        return scheduleTasks.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private ResponseAddNewScheduledTask convertToDto(ScheduleTask scheduledTask) {
+        ResponseAddNewScheduledTask dto = new ResponseAddNewScheduledTask();
+
+        dto.setTask(scheduledTask.getTask());
+        dto.setId(scheduledTask.getId());
+
+        return dto;
+    }
 
     @Override
     @Transactional
@@ -144,7 +202,7 @@ public class TaskServiceImpl implements TaskService {
         dto.setTaskId(task.getId());
         dto.setPropertyId(task.getProperty().getId());
         dto.setManpowerCompany(task.getManpowerCompany());
-        dto.setLocation(task.getProperty().getLocation());
+        dto.setAddress(task.getProperty().getAddress());
         dto.setTaskStatus(task.getStatus());
 
         return dto;
