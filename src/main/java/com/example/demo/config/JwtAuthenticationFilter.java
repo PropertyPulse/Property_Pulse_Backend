@@ -39,6 +39,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         // here we firstly, doing extracting the request (header,jwt,user email)
+        final String ctype= request.getHeader("Content-Type");
+
+        System.out.println("--------------Content - Type :  "+ctype);
+        System.out.println(" ");
         final String authHeader = request.getHeader("Authorization"); //extract the header
         final String jwt;
         final String userEmail;

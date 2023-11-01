@@ -1,8 +1,62 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/propertypulsedb
+#    username: postgres
+#    password: admin
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: false
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#
+#application:
+#  security:
+#    jwt:
+#      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+#      expiration: 3600000 # a minute
+#      refresh-token:
+#        expiration: 7200000 # 7 days
+
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/propertypulsedb
+#    username: postgres
+#    password: admin
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: false
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+#      max-request-size: 10MB
+#
+#application:
+#  security:
+#    jwt:
+#      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566b5970
+#      expiration: 3600000 # a minute
+#      refresh-token:
+#        expiration: 7200000 # 7 days
+
+
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/propertypulsedb
     username: postgres
-    password: admin
+    password: root
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -13,11 +67,26 @@ spring:
         format_sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: propertypulse.official@gmail.com
+    password: tlfltxsnilnyhryr
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566b5970
       expiration: 3600000 # a minute
       refresh-token:
         expiration: 7200000 # 7 days

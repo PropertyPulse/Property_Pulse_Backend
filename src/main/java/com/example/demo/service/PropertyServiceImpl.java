@@ -11,8 +11,27 @@ import com.example.demo.repository.PropertyRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import com.example.demo.exception.UserException;
+import com.example.demo.repository.*;
 
+import com.example.demo.entity.FileData;
+import com.example.demo.entity.ImageData;
+import com.example.demo.entity.Property;
+import com.example.demo.entity.PropertyOwner;
+import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.entity.*;
+import com.example.demo.user.UserRepository;
+import jakarta.transaction.Transactional;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,57 +41,151 @@ import java.util.stream.Collectors;
 @Transactional
 public class PropertyServiceImpl implements PropertyService {
 
-    private final PropertyRepository propertyRepository;
+
+
     private final PropertyOwnerRepository propertyOwnerRepository;
     private final UserRepository userRepository;
 
+
+
+
+
+
+    @Autowired
+    private final PropertyRepository propertyRepository;
+
+    @Autowired
+    private FileDataRepository fileDataRepository;
+
+    @Autowired
+    private ValuationReportRepository valuationReportRepository;
+
+
+    @Autowired
+    private ImageDataRepository imageDataRepository;
+
+
+    // Use relative paths based on the project directory
+    private final String PROJECT_DIRECTORY = System.getProperty("user.dir");
+    private final String FOLDER_PATH_PROPERTIES = PROJECT_DIRECTORY + "/uploads/PropertyImages/";
+    private final String FOLDER_PATH_PROPERTIES_LAND = PROJECT_DIRECTORY + "/uploads/LandImages/";
+    private final String FOLDER_PATH_DOCS_LAND = PROJECT_DIRECTORY + "/uploads/LandDocuments/";
+    private final String FOLDER_PATH_DOCS = PROJECT_DIRECTORY + "/uploads/PropertyDocuments/";
+    private final String FOLDER_PATH_VAL_REPORT = PROJECT_DIRECTORY + "/uploads/ValuationReport/";
+
+//
+//    private final String FOLDER_PATH_PROPERTIES = "C:/Users/MSI/Desktop/MyFiles/Properties/";
+//    private final String FOLDER_PATH_DOCS = "C:/Users/MSI/Desktop/MyFiles/Documents/";
     public PropertyServiceImpl(PropertyRepository propertyRepository, UserRepository userRepository, PropertyOwnerRepository propertyOwnerRepository) {
         this.propertyRepository = propertyRepository;
+
         this.userRepository = userRepository;
         this.propertyOwnerRepository = propertyOwnerRepository;
+
+
     }
 
     @Override
     @Transactional
-    public ResponseAddNewPropertyDto addNewProperty(RequestAddNewPropertyDto req) throws UserException {
-        ResponseAddNewPropertyDto responseAddNewPropertyDto = new ResponseAddNewPropertyDto();
-
-        var user = userRepository.findByEmail(req.getProperty_owner_email());
+// <<<<<<< PP-83
+//     public ResponseAddNewPropertyDto addNewProperty(RequestAddNewPropertyDto req) throws UserException {
+//         ResponseAddNewPropertyDto responseAddNewPropertyDto = new ResponseAddNewPropertyDto();
+// =======
+    public String addNewProperty(Property property,MultipartFile propertyImage,MultipartFile propertydocument,String propertyOwnerEmail) throws UserException, IOException {
+        var user = userRepository.findByEmail(propertyOwnerEmail);
+// >>>>>>> main
 
         PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
 
-        // var propertyOwner = userRepository.findByEmail(req.getProperty_owner_email().toString());
-        System.out.println(req.getChecklist());
-        Property property = new Property();
-        property.setType(req.getType());
-        property.setAddress(req.getAddress());
-        property.setDistrict(req.getDistrict());
-        property.setLocation(req.getLocation());
-        property.setDuration(req.getDuration());
-        property.setStories(req.getStories());
-        property.setBathrooms(req.getBathrooms());
-        property.setBedrooms(req.getBedrooms());
-        property.setDiningRooms(req.getDining_rooms());
-        property.setLivingRooms(req.getLiving_rooms());
-        property.setHaveSpecialRooms(req.getHave_special_rooms());
-        property.setSpecialRooms(req.getSpecial_rooms());
-        property.setLandSize(req.getLand_size());
-        property.setHaveCrops(req.getHave_crops());
-        property.setCrops(req.getCrops());
-        property.setSpecialFacts(req.getSpecial_facts());
-        property.setRegisteredStatus("PENDING");
-        property.setRegistered_date(LocalDate.now());
-        property.setWantInsurance(req.getWant_insurance());
         property.setPropertyOwner(propertyOwner);
-        property.setChecklist(req.getChecklist());
-        // property.setPropertyOwner(user.get().getId());
 
-        var savedProperty = propertyRepository.save(property);
+        String filePath = FOLDER_PATH_PROPERTIES + propertyImage.getOriginalFilename();
+        String documentpath = FOLDER_PATH_DOCS + propertydocument.getOriginalFilename();
 
-        responseAddNewPropertyDto.setId(savedProperty.getId());
+        ImageData img = new ImageData();
+        img.setName(propertyImage.getOriginalFilename());
+        img.setType(propertyImage.getContentType());
+        img.setFilePath(filePath);
+        img.setProperty(property);
 
-        return responseAddNewPropertyDto;
+        imageDataRepository.save(img);
+
+        propertyImage.transferTo(new File(filePath));
+
+
+        FileData fileData = new FileData();
+        fileData.setName(propertydocument.getName());
+        fileData.setType(propertydocument.getContentType());
+        fileData.setFilePath(documentpath);
+        fileData.setProperty(property);
+        System.out.println(propertydocument.getOriginalFilename());
+
+        fileDataRepository.save(fileData);
+        propertydocument.transferTo(new File(documentpath));
+
+
+        propertyRepository.save(property);
+
+        return "success";
     }
+
+    @Override
+    public String addNewLandProperty(Property property, MultipartFile file, MultipartFile propertydocument, String propertyOwnerEmail) throws UserException, IOException {
+        var user = userRepository.findByEmail(propertyOwnerEmail);
+
+        PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
+
+        property.setPropertyOwner(propertyOwner);
+
+        String filePath = FOLDER_PATH_PROPERTIES_LAND + file.getOriginalFilename();
+        String documentpath = FOLDER_PATH_DOCS_LAND + propertydocument.getOriginalFilename();
+
+// <<<<<<< PP-83
+//         responseAddNewPropertyDto.setId(savedProperty.getId());
+
+//         return responseAddNewPropertyDto;
+// =======
+        ImageData img = new ImageData();
+        img.setName(file.getOriginalFilename());
+        img.setType(file.getContentType());
+        img.setFilePath(filePath);
+        img.setProperty(property);
+
+        imageDataRepository.save(img);
+
+        file.transferTo(new File(filePath));
+
+
+        FileData fileData = new FileData();
+        fileData.setName(propertydocument.getOriginalFilename());
+        fileData.setType(propertydocument.getContentType());
+        fileData.setFilePath(documentpath);
+        fileData.setProperty(property);
+        System.out.println(propertydocument.getOriginalFilename());
+
+        fileDataRepository.save(fileData);
+        propertydocument.transferTo(new File(documentpath));
+
+
+        propertyRepository.save(property);
+
+        return "success";
+// >>>>>>> main
+    }
+
+    @Override
+    public void addValuationReport(Integer propertyId, MultipartFile file) throws IOException {
+        Optional<Property> property = propertyRepository.findById(propertyId);
+
+        Property property1 = property.get();
+
+        String documentpath = FOLDER_PATH_VAL_REPORT + file.getOriginalFilename();
+
+        ValuationReport fileData = new ValuationReport();
+        fileData.setName(file.getOriginalFilename());
+        fileData.setType(file.getContentType());
+        fileData.setFilePath(documentpath);
+        fileData.setProperty(property1);
 
 
     @Override
@@ -129,5 +242,12 @@ public class PropertyServiceImpl implements PropertyService {
 
         return dto;
     }
+        property1.setValuationReport(fileData);
 
+
+        file.transferTo(new File(documentpath));
+
+        propertyRepository.save(property1);
+
+    }
 }
