@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 8d3488c43713919d26c13ad3306b008d4f353959
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.*;
 
@@ -10,6 +13,7 @@ import com.example.demo.entity.FileData;
 import com.example.demo.entity.ImageData;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyOwner;
+<<<<<<< HEAD
 
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
@@ -17,6 +21,11 @@ import com.example.demo.entity.*;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.*;
 
+=======
+import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.entity.*;
+>>>>>>> 8d3488c43713919d26c13ad3306b008d4f353959
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -30,12 +39,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d3488c43713919d26c13ad3306b008d4f353959
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d3488c43713919d26c13ad3306b008d4f353959
 
 @Service
 @Transactional
