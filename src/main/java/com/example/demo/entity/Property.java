@@ -173,6 +173,7 @@ public  class Property {
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private ImageData imageData;
+
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private ValuationReport valuationReport;

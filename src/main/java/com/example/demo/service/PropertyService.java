@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
 import com.example.demo.entity.Property;
 import com.example.demo.exception.UserException;
 import jakarta.transaction.Transactional;
@@ -16,10 +17,14 @@ import java.util.List;
 @Transactional
 public interface PropertyService {
 
-    String addNewProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
-    String addNewLandProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
+
+    List<ResponseGetAllPropertiesByUserDto> getAllPropertiesByUser(String email);
+
+    ResponseAddNewPropertyDto getPropertyById(Integer id);
+
+    Integer addNewProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
+    Integer addNewLandProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
 
     void addValuationReport(Integer propertyId, MultipartFile file) throws IOException;
-
     // ResponseEntity<List<ResponseAddNewPropertyDto>> getAllProperties() throws  UserException;
 }
