@@ -19,13 +19,12 @@ import java.time.LocalDate;
 public class ValuationReport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long reportId;
+    private Integer reportId;
 
-    @Column(nullable = true)
-    private String fileName;
 
-    @Column(nullable = true)
-    private String pdfPath;
+    private String name;
+    private String type;
+    private String filePath;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'pending'")
     private String status;
@@ -37,33 +36,10 @@ public class ValuationReport {
     private LocalDate submittedDate;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "property_id")
     private Property property;
 
 
 }
-
-
-//@Entity
-//@Table(name = "Valuation_Report")
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
-//public class ValuationReport {
-//
-//    @Id
-//    @Column(name = "id")
-//    private Integer id;
-//
-//
-//    @OneToOne
-//    @MapsId
-//    @JoinColumn(name = "id")
-//    private Property property;
-//
-//    private String name;
-//    private String type;
-//    private String filePath;
-//}
 

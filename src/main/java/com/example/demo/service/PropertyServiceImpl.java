@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-<<<<<<< HEAD
+
 
 
 import com.example.demo.exception.UserException;
@@ -11,13 +11,12 @@ import com.example.demo.entity.ImageData;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyOwner;
 
-=======
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.entity.*;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.*;
->>>>>>> 08e059e0b3488495ea4b4fd00fd857982977c05b
+
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -31,13 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-<<<<<<< HEAD
-=======
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
->>>>>>> 08e059e0b3488495ea4b4fd00fd857982977c05b
+
 
 @Service
 @Transactional

@@ -157,9 +157,9 @@ public  class Property {
     private List<Document> files;
 
 
-    @OneToOne
-    @JoinColumn(name = "valuation_report_id")
-    private ValuationReport valuationReport;
+//    @OneToOne
+//    @JoinColumn(name = "valuation_report_id")
+//    private ValuationReport valuationReport;
 
 
 

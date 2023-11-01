@@ -40,7 +40,13 @@ public class TopManagerServiceImpl  implements  TopManagerService {
 
     @Override
     public List<TaskSupervisor> SelectedSupervisors(String address) throws IOException {
+
         Map<Integer, Double> availableTaskSupervisors = new LinkedHashMap<Integer,Double>();
+
+        for (TaskSupervisor taskSupervisor :      taskSupervisorRepository.findAll()) {
+            availableTaskSupervisors.put(taskSupervisor.getId(), 1.0); // Set availability to 1 for each Task Supervisor
+        }
+
         TaskSupervisor taskSupervisor = null;
         String nearestTown = "";
         double Distance = 0.0;

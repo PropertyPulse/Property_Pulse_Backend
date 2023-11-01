@@ -12,7 +12,7 @@ import java.util.List;
 public class ResponseValuationDTO {
 
 
-    private Long propertyId;
+    private Integer propertyId;
     private PropertyType type;
     private String location;
     private List<TaskRequest> taskList;

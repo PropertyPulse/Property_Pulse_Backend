@@ -53,13 +53,13 @@ public class ValuationReportServiceImpl implements ValuationReportService
                 property = propertyRepository.findById(valuationReport.getProperty().getId()).get();
                 propertyOwner = property.getPropertyOwner();
 
-                responseValuationDTO.setPropertyId(Long.valueOf(property.getId()));
+                responseValuationDTO.setPropertyId(property.getId());
                 responseValuationDTO.setType(property.getType());
                 responseValuationDTO.setLocation(property.getLocation());
                 responseValuationDTO.setTaskList(property.getTaskRequests());
                 responseValuationDTO.setContact(propertyOwner.getTelephone());
                 responseValuationDTO.setStatus(valuationReport.getStatus());
-                responseValuationDTO.setFileLink(valuationReport.getPdfPath());
+                responseValuationDTO.setFileLink(valuationReport.getFilePath());
                 responseValuationDTO.setDistrict(property.getDistrict());
                 responseValuationDTO.setSpecialFacts(property.getSpecialFacts());
 

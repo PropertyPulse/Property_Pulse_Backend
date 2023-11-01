@@ -4,10 +4,7 @@ import com.example.demo.dto.requestDto.RequestFeedbackDTO;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.ComplaintRepository;
-import com.example.demo.repository.PropertyOwnerRepository;
-import com.example.demo.repository.PropertyRepository;
-import com.example.demo.repository.TaskSupervisorRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,10 +38,12 @@ public class TopManagerController {
     private final PropertyRepository propertyRepository;
     private   final TaskSupervisorRepository taskSupervisorRepository;
 
+    private  final TaskRepository taskRepository;
+
     private final PropertyOwnerRepository propertyOwnerRepository;
 
     @Autowired
-    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, PropertyService propertyService, ComplaintRepository complaintRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository, PropertyOwnerRepository propertyOwnerRepository) {
+    public TopManagerController(FeedbackService feedbackService, TopManagerServiceImpl topManagerService, ValuationReportServiceImpl valuationReportService, PropertyService propertyService, ComplaintRepository complaintRepository, PropertyRepository propertyRepository, TaskSupervisorRepository taskSupervisorRepository, TaskRepository taskRepository, PropertyOwnerRepository propertyOwnerRepository) {
         this.feedbackService = feedbackService;
 //        this.geocodeController = geocodeController;
 
@@ -56,6 +55,7 @@ public class TopManagerController {
 
         this.propertyRepository = propertyRepository;
         this.taskSupervisorRepository = taskSupervisorRepository;
+        this.taskRepository = taskRepository;
         this.propertyOwnerRepository = propertyOwnerRepository;
     }
 
@@ -349,6 +349,42 @@ public class TopManagerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+
+
+    @GetMapping("/get-scheduled-tasks")
+    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<List<ResponseScheduledTaskDTO>> getScheduledTasks(@RequestParam Integer propertyId) {
+        try {
+
+
+            List<Task>  scheduledTasks =  taskRepository.findByTypeAndId("Scheduled",propertyId);
+
+            List<ResponseScheduledTaskDTO> responseScheduledTaskDTOList = new ArrayList<>();
+            for(Task task : scheduledTasks)
+            {
+                ResponseScheduledTaskDTO responseScheduledTaskDTO = new ResponseScheduledTaskDTO();
+                responseScheduledTaskDTO.setProperty(task.getProperty());
+                responseScheduledTaskDTO.setFrequency(task.getFrequency());
+                responseScheduledTaskDTO.setTask(task.getTask());
+
+                responseScheduledTaskDTOList.add(responseScheduledTaskDTO);
+            }
+
+
+            return ResponseEntity.ok(responseScheduledTaskDTOList);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+    }
+
+
+
+
+
+
 
 }
 

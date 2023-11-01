@@ -33,5 +33,8 @@ public class Task {
     private String contactPersonTelNo;
     private Integer estimatedPrice;
     private Integer timeInDays;
+    private String type;
+    private String frequency;
+
 
 }
