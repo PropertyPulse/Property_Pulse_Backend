@@ -1,5 +1,16 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
+import com.example.demo.entity.Property;
+import com.example.demo.entity.PropertyOwner;
+import com.example.demo.exception.UserException;
+import com.example.demo.repository.PropertyOwnerRepository;
+import com.example.demo.repository.PropertyRepository;
+import com.example.demo.user.User;
+import com.example.demo.user.UserRepository;
+import jakarta.transaction.Transactional;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.*;
 
@@ -16,17 +27,15 @@ import jakarta.transaction.Transactional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -78,8 +87,13 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     @Transactional
+// <<<<<<< PP-83
+//     public ResponseAddNewPropertyDto addNewProperty(RequestAddNewPropertyDto req) throws UserException {
+//         ResponseAddNewPropertyDto responseAddNewPropertyDto = new ResponseAddNewPropertyDto();
+// =======
     public String addNewProperty(Property property,MultipartFile propertyImage,MultipartFile propertydocument,String propertyOwnerEmail) throws UserException, IOException {
         var user = userRepository.findByEmail(propertyOwnerEmail);
+// >>>>>>> main
 
         PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
 
@@ -126,6 +140,11 @@ public class PropertyServiceImpl implements PropertyService {
         String filePath = FOLDER_PATH_PROPERTIES_LAND + file.getOriginalFilename();
         String documentpath = FOLDER_PATH_DOCS_LAND + propertydocument.getOriginalFilename();
 
+// <<<<<<< PP-83
+//         responseAddNewPropertyDto.setId(savedProperty.getId());
+
+//         return responseAddNewPropertyDto;
+// =======
         ImageData img = new ImageData();
         img.setName(file.getOriginalFilename());
         img.setType(file.getContentType());
@@ -151,6 +170,7 @@ public class PropertyServiceImpl implements PropertyService {
         propertyRepository.save(property);
 
         return "success";
+// >>>>>>> main
     }
 
     @Override
@@ -167,7 +187,63 @@ public class PropertyServiceImpl implements PropertyService {
         fileData.setFilePath(documentpath);
         fileData.setProperty(property1);
 
+
+    @Override
+    public List<ResponseGetAllPropertiesByUserDto> getAllPropertiesByUser(String email) {
+        Optional<User> propertyOwner = userRepository.findByEmail(email);
+
+        List<Property> properties = propertyRepository.findByPropertyOwnerId(propertyOwner.get().getPropertyOwner().getId());
+
+        List<ResponseGetAllPropertiesByUserDto> responseDtos = properties
+                .stream()
+                .map(this::convertToDtos)
+                .collect(Collectors.toList());
+
+        return responseDtos;
+    }
+
+    private ResponseGetAllPropertiesByUserDto convertToDtos(Property property) {
+        ResponseGetAllPropertiesByUserDto responseDto = new ResponseGetAllPropertiesByUserDto();
+
+        responseDto.setPropertyId(property.getId());
+        responseDto.setPropertyType(property.getType().toString());
+        responseDto.setAddress(property.getAddress());
+        responseDto.setDistrict(property.getDistrict());
+        responseDto.setTaskSupervisor(property.getTaskSupervisor());
+        responseDto.setRegisteredStatus(property.getRegisteredStatus());
+        responseDto.setRegisteredDate(property.getRegistered_date());
+        responseDto.setDuration(property.getDuration());
+
+        return responseDto;
+    }
+
+
+    @Override
+    public ResponseAddNewPropertyDto getPropertyById(Integer id) {
+        Optional<Property> propertyOptional = propertyRepository.findById(id);
+
+        Property property = propertyOptional.get();
+
+        ResponseAddNewPropertyDto responseDto = convertToDto(property);
+
+        return responseDto;
+    }
+
+    private ResponseAddNewPropertyDto convertToDto(Property property) {
+        ResponseAddNewPropertyDto dto = new ResponseAddNewPropertyDto();
+
+        dto.setType(property.getType());
+        dto.setDuration(property.getDuration());
+        dto.setAddress(property.getAddress());
+        dto.setDistrict(property.getDistrict());
+        dto.setAccepted_date(property.getAccepted_date());
+        dto.setProperty_owner(property.getPropertyOwner().getId());
+        dto.setRegistered_date(property.getRegistered_date());
+
+        return dto;
+    }
         property1.setValuationReport(fileData);
+
 
         file.transferTo(new File(documentpath));
 

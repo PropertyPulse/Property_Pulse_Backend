@@ -2,23 +2,22 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.Names;
 import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyType;
 import com.example.demo.exception.UserException;
 import com.example.demo.repository.PropertyRepository;
 import com.example.demo.service.PropertyService;
-
 import com.example.demo.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -138,6 +137,31 @@ public class PropertyController {
         return ResponseEntity.ok("Property added successfully.");
     }
 
+
+    @PostMapping("/addNewProperty")
+    @PreAuthorize("hasAuthority('propertyowner:create')")
+    public ResponseEntity<ResponseAddNewPropertyDto> addNewProperty(@RequestBody RequestAddNewPropertyDto req) throws UserException {
+        ResponseAddNewPropertyDto savedProperty = propertyService.addNewProperty(req);
+        ResponseAddNewPropertyDto responseDto = new ResponseAddNewPropertyDto();
+        responseDto.setId(savedProperty.getId());
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // @PreAuthorize("hasAuthority('propertyowner:read')")
+    @GetMapping("/get-all-properties-by-owner")
+    public ResponseEntity<List<ResponseGetAllPropertiesByUserDto>> getAllProperties(@RequestParam("email") String email) throws UserException {
+        List<ResponseGetAllPropertiesByUserDto> allProperties = propertyService.getAllPropertiesByUser(email);
+        return ResponseEntity.ok(allProperties);
+    }
+
+
+    @GetMapping("/get-property-by-id")
+    @PreAuthorize("hasAuthority('propertyowner:read')")
+    public ResponseEntity<ResponseAddNewPropertyDto> getPropertyById(@RequestParam("id") Integer id) {
+        ResponseAddNewPropertyDto property = propertyService.getPropertyById(id);
+        return ResponseEntity.ok(property);
+    }
+  
     @PostMapping("/addValuationReport")
     public ResponseEntity<String> addValuationReport(@RequestParam("property_id")int propertyId,@RequestParam("document") MultipartFile file) throws IOException {
         propertyService.addValuationReport(propertyId,file);
