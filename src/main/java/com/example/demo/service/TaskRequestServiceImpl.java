@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.requestDto.RequestAddContactPersonDto;
+import com.example.demo.dto.requestDto.RequestRescheduleTaskDto;
 import com.example.demo.dto.responseDto.ResponseNewTaskRequestDto;
 import com.example.demo.dto.responseDto.ResponseTaskApprovalsDto;
 import com.example.demo.entity.Property;
@@ -129,6 +130,19 @@ public class TaskRequestServiceImpl implements TaskRequestService {
             Task updatingTask = task.get();
             updatingTask.setContactPersonName(req.getContactPersonName());
             updatingTask.setContactPersonTelNo(req.getContactPersonNumber());
+            taskRepository.save(updatingTask);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean rescheduleTask(RequestRescheduleTaskDto req) {
+        Optional<Task> task = taskRepository.findById(req.getTaskId());
+        if (task.isPresent()) {
+            Task updatingTask = task.get();
+            updatingTask.setStartDate(req.getStartDate());
+            updatingTask.setEndDate(req.getEndDate());
             taskRepository.save(updatingTask);
             return true;
         }

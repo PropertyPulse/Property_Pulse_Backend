@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestAddContactPersonDto;
+import com.example.demo.dto.requestDto.RequestRescheduleTaskDto;
 import com.example.demo.dto.requestDto.RequestUpdateRequestStatusDto;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.exception.UserException;
@@ -64,6 +65,19 @@ public class TaskRequestController {
     @PreAuthorize("hasAuthority('tasksupervisor:create')")
     public ResponseEntity<Boolean> addContactPerson(@RequestBody RequestAddContactPersonDto req) throws UserException {
         return ResponseEntity.ok(taskRequestService.addContactPerson(req));
+    }
+
+    @PostMapping("/task-approvals/reschedule-task")
+    @PreAuthorize("hasAuthority('tasksupervisor:update')")
+    public ResponseEntity<String> rescheduleTask(@RequestBody RequestRescheduleTaskDto req) throws UserException {
+//        return ResponseEntity.ok(taskRequestService.rescheduleTask(req));
+        Boolean isSetTask = taskRequestService.rescheduleTask(req);
+
+        if (isSetTask) {
+            return ResponseEntity.ok("Price List Updated");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update the price list");
+        }
     }
 
 }
