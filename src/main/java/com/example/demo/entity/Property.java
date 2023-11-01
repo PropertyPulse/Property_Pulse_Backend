@@ -1,20 +1,14 @@
 package com.example.demo.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 
@@ -161,6 +155,9 @@ public  class Property {
     @JoinColumn(name = "valuation_report_id")
     private ValuationReport valuationReport;
 
+//    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private ValuationReport valuationReport;
 
 
 //    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -173,9 +170,6 @@ public  class Property {
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private ImageData imageData;
-//    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
-//    @PrimaryKeyJoinColumn
-//    private ValuationReport valuationReport;
 
 
 }

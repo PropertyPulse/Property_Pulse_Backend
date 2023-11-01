@@ -19,6 +19,8 @@ public class RequestAddNewPropertyDto {
     private String district;
     private String duration;
     private Integer property_owner_id;
+    private String registered_status;
+    private Boolean accepted_status;
 
     private List<MultipartFile> propertyImages;
     private List<MultipartFile> propertyDocuments;

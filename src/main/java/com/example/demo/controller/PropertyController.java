@@ -1,26 +1,17 @@
 package com.example.demo.controller;
-
-import com.example.demo.dto.requestDto.Names;
-import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyType;
 import com.example.demo.exception.UserException;
-import com.example.demo.repository.PropertyRepository;
 import com.example.demo.service.PropertyService;
-import com.example.demo.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 //@PreAuthorize("hasRole('PROPERTYOWNER')")
@@ -29,22 +20,14 @@ import java.util.List;
 public class PropertyController {
     private final PropertyService propertyService;
 
-
-
-
-
-
-
     @Autowired
     public PropertyController(PropertyService propertyService) {
         this.propertyService = propertyService;
-
-
     }
 
     @PutMapping("/addNewProperty")
 //    @PreAuthorize("hasAuthority('propertyowner:create')")
-    public ResponseEntity<String> addNewProperty(
+    public ResponseEntity<Integer> addNewProperty(
             @RequestParam("address") String address,
             @RequestParam("type") String type,
             @RequestParam("location") String location,
@@ -86,17 +69,17 @@ public class PropertyController {
             property.setChecklist(checklist);
 
 
-            propertyService.addNewProperty(property,file,propertydocument,propertyOwnerEmail);
+          Integer id =  propertyService.addNewProperty(property,file,propertydocument,propertyOwnerEmail);
 
-            return ResponseEntity.ok("Property added successfully.");
+            return ResponseEntity.ok(id);
         } catch (Exception e) {
-            return ResponseEntity.ok("Property added not successfully.");
+            return ResponseEntity.ok(-1);
         }
 
     }
 
     @PostMapping("/addNewLandProperty")
-    public ResponseEntity<String> addNewLandProperty(
+    public ResponseEntity<Integer> addNewLandProperty(
             @RequestParam("address") String address,
             @RequestParam("type") String type,
             @RequestParam("location") String location,
@@ -127,25 +110,25 @@ public class PropertyController {
         property.setWantInsurance(wantInsurance);
 
 
-        propertyService.addNewLandProperty(property,propertyImages,insuranceDocuments,propertyOwnerEmail);
+        Integer id =    propertyService.addNewLandProperty(property,propertyImages,insuranceDocuments,propertyOwnerEmail);
         // You can access the values using the provided parameters and process them as needed.
         // MultipartFile insuranceDocuments and propertyImages contain the uploaded files.
 
         // You can save files to the server or perform other actions with the data.
 
         // Return an appropriate response
-        return ResponseEntity.ok("Property added successfully.");
+        return ResponseEntity.ok(id);
     }
 
 
-    @PostMapping("/addNewProperty")
-    @PreAuthorize("hasAuthority('propertyowner:create')")
-    public ResponseEntity<ResponseAddNewPropertyDto> addNewProperty(@RequestBody RequestAddNewPropertyDto req) throws UserException {
-        ResponseAddNewPropertyDto savedProperty = propertyService.addNewProperty(req);
-        ResponseAddNewPropertyDto responseDto = new ResponseAddNewPropertyDto();
-        responseDto.setId(savedProperty.getId());
-        return ResponseEntity.ok(responseDto);
-    }
+//    @PostMapping("/addNewProperty")
+//    @PreAuthorize("hasAuthority('propertyowner:create')")
+//    public ResponseEntity<String> addNewProperty(@RequestBody RequestAddNewPropertyDto req) throws UserException {
+////        ResponseAddNewPropertyDto savedProperty = propertyService.addNewProperty(req);
+////        ResponseAddNewPropertyDto responseDto = new ResponseAddNewPropertyDto();
+////        responseDto.setId(savedProperty.getId());
+//        return ResponseEntity.ok("success");
+//    }
 
     // @PreAuthorize("hasAuthority('propertyowner:read')")
     @GetMapping("/get-all-properties-by-owner")
@@ -153,6 +136,8 @@ public class PropertyController {
         List<ResponseGetAllPropertiesByUserDto> allProperties = propertyService.getAllPropertiesByUser(email);
         return ResponseEntity.ok(allProperties);
     }
+
+
 
 
     @GetMapping("/get-property-by-id")
@@ -170,12 +155,6 @@ public class PropertyController {
     }
 
 
-
-
-
-
-
-
     /* @PreAuthorize("hasAuthority('propertyowner:create')")
     @PostMapping("/getAllProperties")
     public ResponseEntity<List<ResponseAddNewPropertyDto>> getAllProperties(@RequestBody RequestAddNewPropertyDto req) throws UserException {
@@ -189,10 +168,6 @@ public class PropertyController {
     {
         System.out.println(name +" " +pass);
     }
-
-
-
-
 
 //    @PostMapping
 //    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {

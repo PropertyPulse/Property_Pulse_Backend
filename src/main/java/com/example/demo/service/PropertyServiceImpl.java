@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.dto.responseDto.ResponseGetAllPropertiesByUserDto;
 import com.example.demo.entity.Property;
@@ -11,28 +10,15 @@ import com.example.demo.repository.PropertyRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
-import com.example.demo.exception.UserException;
 import com.example.demo.repository.*;
-
 import com.example.demo.entity.FileData;
 import com.example.demo.entity.ImageData;
-import com.example.demo.entity.Property;
-import com.example.demo.entity.PropertyOwner;
-import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
-import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
 import com.example.demo.entity.*;
-import com.example.demo.user.UserRepository;
-import jakarta.transaction.Transactional;
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,16 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class PropertyServiceImpl implements PropertyService {
-
-
-
-    private final PropertyOwnerRepository propertyOwnerRepository;
-    private final UserRepository userRepository;
-
-
-
-
-
 
     @Autowired
     private final PropertyRepository propertyRepository;
@@ -60,9 +36,11 @@ public class PropertyServiceImpl implements PropertyService {
     @Autowired
     private ValuationReportRepository valuationReportRepository;
 
-
     @Autowired
     private ImageDataRepository imageDataRepository;
+
+    private final PropertyOwnerRepository propertyOwnerRepository;
+    private final UserRepository userRepository;
 
 
     // Use relative paths based on the project directory
@@ -91,9 +69,8 @@ public class PropertyServiceImpl implements PropertyService {
 //     public ResponseAddNewPropertyDto addNewProperty(RequestAddNewPropertyDto req) throws UserException {
 //         ResponseAddNewPropertyDto responseAddNewPropertyDto = new ResponseAddNewPropertyDto();
 // =======
-    public String addNewProperty(Property property,MultipartFile propertyImage,MultipartFile propertydocument,String propertyOwnerEmail) throws UserException, IOException {
+    public Integer addNewProperty(Property property,MultipartFile propertyImage,MultipartFile propertydocument,String propertyOwnerEmail) throws UserException, IOException {
         var user = userRepository.findByEmail(propertyOwnerEmail);
-// >>>>>>> main
 
         PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
 
@@ -124,13 +101,13 @@ public class PropertyServiceImpl implements PropertyService {
         propertydocument.transferTo(new File(documentpath));
 
 
-        propertyRepository.save(property);
+        Property property1 = propertyRepository.save(property);
 
-        return "success";
+        return property1.getId();
     }
 
     @Override
-    public String addNewLandProperty(Property property, MultipartFile file, MultipartFile propertydocument, String propertyOwnerEmail) throws UserException, IOException {
+    public Integer addNewLandProperty(Property property, MultipartFile file, MultipartFile propertydocument, String propertyOwnerEmail) throws UserException, IOException {
         var user = userRepository.findByEmail(propertyOwnerEmail);
 
         PropertyOwner propertyOwner = propertyOwnerRepository.findById(user.get().getId()).orElse(null);
@@ -140,11 +117,6 @@ public class PropertyServiceImpl implements PropertyService {
         String filePath = FOLDER_PATH_PROPERTIES_LAND + file.getOriginalFilename();
         String documentpath = FOLDER_PATH_DOCS_LAND + propertydocument.getOriginalFilename();
 
-// <<<<<<< PP-83
-//         responseAddNewPropertyDto.setId(savedProperty.getId());
-
-//         return responseAddNewPropertyDto;
-// =======
         ImageData img = new ImageData();
         img.setName(file.getOriginalFilename());
         img.setType(file.getContentType());
@@ -167,9 +139,9 @@ public class PropertyServiceImpl implements PropertyService {
         propertydocument.transferTo(new File(documentpath));
 
 
-        propertyRepository.save(property);
+        Property property1 = propertyRepository.save(property);
 
-        return "success";
+        return property1.getId();
 // >>>>>>> main
     }
 
@@ -187,6 +159,12 @@ public class PropertyServiceImpl implements PropertyService {
         fileData.setFilePath(documentpath);
         fileData.setProperty(property1);
 
+        property1.setValuationReport(fileData);
+
+        file.transferTo(new File(documentpath));
+
+        propertyRepository.save(property1);
+    }
 
     @Override
     public List<ResponseGetAllPropertiesByUserDto> getAllPropertiesByUser(String email) {
@@ -242,12 +220,5 @@ public class PropertyServiceImpl implements PropertyService {
 
         return dto;
     }
-        property1.setValuationReport(fileData);
 
-
-        file.transferTo(new File(documentpath));
-
-        propertyRepository.save(property1);
-
-    }
 }

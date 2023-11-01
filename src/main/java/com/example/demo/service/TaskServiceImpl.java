@@ -11,20 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
-import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.Property;
-import com.example.demo.entity.Task;
-import com.example.demo.exception.UserException;
 import com.example.demo.repository.PropertyRepository;
-import com.example.demo.repository.TaskRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,6 +56,8 @@ public class TaskServiceImpl implements TaskService {
         dto.setEndingDate(task.getEndDate());
         dto.setTaskStatus(task.getStatus());
         dto.setPropertyId(task.getProperty().getId());
+
+        return dto;
     }
 
     @Override

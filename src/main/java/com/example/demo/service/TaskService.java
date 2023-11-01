@@ -6,15 +6,9 @@ import com.example.demo.dto.responseDto.ResponseOngoingTasksDto;
 import com.example.demo.exception.UserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-import java.util.List;
 import com.example.demo.dto.responseDto.*;
-import com.example.demo.exception.UserException;
 import java.time.LocalDate;
 import java.util.Map;
 
