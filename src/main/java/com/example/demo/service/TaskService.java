@@ -8,12 +8,9 @@ import com.example.demo.exception.UserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
-import com.example.demo.dto.responseDto.ResponseTaskListDto;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import com.example.demo.dto.responseDto.ResponseTaskListDto;
 import com.example.demo.dto.responseDto.*;
-import com.example.demo.exception.UserException;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ import java.util.Map;
 @Transactional
 public interface TaskService {
     List<RequestTaskListDto> getTaskList (Integer propertyId);
-  
+
     ResponseOngoingTasksDto getTaskById(Integer id);
 
     String addNewScheduledTask(RequestAddNewScheduledTaskDto req) throws UserException;
@@ -30,6 +27,7 @@ public interface TaskService {
     List<ResponseAddNewScheduledTask> getAllScheduledTasks();
 
     List<ResponseTaskListDto> getTaskList (Integer propertyId);
+
 
     Map<LocalDate, List<ResponseUpcomingTasksDto>> getUpcomingTasks(String email) throws UserException;
     List<ResponseOngoingTasksDto> getOngoingTasks(String email) throws UserException;

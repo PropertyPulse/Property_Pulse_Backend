@@ -16,8 +16,6 @@ import com.example.demo.repository.PropertyRepository;
 import com.example.demo.repository.TaskRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -26,9 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,21 +32,20 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class PropertyOwnerServiceImpl implements PropertyOwnerService {
-    private final PropertyOwnerRepository propertyOwnerRepository;
-    private final UserRepository userRepository;
-    private final PropertyRepository propertyRepository;
-    private final TaskRepository taskRepository;
 
-    public PropertyOwnerServiceImpl(PropertyOwnerRepository propertyOwnerRepository, UserRepository userRepository, PropertyRepository propertyRepository, TaskRepository taskRepository) {
 
     @Autowired
     private UserRepository userRepository;
+    private final PropertyOwnerRepository propertyOwnerRepository;
+    private final PropertyRepository propertyRepository;
+    private final TaskRepository taskRepository;
 
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PropertyOwnerServiceImpl(PropertyOwnerRepository propertyOwnerRepository) {
+    public PropertyOwnerServiceImpl(PropertyOwnerRepository propertyOwnerRepository, UserRepository userRepository,
+                                    TaskRepository taskRepository, PropertyRepository propertyRepository) {
         this.propertyOwnerRepository = propertyOwnerRepository;
         this.userRepository = userRepository;
         this.propertyRepository = propertyRepository;
