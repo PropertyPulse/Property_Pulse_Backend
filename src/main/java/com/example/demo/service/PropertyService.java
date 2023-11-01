@@ -19,5 +19,7 @@ public interface PropertyService {
     String addNewProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
     String addNewLandProperty(Property property,MultipartFile file,MultipartFile propertydocument , String propertyOwnerEmail) throws UserException, IOException;
 
+    void addValuationReport(Integer propertyId, MultipartFile file) throws IOException;
+
     // ResponseEntity<List<ResponseAddNewPropertyDto>> getAllProperties() throws  UserException;
 }

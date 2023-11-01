@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+<<<<<<< HEAD
 
 
 import com.example.demo.exception.UserException;
@@ -10,6 +11,13 @@ import com.example.demo.entity.ImageData;
 import com.example.demo.entity.Property;
 import com.example.demo.entity.PropertyOwner;
 
+=======
+import com.example.demo.dto.requestDto.RequestAddNewPropertyDto;
+import com.example.demo.dto.responseDto.ResponseAddNewPropertyDto;
+import com.example.demo.entity.*;
+import com.example.demo.exception.UserException;
+import com.example.demo.repository.*;
+>>>>>>> 08e059e0b3488495ea4b4fd00fd857982977c05b
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -23,6 +31,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
+=======
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+>>>>>>> 08e059e0b3488495ea4b4fd00fd857982977c05b
 
 @Service
 @Transactional
@@ -44,6 +59,9 @@ public class PropertyServiceImpl implements PropertyService {
     @Autowired
     private FileDataRepository fileDataRepository;
 
+    @Autowired
+    private ValuationReportRepository valuationReportRepository;
+
 
     @Autowired
     private ImageDataRepository imageDataRepository;
@@ -55,6 +73,7 @@ public class PropertyServiceImpl implements PropertyService {
     private final String FOLDER_PATH_PROPERTIES_LAND = PROJECT_DIRECTORY + "/uploads/LandImages/";
     private final String FOLDER_PATH_DOCS_LAND = PROJECT_DIRECTORY + "/uploads/LandDocuments/";
     private final String FOLDER_PATH_DOCS = PROJECT_DIRECTORY + "/uploads/PropertyDocuments/";
+    private final String FOLDER_PATH_VAL_REPORT = PROJECT_DIRECTORY + "/uploads/ValuationReport/";
 
 //
 //    private final String FOLDER_PATH_PROPERTIES = "C:/Users/MSI/Desktop/MyFiles/Properties/";
@@ -130,7 +149,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 
         FileData fileData = new FileData();
-        fileData.setName(propertydocument.getName());
+        fileData.setName(propertydocument.getOriginalFilename());
         fileData.setType(propertydocument.getContentType());
         fileData.setFilePath(documentpath);
         fileData.setProperty(property);
@@ -143,5 +162,27 @@ public class PropertyServiceImpl implements PropertyService {
         propertyRepository.save(property);
 
         return "success";
+    }
+
+    @Override
+    public void addValuationReport(Integer propertyId, MultipartFile file) throws IOException {
+        Optional<Property> property = propertyRepository.findById(propertyId);
+
+        Property property1 = property.get();
+
+        String documentpath = FOLDER_PATH_VAL_REPORT + file.getOriginalFilename();
+
+        ValuationReport fileData = new ValuationReport();
+        fileData.setName(file.getOriginalFilename());
+        fileData.setType(file.getContentType());
+        fileData.setFilePath(documentpath);
+        fileData.setProperty(property1);
+
+        property1.setValuationReport(fileData);
+
+        file.transferTo(new File(documentpath));
+
+        propertyRepository.save(property1);
+
     }
 }
