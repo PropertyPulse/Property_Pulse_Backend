@@ -14,8 +14,8 @@ import java.util.List;
 public interface PropertyRepository extends JpaRepository<Property, Integer> {
 
     List<Object> findAllById(Long propertyId);
-    @Query("SELECT p FROM Property p WHERE p.isDeleted = false AND p.acceptedStatus = false")
-    List<Property> findByIsDeletedFalseAndAcceptedStatusFalse();
+
+    List<Property> findByRegisteredStatus(String status);
 
     List<Property> findByAcceptedStatus(boolean b);
 

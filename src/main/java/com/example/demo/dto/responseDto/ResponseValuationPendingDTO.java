@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class ResponseValuationPendingDTO {
 
 
-    private Long propertyId;
+    private Integer propertyId;
     private PropertyType type;
     private String location;
     private String contact;

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public interface PropertyOwnerService {
 
-    public ResponsePo addPropertyOwner(RegisterRequest req);
+//    public ResponsePo addPropertyOwner(RegisterRequest req);
 
 
 

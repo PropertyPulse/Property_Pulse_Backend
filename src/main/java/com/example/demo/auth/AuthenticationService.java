@@ -69,19 +69,12 @@ public class AuthenticationService {
             throw new UserException("Password is required");
         }
 
-
-
-        PropertyOwner propertyOwner = request.getPropertyOwner();
-
-      System.out.println(propertyOwner.toString());
-
-
-        if (propertyOwner.getNic()==null || propertyOwner.getNic().equals("")) {
+        if (request.getNic()==null || request.getNic().equals("")) {
             throw new UserException("Nic is required");
         }
 
 
-        if (propertyOwner.getAddress()==null || propertyOwner.getAddress().equals("")) {
+        if (request.getAddress()==null || request.getAddress().equals("")) {
             throw new UserException("Address is required");
         }
 
@@ -97,23 +90,34 @@ public class AuthenticationService {
         };
 
 
-        if (propertyOwner.getDistrict()==null || propertyOwner.getDistrict().equals("")) {
+        if (request.getDistrict()==null || request.getDistrict().equals("")) {
             throw new UserException("District is required");
         }
 
 
-        if (propertyOwner.getTelephone()==null || propertyOwner.getTelephone().equals("")) {
+        if (request.getTelephone()==null || request.getTelephone().equals("")) {
             throw new UserException("Phone number is required");
 
         }
 
-        if (!Arrays.asList(districts).contains(propertyOwner.getDistrict())) {
+        if (!Arrays.asList(districts).contains(request.getDistrict())) {
             throw new UserException("District is not valid");
         }
 
-        if (propertyOwner.getTelephone().length() != 10) {
+        if (request.getTelephone().length() != 10) {
             throw new UserException("Phone number is not valid");
         }
+
+        PropertyOwner propertyOwner = new PropertyOwner();
+        propertyOwner.setAddress(request.getAddress());
+        propertyOwner.setNic(request.getNic());
+        propertyOwner.setTelephone(request.getTelephone());
+        propertyOwner.setGender(request.getGender());
+        propertyOwner.setDistrict(request.getDistrict());
+
+
+
+
 
 
 
@@ -124,7 +128,7 @@ public class AuthenticationService {
 //                    .lastname(request.getLastname())
 //                    .email(request.getEmail())
 //                    .password(encoder.encode(request.getPassword()))
-//                    .role(request.getRole())
+//                    .role(Role.PROPERTYOWNER)
 ////                    .propertyOwner(propertyOwner)
 //                    .build();
 
@@ -134,16 +138,17 @@ public class AuthenticationService {
         user.setLastname(request.getLastname());
         user.setEmail(request.getEmail());
         user.setPassword(encoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
-
+        user.setRole(Role.PROPERTYOWNER);
         propertyOwner.setUser(user);
-        user.setPropertyOwner(propertyOwner);
+//        propertyOwner.setUser(user);
+//        user.setPropertyOwner(propertyOwner);
             //take the saved user into the savedUser variable
            var savedUser = repository.save(user);
+
      System.out.println(savedUser);
 
 //           propertyOwner.setUser(savedUser);
-//        propertyOwnerRepository.save(propertyOwner);
+        propertyOwnerRepository.save(propertyOwner);
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);

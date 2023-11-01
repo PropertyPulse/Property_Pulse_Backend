@@ -34,22 +34,22 @@ public class PropertyOwnerServiceImpl implements PropertyOwnerService {
         this.propertyOwnerRepository = propertyOwnerRepository;
     }
 
-    @Override
-    public ResponsePo addPropertyOwner(RegisterRequest reqreg) {
-        PropertyOwner propertyOwner = reqreg.getPropertyOwner();
-
-        // Perform necessary operations with the propertyOwner object
-        // For example, you can save it to the database using the repository
-
-        PropertyOwner savedPropertyOwner = propertyOwnerRepository.save(propertyOwner);
-
-        // Create a ResponsePo object if needed
-        ResponsePo response = new ResponsePo();
-        // Populate the response object with relevant data if required
-
-        // Return the response object
-        return response;
-    }
+//    @Override
+//    public ResponsePo addPropertyOwner(RegisterRequest reqreg) {
+//        PropertyOwner propertyOwner = reqreg.getPropertyOwner();
+//
+//        // Perform necessary operations with the propertyOwner object
+//        // For example, you can save it to the database using the repository
+//
+//        PropertyOwner savedPropertyOwner = propertyOwnerRepository.save(propertyOwner);
+//
+//        // Create a ResponsePo object if needed
+//        ResponsePo response = new ResponsePo();
+//        // Populate the response object with relevant data if required
+//
+//        // Return the response object
+//        return response;
+//    }
 
 
 

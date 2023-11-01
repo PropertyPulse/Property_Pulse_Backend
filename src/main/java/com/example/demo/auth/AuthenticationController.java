@@ -31,7 +31,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody @Valid RegisterRequest request
+            @RequestBody  RegisterRequest request
     ) throws UserException {
 
 //        poservice.addPropertyOwner(request);

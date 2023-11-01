@@ -151,7 +151,7 @@ public class TopManagerController {
     @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseNewManagementRequestDto>> newmanagementrequest() {
         try {
-            List<Property> unacceptedProperties = propertyRepository.findByIsDeletedFalseAndAcceptedStatusFalse();
+            List<Property> unacceptedProperties = propertyRepository.findByAcceptedStatus(false);
             System.out.println(unacceptedProperties.size());
             List<ResponseNewManagementRequestDto> responseDTOs = new ArrayList<>();
 
@@ -163,7 +163,9 @@ public class TopManagerController {
                 responseDTO.setRegisteredStatus(property.getRegisteredStatus());
                 responseDTO.setVisitStatus(property.getVisitStatus());
                 responseDTO.setPriceListStatus(property.getPriceListStatus());
-//                responseDTO.setAcceptedStatus(property.setAcceptedStatus(true));;
+                responseDTO.setAcceptedStatus(true);
+                responseDTO.setRegisteredStatus("Registered");
+
                 responseDTO.setAcceptedDate(property.getAccepted_date());
                 responseDTO.setLegalContractStatus(property.getLegalContractStatus());
 
@@ -341,6 +343,7 @@ public class TopManagerController {
 
         if (propertyOptional.isPresent()) {
             Property property = propertyOptional.get();
+            property.setRegisteredStatus("Rejected");
             property.setDeleted(true); // Set the isDeleted flag to true
              propertyRepository.save(property);
             return ResponseEntity.ok("Property rejected successfully");

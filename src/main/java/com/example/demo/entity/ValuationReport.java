@@ -14,42 +14,40 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "valuation_reports")
 public class ValuationReport {
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.AUTO)
-//     private Long reportId;
-
-//     @Column(nullable = true)
-//     private String fileName;
-
-//     @Column(nullable = true)
-//     private String pdfPath;
-
-//     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'pending'")
-//     private String status;
-
-//     @Column
-//     private LocalDate requestedDate;
-
-//     @Column(nullable = true)
-//     private LocalDate submittedDate;
-
-//     @OneToOne
-//     @JoinColumn(name = "property_id")
-//     private Property property;
-  
-  @Id
-    @Column(name = "id")
-    private Integer id;
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+     private Integer reportId;
 
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    private Property property;
+     private String fileName;
 
-    private String name;
-    private String type;
-    private String filePath;
+
+     private String pdfPath;
+
+     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'pending'")
+     private String status;
+
+     @Column
+     private LocalDate requestedDate;
+
+     @Column(nullable = true)
+     private LocalDate submittedDate;
+
+     @OneToOne
+     @JoinColumn(name = "property_id")
+     private Property property;
+//
+//    @Id
+//    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private Integer id;
+//
+//
+//
+
+      private String name;
+      private String type;
+      private String filePath;
 
 
 }

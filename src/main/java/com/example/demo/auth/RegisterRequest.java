@@ -1,5 +1,6 @@
 package com.example.demo.auth;
 
+import com.example.demo.entity.Gender;
 import com.example.demo.entity.PropertyOwner;
 import com.example.demo.token.Token;
 import com.example.demo.user.Role;
@@ -24,21 +25,20 @@ import java.util.List;
 public class RegisterRequest {
 
 
-    @NotBlank(message = "Firstname is required")
+
     private String firstname;
-    @NotBlank(message = "Lastname is required")
     private String lastname;
-    @NotBlank(message = "Email is required")
     private String email;
-    @NotBlank(message = "Password is required")
     private String password;
+    private String address;
+    private String nic;
+    private String gender;
+    private String telephone;
+    private String district;
 
-    @Enumerated(EnumType.STRING)
-    public Role role;
 
 
 
-
-    private PropertyOwner propertyOwner;
+//    private PropertyOwner propertyOwner;
 
 }
