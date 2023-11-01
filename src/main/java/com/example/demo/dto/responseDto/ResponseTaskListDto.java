@@ -4,9 +4,8 @@ import lombok.Data;
 
 @Data
 public class ResponseTaskListDto {
-    private int propertyId;
-    private Integer estimatedPrice;
-    private Integer timeInDays;
-    private Float cost;
-    private String taskName;
+    private int noOfWorkers;
+    private int timeInDays;
+    private float cost;
+    private int taskId;
 }

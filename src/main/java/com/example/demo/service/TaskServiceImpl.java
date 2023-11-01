@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.requestDto.RequestTaskListDto;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
 import com.example.demo.entity.*;
@@ -36,28 +37,25 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<ResponseTaskListDto> getTaskList(Integer propertyId){
+    public List<RequestTaskListDto> getTaskList(Integer propertyId){
 
         List<Task> tasks = taskRepository.findByPropertyId(propertyId);
 
-
-        List<ResponseTaskListDto> responseTaskListDtos = tasks.stream()
+        List<RequestTaskListDto> requestTaskListDto = tasks.stream()
                 .filter(task -> task.getProperty().getId().equals(propertyId))
                 .map(this::mapTaskList)
                 .collect(Collectors.toList());
 
-        return responseTaskListDtos;
+        return requestTaskListDto;
     }
 
-    private ResponseTaskListDto mapTaskList(Task t) {
+    private RequestTaskListDto mapTaskList(Task t) {
 
-        ResponseTaskListDto dto = new ResponseTaskListDto();
+        RequestTaskListDto dto = new RequestTaskListDto();
 
-        dto.setCost(t.getCost());
         dto.setPropertyId(t.getProperty().getId());
-        dto.setTimeInDays(t.getTimeInDays());
-        dto.setEstimatedPrice(t.getEstimatedPrice());
         dto.setTaskName(t.getTask());
+        dto.setTaskId(t.getId());
         return dto;
     }
 
@@ -221,5 +219,26 @@ public class TaskServiceImpl implements TaskService {
         }
         return false;
     }
+
+    @Override
+    public Boolean setTaskList(List<ResponseTaskListDto> responseTaskListDtoList) {
+        boolean atLeastOneTaskUpdated = false;
+
+        for (ResponseTaskListDto responseTaskListDto : responseTaskListDtoList) {
+            Optional<Task> taskOptional = taskRepository.findById(responseTaskListDto.getTaskId());
+
+            if (taskOptional.isPresent()) {
+                Task updatingTask = taskOptional.get();
+                updatingTask.setCost(responseTaskListDto.getCost());
+                updatingTask.setTimeInDays(responseTaskListDto.getTimeInDays());
+                updatingTask.setNoOfWorkers(responseTaskListDto.getNoOfWorkers());
+                taskRepository.save(updatingTask);
+                atLeastOneTaskUpdated = true;
+            }
+        }
+
+        return atLeastOneTaskUpdated;
+    }
+
 
 }
