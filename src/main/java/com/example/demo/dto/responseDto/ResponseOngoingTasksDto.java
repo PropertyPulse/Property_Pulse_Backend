@@ -6,7 +6,7 @@ import lombok.Data;
 public class ResponseOngoingTasksDto {
 
     private Integer propertyId;
-    private String location;
+    private String address;
     private Integer taskId;
     private String manpowerCompany;
     private String taskStatus;

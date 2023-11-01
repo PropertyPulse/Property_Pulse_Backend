@@ -1,5 +1,4 @@
 package com.example.demo.service;
-
 import com.example.demo.dto.responseDto.ResponseAssignedPropertiesTSDto;
 import com.example.demo.entity.*;
 import com.example.demo.repository.AssignedPropertyRepositoryTS;
@@ -8,10 +7,9 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,31 +27,24 @@ public class AssignedPropertiesTSServiceImpl implements AssignedPropertiesTSServ
     @Override
     public List<ResponseAssignedPropertiesTSDto> assignedPropertiesTS(String email) {
         Optional<User> taskSupervisor = userRepository.findByEmail(email);
-        List<ResponseAssignedPropertiesTSDto> e = new ArrayList<>();
 
-        List<Property> assignedProperties = propertyRepository.findBytaskSupervisor_id(taskSupervisor.get().getId());
-        for (Property p : assignedProperties) {
-            System.out.println(p.getType());
-            ResponseAssignedPropertiesTSDto dto = new ResponseAssignedPropertiesTSDto();
+        List<Property> properties = propertyRepository.findBytaskSupervisor_id(taskSupervisor.get().getId());
 
-            dto.setPropertyId(p.getId());
-            dto.setPropertyOwner(p.getPropertyOwner().getUser().getFirstname());
-            dto.setPropertyType(p.getType().toString());
+        List<ResponseAssignedPropertiesTSDto> assignedProperties = properties.stream()
+                .filter(property -> property.getAssignStage().equals("ToBeAssigned") && property.getVisitStatus().equals("true"))
+                .map(this::mapPropertyToDto)
+                .collect(Collectors.toList());
 
-            e.add(dto);
-        }
-//        List<ResponseAssignedPropertiesTSDto> responseAssignedPropertiesTSDtos = assignedProperties.stream()
-//                .map(this::mapUserToDto)
-//                .collect(Collectors.toList());
-        return e;
+        return assignedProperties;
     }
 
-//    private ResponseAssignedPropertiesTSDto mapUserToDto (Property property) {
-//        ResponseAssignedPropertiesTSDto dto = new ResponseAssignedPropertiesTSDto();
-//
-//        dto.setPropertyId(property.getId());
-//        dto.setPropertyOwner(property.getPropertyOwner().getUser().getFirstname());
-//        dto.setPropertyType(property.getType().toString());
-//        return dto;
-//    }
+    private ResponseAssignedPropertiesTSDto mapPropertyToDto (Property p) {
+        ResponseAssignedPropertiesTSDto dto = new ResponseAssignedPropertiesTSDto();
+
+        dto.setPropertyId(p.getId());
+        dto.setPropertyOwner(p.getPropertyOwner().getUser().getFirstname());
+        dto.setPropertyType(p.getType().toString());
+        dto.setAddress(p.getAddress());
+        return dto;
+    }
 }
