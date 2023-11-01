@@ -32,6 +32,7 @@ public class Task {
     private String contactPersonName;
     private String contactPersonTelNo;
     private Integer estimatedPrice;
+    private Integer noOfWorkers;
     private Integer timeInDays;
 
 }

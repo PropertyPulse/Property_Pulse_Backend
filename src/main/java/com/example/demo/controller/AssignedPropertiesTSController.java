@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.PropertyVisitStatusRequestDto;
+import com.example.demo.dto.requestDto.RequestTaskListDto;
 import com.example.demo.dto.responseDto.ResponseAssignedPropertiesTSDto;
 import com.example.demo.dto.responseDto.ResponsePropertiesToBeManagedDto;
 import com.example.demo.dto.responseDto.ResponseTaskListDto;
@@ -9,6 +10,7 @@ import com.example.demo.service.AssignedPropertiesTSService;
 import com.example.demo.service.PropertiesToBeManagedService;
 import com.example.demo.service.TaskService;
 import com.example.demo.service.UpdatePropertyVisitStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,8 @@ public class AssignedPropertiesTSController {
     private final TaskService taskService;
 
     private final UpdatePropertyVisitStatusService updatePropertyVisitStatusService;
+
+    @Autowired
     public AssignedPropertiesTSController(AssignedPropertiesTSService assignedPropertiesTSService, PropertiesToBeManagedService propertiesToBeManagedService, TaskService taskService, UpdatePropertyVisitStatusService updatePropertyVisitStatusService) {
         this.assignedPropertiesTSService = assignedPropertiesTSService;
         this.propertiesToBeManagedService = propertiesToBeManagedService;
@@ -52,8 +56,8 @@ public class AssignedPropertiesTSController {
     }
 
     @GetMapping("/getTaskList")
-    public ResponseEntity<List<ResponseTaskListDto>> getTaskList (@RequestParam("propertyId") Integer propertyId) throws UserException{
-        List<ResponseTaskListDto> tasksList = taskService.getTaskList (propertyId);
+    public ResponseEntity<List<RequestTaskListDto>> getTaskList (@RequestParam("propertyId") Integer propertyId) throws UserException{
+        List<RequestTaskListDto> tasksList = taskService.getTaskList (propertyId);
         return ResponseEntity.ok(tasksList);
     }
 
@@ -74,6 +78,24 @@ public class AssignedPropertiesTSController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Replace this with proper error handling
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred.");
+        }
+    }
+
+    @PostMapping("/setTaskList")
+    public ResponseEntity<String> setTaskList(@RequestBody List<ResponseTaskListDto> responseTaskListDto) {
+        try {
+
+            Boolean isSetTask = taskService.setTaskList(responseTaskListDto);
+
+            if (isSetTask) {
+                return ResponseEntity.ok("Price List Updated");
+            } else {
+                return ResponseEntity.badRequest().body("Failed to update the price list");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred.");
         }
     }

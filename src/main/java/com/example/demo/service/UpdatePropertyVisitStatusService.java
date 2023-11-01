@@ -9,3 +9,4 @@ public interface UpdatePropertyVisitStatusService {
     Boolean updateVisitStatus(int propertyId, boolean visitStatus);
 }
 
+
