@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@PreAuthorize("hasRole('PROPERTYOWNER')")
+//@PreAuthorize("hasRole('PROPERTYOWNER')")
 @RestController
 @RequestMapping("/api/v1/property")
 public class PropertyController {
@@ -34,7 +34,7 @@ public class PropertyController {
     }
 
     @PutMapping("/addNewProperty")
-    @PreAuthorize("hasAuthority('propertyowner:create')")
+//    @PreAuthorize("hasAuthority('propertyowner:create')")
     public ResponseEntity<String> addNewProperty(
             @RequestParam("address") String address,
             @RequestParam("type") String type,
@@ -128,6 +128,15 @@ public class PropertyController {
         return ResponseEntity.ok("Property added successfully.");
     }
 
+    @PostMapping("/addValuationReport")
+    public ResponseEntity<String> addValuationReport(@RequestParam("property_id")int propertyId,@RequestParam("document") MultipartFile file) throws IOException {
+        propertyService.addValuationReport(propertyId,file);
+
+        return ResponseEntity.ok("Document added successfully.");
+    }
+
+
+
 
 
 
@@ -145,6 +154,9 @@ public class PropertyController {
     {
         System.out.println(name +" " +pass);
     }
+
+
+
 
 
 //    @PostMapping
