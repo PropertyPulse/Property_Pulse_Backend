@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,11 +38,19 @@ public class PropertyOwner  {
     private String nic;
 
     @Pattern(regexp = "^\\d{10}$", message = "invalid mobile number entered")
+
     private String telephone;
+
     private String district;
     private String gender;
 
         @OneToMany(mappedBy = "propertyOwner")
-    private  List<Property> properties = new ArrayList<>();
+        @JsonManagedReference
+    private  List<Property> properties;
+
+
+
+
+
 
 }

@@ -1,14 +1,25 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "ComplaintCategory")
 public    class ComplaintCategory {
 
-    @OneToOne
-    @JoinColumn(name  = "category_id")
-    private  long   category_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long category_id;
 
     private String category_name;
+
 
 }
