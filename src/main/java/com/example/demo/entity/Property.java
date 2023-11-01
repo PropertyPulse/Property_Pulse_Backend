@@ -174,4 +174,5 @@ public  class Property {
     @PrimaryKeyJoinColumn
     private ImageData imageData;
 
+
 }
