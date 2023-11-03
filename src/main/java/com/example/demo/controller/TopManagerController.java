@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.requestDto.RequestFeedbackDTO;
+import com.example.demo.dto.requestDto.RequestPropertyId;
 import com.example.demo.dto.responseDto.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/tm")
 
-@PreAuthorize("hasRole('TOPMANAGER')")
+//@PreAuthorize("hasRole('TOPMANAGER')")
 public class TopManagerController {
 
     private final FeedbackService feedbackService;
@@ -60,7 +61,7 @@ public class TopManagerController {
     }
 
     @GetMapping("/hello")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<String> get() {
         // Replace the following string with an actual object you want to return as JSON
         // You can create a class representing the response data and return an instance of that class.
@@ -70,7 +71,7 @@ public class TopManagerController {
 
 
     @PostMapping("/give-a-feedback")
-    @PreAuthorize("hasAuthority('topmanager:create')")
+//    @PreAuthorize("hasAuthority('topmanager:create')")
     public ResponseEntity<String> giveAFeedback(@RequestBody RequestFeedbackDTO requestFeedbackDTO) {
 
         try {
@@ -82,7 +83,7 @@ public class TopManagerController {
     }
 
     @GetMapping("/select-a-task-supervisor")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseTaskSupervisorDTO>> SelectedTaskSupervisor(@RequestParam String address) throws IOException {
 
 
@@ -114,7 +115,7 @@ public class TopManagerController {
     }
 
     @GetMapping("/valuation-reports")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseValuationDTO>> getValuationReports(
             @RequestParam(name = "status") String status
     ) throws ResourceNotFoundException {
@@ -132,13 +133,15 @@ public class TopManagerController {
     }
 
 
-    @GetMapping("/requestValuationandAcceptProperty")
-    @PreAuthorize("hasAuthority('topmanager:read')")
-    public ResponseEntity<String> requestValuationandAcceptProperty(@RequestParam(name = "propertyId") Integer propertyId) throws ResourceNotFoundException {
+    @PostMapping("/requestValuationandAcceptProperty")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
+    public ResponseEntity<String> requestValuationandAcceptProperty(@RequestBody RequestPropertyId pid) throws ResourceNotFoundException {
 
-        if (propertyId != null) {
 
-            topManagerService.requestValuationandAcceptProperty(propertyId);
+        System.out.println("---"+pid.getPropertyId());
+        if (pid != null) {
+
+            topManagerService.requestValuationandAcceptProperty(pid.getPropertyId());
             return ResponseEntity.ok("Valuation Requested and Property Accepted");
         } else {
             // Handle invalid status parameter or return an error response
@@ -148,7 +151,7 @@ public class TopManagerController {
     }
 
     @GetMapping("/newmanagmentrequest")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseNewManagementRequestDto>> newmanagementrequest() {
         try {
             List<Property> unacceptedProperties = propertyRepository.findByAcceptedStatus(false);
@@ -164,7 +167,9 @@ public class TopManagerController {
                 responseDTO.setVisitStatus(property.getVisitStatus());
                 responseDTO.setPriceListStatus(property.getPriceListStatus());
                 responseDTO.setAcceptedStatus(true);
+                responseDTO.setPropertyOwnername(property.getPropertyOwner().getUser().getFirstname()+" "+property.getPropertyOwner().getUser().getLastname());
                 responseDTO.setRegisteredStatus("Registered");
+
 
                 responseDTO.setAcceptedDate(property.getAccepted_date());
                 responseDTO.setLegalContractStatus(property.getLegalContractStatus());
@@ -210,7 +215,7 @@ public class TopManagerController {
 
 
     @GetMapping
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<Property>> getAllProperties() {
         return ResponseEntity.ok(propertyRepository.findAll());
     }
@@ -230,7 +235,7 @@ public class TopManagerController {
 
 
     @PostMapping("/Assign-a-task-supervisor")
-    @PreAuthorize("hasAuthority('topmanager:create')")
+//    @PreAuthorize("hasAuthority('topmanager:create')")
     public ResponseEntity<String> AssignTaskSupervisor(@RequestParam(name = "propertyId") Long propertyId, @RequestParam(name = "taskSupervisorName") Long taskSupervisorId) throws ResourceNotFoundException {
 
         if (propertyId != null && taskSupervisorId != null) {
@@ -245,7 +250,7 @@ public class TopManagerController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
     public ResponseEntity<List<ResponseComplaintDTO>> getAllComplaints() {
         try {
             List<NewComplaint> complaints = complaintRepository.findAllWithComplainantByIssolvedFalse();
@@ -281,7 +286,7 @@ public class TopManagerController {
 
 
     @PostMapping("/update-task-supervisor")
-    @PreAuthorize("hasAuthority('topmanager:create')")
+//    @PreAuthorize("hasAuthority('topmanager:create')")
     public ResponseEntity<ResponseTaskSupervisorDTO> updateTaskSupervisor(@RequestBody Integer PropertyId) throws IOException {
         Property property = propertyRepository.findById(PropertyId).get();
         String address = propertyRepository.findById(PropertyId).get().getAddress();
@@ -314,7 +319,7 @@ public class TopManagerController {
 
 
     @GetMapping("/accepted")
-    @PreAuthorize("hasAuthority('topmanager:read')")
+//    @PreAuthorize("hasAuthority('topmanager:read')")
 
     public ResponseEntity<List<UpdateTaskSupervisorResponseDTO>> getAllAcceptedProperties() {
         List<Property> propertyList =  propertyRepository.findByAcceptedStatusTrueAndTaskSupervisorIsNotNull();
@@ -337,7 +342,7 @@ public class TopManagerController {
         return ResponseEntity.ok(updateTaskSupervisorResponseDTOList);
     }
     @PostMapping("/reject-property")
-    @PreAuthorize("hasAuthority('topmanager:create')")
+//    @PreAuthorize("hasAuthority('topmanager:create')")
     public ResponseEntity<String> rejectProperty(Integer propertyId) {
         Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
 

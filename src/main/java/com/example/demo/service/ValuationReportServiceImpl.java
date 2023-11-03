@@ -62,7 +62,7 @@ public class ValuationReportServiceImpl implements ValuationReportService
                 responseValuationDTO.setFileLink(valuationReport.getPdfPath());
                 responseValuationDTO.setDistrict(property.getDistrict());
                 responseValuationDTO.setSpecialFacts(property.getSpecialFacts());
-
+                responseValuationDTO.setPropertyownername(propertyOwner.getUser().getFirstname() +" "+propertyOwner.getUser().getLastname());
 
                 if(property.getType() == PropertyType.LAND)
                 {
