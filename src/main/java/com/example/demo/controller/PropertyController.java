@@ -99,12 +99,13 @@ public class PropertyController {
 
         // Set properties based on the request parameters
         property.setAddress(address);
-        property.setType(PropertyType.valueOf(type)); // Assuming PropertyType is an Enum
+        property.setType(PropertyType.LAND); // Assuming PropertyType is an Enum
         property.setLocation(location);
         property.setDistrict(district);
         property.setDuration(duration);
         property.setLandSize(landSize);
         property.setHaveCrops(haveCrops);
+        property.setRegisteredStatus("PENDING");
         property.setCrops(crops);
         property.setSpecialFacts(specialFacts);
         property.setWantInsurance(wantInsurance);

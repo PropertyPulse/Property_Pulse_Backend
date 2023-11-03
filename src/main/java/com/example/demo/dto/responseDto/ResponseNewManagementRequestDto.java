@@ -43,6 +43,7 @@ public class ResponseNewManagementRequestDto {
     private List<TaskEquipmentPayment> equipmentPayments;
     private List<Document> files;
     private ValuationReport valuationReport;
+    private String propertyOwnername;
 
 
 

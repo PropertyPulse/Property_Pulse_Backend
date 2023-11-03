@@ -25,6 +25,7 @@ public class ResponseValuationDTO {
     private Double landSize;
     private String haveCrops;
 
+    private String propertyownername;
     private String specialFacts;
     private String crops;
 }

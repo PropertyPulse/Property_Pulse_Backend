@@ -95,6 +95,7 @@ public class PaymentController {
     public ResponseEntity<String> updatePaymentStatus(@RequestBody RequestUpdatePaymentDto payment) {
 
 
+
         Boolean updated = taskEquipmentPaymentService.updatePaymentStatus(payment);
         if (updated != null && updated) {
             return ResponseEntity.ok("Payment status updated successfully");
@@ -122,6 +123,10 @@ public class PaymentController {
 
     @PostMapping("/monthly")
     public ResponseEntity<String> addMonthlyPayment(@RequestBody PaymentRequestDto request) {
+
+        System.out.println(request.getPropertyId());
+
+
         if (recivedPaymentService.addMonthlyPayment(request.getPropertyId(), request.getAmount(), request.getDescription())) {
             return ResponseEntity.ok("Monthly payment added successfully");
         } else {
